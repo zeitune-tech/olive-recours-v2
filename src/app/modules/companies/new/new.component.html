@@ -1,0 +1,90 @@
+<div class="w-full pb-10"  *transloco="let t">
+
+    <div class="flex flex-col mb-10">
+        <h1 class="text-2xl md:text-4xl font-bold py-4">
+            {{ t('entities.company.form.title') }}
+        </h1>
+        <!-- Description -->
+        <p class="text-sm md:text-base text-gray-600">
+            {{ t('entities.company.form.description') }}
+        </p>
+    </div>
+
+
+    <mat-vertical-stepper  #stepper class="mt-8 rounded-md" [selectedIndex]="selectedIndex">
+        <mat-step [stepControl]="formStepOne">
+            <ng-template matStepLabel>
+                <!-- Informations personnelles -->
+                <div class="flex flex-col items-start">
+                    <div class="text-lg font-semibold">
+                        {{ t('entities.company.form.step_one_title') }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ t('entities.company.form.step_one_description') }}
+                    </div>
+                </div>
+            </ng-template>
+            <app-company-new-step-one (formReady)="onStepOneNext($event)" ></app-company-new-step-one>
+        </mat-step>
+
+        <mat-step [stepControl]="formStepTwo">
+            <ng-template matStepLabel>
+                <div class="flex flex-col items-start">
+                    <div class="text-lg font-semibold">
+                        {{ t('entities.company.form.step_two_title') }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ t('entities.company.form.step_two_description') }}
+                    </div>
+                </div>
+            </ng-template>
+            <app-company-new-step-two (formReady)="onStepTwoNext($event)" ></app-company-new-step-two>
+        </mat-step>
+        <mat-step >
+            <ng-template matStepLabel>
+                <div class="flex flex-col items-start">
+                    <div class="text-lg font-semibold">
+                        {{ t('entities.company.form.step_three_title') }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ t('entities.company.form.step_three_description') }}
+                    </div>
+                </div>
+            </ng-template>
+            <div class="flex flex-col gap-4 py-4">
+                <div class="text-lg font-semibold">
+                    {{t('entities.company.form.step_three_summary')}}
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex gap-6">
+                        <div class="flex flex-col gap-1">
+                            <div class="text-sm font-semibold">
+                                {{t('entities.company.form.step_three_name')}}
+                            </div>
+                            <div>{{ data.managementEntity.name }}</div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="text-sm font-semibold">
+                                {{t('entities.company.form.step_three_description')}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="flex flex-col gap-1">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-6">
+                <button mat-button matStepperPrevious class="mat-button-large mt-6" mat-flat-button [color]="'primary'">
+                    {{ t('entities.company.form.step_three_previous') }}
+                </button>
+                <button mat-button class="mat-button-large mt-6" mat-flat-button [color]="'primary'" (click)="save()">
+                    {{ t('entities.company.form.step_three_create') }}
+                </button>
+            </div>
+        </mat-step>
+        <!-- -->
+    </mat-vertical-stepper>
+</div>

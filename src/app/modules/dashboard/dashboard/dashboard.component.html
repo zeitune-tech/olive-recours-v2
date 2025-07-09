@@ -1,0 +1,26 @@
+<!-- Header -->
+
+<div class="w-full bg-primary p-4 sm:p-6 sm:rounded-xl rounded-md flex items-center sm:gap-6 gap-2">
+
+    <!-- Logo -->
+    <div class="size-28 rounded-md flex items-center justify-center">
+        <img [src]="entity.logo || 'assets/images/logo/logo.png'" class="w-full max-w-26 object-cover rounded-md">
+    </div>
+
+    <!-- Entity Information -->
+    <div class="flex flex-col gap-2">
+        <h1 class="text-white text-2xl font-bold">
+            {{ entity.name }}
+        </h1>
+        <p class="text-white text-md">
+            Email: {{ entity.email }}
+        </p>
+        <p class="text-white text-md">
+            Téléphone: {{ entity.phone }}
+        </p>
+        <p class="text-white text-md">
+            Adresse: {{ entity.address }}
+        </p>
+
+    </div>
+</div>

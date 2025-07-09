@@ -1,0 +1,22 @@
+{
+    "welcome-back": "Welcome back",
+    "Project": "Project",
+    "Analytics": "Analytics",
+    "registration": {
+        "user-registration": {
+            "welcome-title": "Welcome to User Registration",
+            "welcome-message": "Please fill the form to register",
+            "form-title": "Sign Up",
+            "sign-in-message": "Already have an account?",
+            "sign-in": "Sign In",
+            "form": {
+                "name": "Name",
+                "email": "Email",
+                "password": "Password",
+                "confirm-password": "Confirm Password",
+                "submit": "Create your free account"
+            }
+        },
+        "complaint-registration": {}
+    }
+}

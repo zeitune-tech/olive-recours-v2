@@ -1,0 +1,80 @@
+<div class="w-full p-4" *transloco="let t;" tabindex="0">
+    <div class="flex flex-col mb-6">
+        <h1 class="text-2xl md:text-4xl font-bold py-4">
+            {{ t('entities.company.table.title') }}
+        </h1>
+        <!-- Description -->
+        <p class="text-sm md:text-base text-gray-600">
+            {{ t('entities.company.table.description') }}
+        </p>
+    </div>
+
+    <mat-dialog-content class="overflow-auto">
+        <!-- Table -->
+        <table [dataSource]="dataSource" class="w-full rounded-md bg-card" mat-table matSort>
+        
+            <!-- Image Column -->
+            @let imageOptions = tableOptions.imageOptions;
+            <ng-container matColumnDef="logo">
+                <th *matHeaderCellDef mat-header-cell>
+                    {{ t(imageOptions?.label || 'Logo') }}
+                </th>
+                <td *matCellDef="let row" class=" pr-0 py-2" mat-cell>
+                    <img [src]="row[imageOptions?.property || 'defaultProperty']" [ngClass]="imageOptions?.cssClasses">
+                </td>
+            </ng-container>
+
+            <!-- Text Columns -->
+            @let columns = tableOptions.columns;
+            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+                    <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>{{ t(column.label) }}</th>
+                    <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+                        {{ tableOptions.renderItem(row, column.property) }}
+                    </td>
+                </ng-container>
+            </ng-container>
+
+            
+            <!-- Action Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase text-center border-l">
+                    Actions
+                </th>
+                <td mat-cell *matCellDef="let element" class="border-l">
+                    <div class="w-full h-full flex items-center justify-around">
+                        <button 
+                            mat-button matStepperNext
+                            class="mat-button-large"
+                            mat-flat-button
+                            [color]="'primary'"
+                        >
+                            {{t('entities.company.table.table.demand')}}
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+
+                    
+            <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+            <tr *matRowDef="let row; columns: visibleColumns;"
+                @fadeInBottom
+                class="trans-ease-out cursor-pointer"
+                mat-row>
+            </tr>
+
+            @let count = visibleColumns.length;
+            <!-- No Data Row -->
+            <tr *matNoDataRow>
+                <td [attr.colspan]="count" class="text-center py-4">
+                    {{ t('entities.company.table.empty_state') }}
+                </td>
+            </tr>
+        </table>
+    </mat-dialog-content>
+
+    @let pageSizeOptions = tableOptions.pageSizeOptions;
+    @let pageSize = tableOptions.pageSize;
+    <mat-paginator class="rounded-b-md border-t" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"></mat-paginator>
+</div>
+

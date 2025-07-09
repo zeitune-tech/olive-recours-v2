@@ -1,0 +1,31 @@
+import { ClaimStatus } from "./claim-status.enum";
+
+export interface Claim {
+    id: string;
+
+    dateOfSinister?: string;
+    claimNumber: string;
+    insuredName: string;
+
+
+    opponentCompanyName?: string;
+    opponentClaimNumber?: string;
+    opponentInsuredName?: string;
+
+    amount: number;
+    insuredAmount: number;
+    comment?: string;
+
+    declaringCompanyId: string;
+    declaringCompanyLogo?: string;
+    declaringCompanyName?: string;
+    opponentCompanyId: string;
+    opponentCompanyLogo?: string;
+
+
+
+
+    status: ClaimStatus;
+    submissionDate?: string;
+    acceptanceDate?: string;
+}

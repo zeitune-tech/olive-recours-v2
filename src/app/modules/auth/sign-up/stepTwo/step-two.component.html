@@ -1,0 +1,33 @@
+
+<form [formGroup]="formGroup">
+    <!-- 
+        Choice between
+        - Organisation Niveau Marché
+        - Compagnie
+        - Courtier
+     -->
+    <div  class="mt-4">
+        <mat-radio-group formControlName="entityType">
+            <mat-radio-button value="ENTITY_SUPERIOR">
+                Organisation Niveau Marché (Régulateur, Pool, etc.)
+            </mat-radio-button>
+            <mat-radio-button value="COMPANY">
+                Compagnie d'assurance
+            </mat-radio-button>
+            <mat-radio-button value="POINT_OF_SALE">
+                Courtier d'assurance
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+    
+    
+    <button mat-button matStepperNext
+        class="mat-button-large  mt-6"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="formGroup.invalid"
+        (click)="onNext()"
+    >
+        Suivant
+    </button>
+</form>

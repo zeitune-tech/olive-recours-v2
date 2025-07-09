@@ -1,0 +1,101 @@
+
+<form [formGroup]="formGroup" *transloco="let t">
+
+    <div class="space-y-6 mt-4">
+        <!-- Email field -->
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                {{ t('auth.sign_in.email') }}
+            </mat-label>
+            <input
+                id="email"
+                matInput
+                [formControlName]="'email'">
+            <mat-error *ngIf="formGroup.get('email')?.hasError('required')">
+                {{ t('auth.sign_in.email_required') }}
+            </mat-error>
+            <mat-error *ngIf="formGroup.get('email')?.hasError('email')">
+                {{ t('auth.sign_in.email_invalid') }}
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Password field -->
+        <mat-form-field class="w-full"  appearance="outline">
+            <mat-label>
+                {{ t('auth.sign_in.password') }}
+            </mat-label>
+            <input
+                id="password"
+                matInput
+                type="password"
+                [formControlName]="'password'"
+                #passwordField>
+            <button
+                mat-icon-button
+                type="button"
+                (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                matSuffix>
+                <mat-icon
+                    class="icon-size-5"
+                    *ngIf="passwordField.type === 'password'"
+                    [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                <mat-icon
+                    class="icon-size-5"
+                    *ngIf="passwordField.type === 'text'"
+                    [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+            </button>
+            <mat-error *ngIf="formGroup.get('password')?.hasError('required')">
+                {{ t('auth.sign_in.password_required') }}
+            </mat-error>
+            <mat-error *ngIf="formGroup.get('password')?.hasError('minlength')">
+                {{ t('auth.sign_in.password_min_length') }}
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Password confirmation field -->
+        <mat-form-field class="w-full"  appearance="outline">
+            <mat-label>
+                {{ t('auth.sign_up.password_confirmation') }}
+            </mat-label>
+            <input
+                id="confirmPassword"
+                matInput
+                type="password"
+                [formControlName]="'confirmPassword'"
+                #passwordConfirmationField>
+            <mat-error>
+                {{ t('auth.sign_up.password_confirmation_required') }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="mt-4 space-y-4">
+        <mat-checkbox formControlName="termsAndConditions">
+            J'accepte les
+        </mat-checkbox>
+        <a
+            href="#"
+            class="text-accent-500"
+        >
+            conditions d'utilisation
+        </a>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <button mat-button matStepperPrevious
+            class="mat-button-large mt-6 bg-accent-200"
+            mat-flat-button
+        >
+            Précédent
+        </button>
+        <button mat-button matStepperNext
+            class="mat-button-large  mt-6"
+            mat-flat-button
+            [color]="'primary'"
+            [disabled]="formGroup.invalid"
+            (click)="onNext()"
+        >
+            Terminer
+        </button>
+    </div>
+</form>

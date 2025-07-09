@@ -1,0 +1,637 @@
+{
+    "auth": {
+      "sign_in": {
+        "title": "Sign in",
+        "subtitle": "Log in to your account",
+        "email": "Email",
+        "email_required": "Email is required",
+        "email_invalid": "Email is invalid",
+        "password": "Password",
+        "password_required": "Password is required",
+        "remember_me": "Remember me",
+        "forgot_password": "Forgot password?",
+        "no_account": "Don't have an account?",
+        "sign_up": "Sign up",
+        "sign_in": "Sign in",
+        "error": "Incorrect email or password"
+      },
+      "sign_up": {
+        "title": "Sign up",
+        "subtitle": "Already have an account?",
+        "first_name": "First name",
+        "first_name_required": "First name is required",
+        "last_name": "Last name",
+        "last_name_required": "Last name is required",
+        "email": "Email",
+        "email_required": "Email is required",
+        "email_invalid": "Email is invalid",
+        "password": "Password",
+        "password_required": "Password is required",
+        "password_min": "Password must be at least 6 characters",
+        "password_confirmation": "Confirm password",
+        "password_confirmation_required": "Password confirmation is required",
+        "password_confirmation_same": "Passwords must match",
+        "sign_up": "Sign up",
+        "already_account": "Already have an account?",
+        "sign_in": "Sign in"
+      },
+      "forgot_password": {
+        "title": "Forgot password",
+        "subtitle": "Enter your email to reset your password",
+        "email": "Email",
+        "email_required": "Email is required",
+        "email_invalid": "Email is invalid",
+        "send": "Send reset link",
+        "back": "Back to login",
+        "back_to": "Back to",
+        "sign_in": "Sign in"
+      },
+      "reset_password": {
+        "title": "Reset password",
+        "subtitle": "Enter your new password",
+        "password": "New password",
+        "password_required": "Password is required",
+        "password_min": "Password must be at least 6 characters",
+        "password_confirmation": "Confirm password",
+        "password_confirmation_required": "Password confirmation is required",
+        "password_confirmation_same": "Passwords must match",
+        "reset": "Reset password",
+        "back": "Back to login",
+        "back_to": "Back to",
+        "sign_in": "Sign in"
+      },
+      "sign_out": {
+        "title": "Sign out",
+        "description": "Are you sure you want to sign out?",
+        "redirecting": "Signing out...",
+        "seconds": "seconds",
+        "back": "Back to login",
+        "back_to": "Back to",
+        "sign_in": "Sign in"
+      }
+    },
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "insurance-level": "Insurance Level",
+      "classes": "Classes",
+      "classes-list": "Classes list",
+      "classes-new": "Create class",
+      "branches": "Branches",
+      "branches-list": "Branches list",
+      "branches-new": "Create branch",
+      "products": "Products",
+      "products-list": "Products list",
+      "products-new": "Create product",
+      "broker": "Broker",
+      "broker-list": "Brokers list",
+      "broker-new": "Create broker",
+      "entities-superior": "Market Organization",
+      "entities-superior-list": "Market organizations list",
+      "entities-superior-new": "Create market organization",
+      "companies": "Companies",
+      "companies-list": "Companies list",
+      "companies-new": "Create company",
+      "points-of-sale": "Points of sale",
+      "points-of-sale-list": "Points of sale list",
+      "points-of-sale-broker": "Broker points of sale list",
+      "points-of-sale-new": "Create point of sale",
+      "demands": "Requests",
+      "demands-list": "Requests list",
+      "user-space": "User space",
+      "profile": "Profiles",
+      "profile-list": "Profiles list",
+      "profile-new": "Create profile",
+      "user": "Users",
+      "user-list": "Users list",
+      "user-new": "Create user"
+    },
+    "calendar": {
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday",
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
+      },
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mar",
+        "apr": "Apr",
+        "jun": "Jun",
+        "jul": "Jul",
+        "aug": "Aug",
+        "sep": "Sep",
+        "oct": "Oct",
+        "nov": "Nov",
+        "dec": "Dec",
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December",
+        "0": "January",
+        "1": "February",
+        "2": "March",
+        "3": "April",
+        "4": "May",
+        "5": "June",
+        "6": "July",
+        "7": "August",
+        "8": "September",
+        "9": "October",
+        "10": "November",
+        "11": "December"
+      },
+      "today": "Today",
+      "clear": "Clear",
+      "close": "Close",
+      "previous-month": "Previous month",
+      "next-month": "Next month",
+      "previous-year": "Previous year",
+      "next-year": "Next year",
+      "previous-decade": "Previous decade",
+      "next-decade": "Next decade",
+      "previous-century": "Previous century",
+      "next-century": "Next century",
+      "daily": "Today",
+      "weekly": "This week",
+      "monthly": "This month",
+      "monthly-by-default": "Monthly total",
+      "monthly-by-day": "Daily",
+      "monthly-by-week": "Weekly"
+    },
+    "notifications": {
+      "no-notifications": "No notifications",
+      "no-notifications-description": "You don't have any notifications at this time"
+    },
+    "user": {
+      "welcome": "Welcome",
+      "connected": "Connected as",
+      "profile": {
+        "title": "Profile",
+        "description": "Personal information"
+      },
+      "logout": {
+        "title": "Logout",
+        "description": "Are you sure you want to logout?"
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Overview of your account"
+    },
+    "classes": {
+      "title": "Classes",
+      "new-title": "Classes",
+      "description": "Class creation",
+      "new-description": "Add a class",
+      "table": {
+        "title": "Classes list",
+        "description": "List of all classes",
+        "search": "Search for a class",
+        "no-data": "No results found",
+        "no-data-description": "No classes found at this time"
+      },
+      "columns": {
+        "designation": "Designation",
+        "description": "Description"
+      },
+      "new": {
+        "title": "Add new class",
+        "description": "Create a new class",
+        "success": "Class created successfully",
+        "error": "An error occurred while creating the class",
+        "form-title": "Fill in class information",
+        "form-description": "Class information",
+        "form-designation": "Designation",
+        "form-designation-required": "Designation is required",
+        "form-desc": "Description",
+        "form-submit": "Create class"
+      },
+      "actions": {
+        "delete": "Delete",
+        "edit": "Edit"
+      }
+    },
+    "branches": {
+      "title": "Branches",
+      "new-title": "Branches",
+      "description": "Branch creation",
+      "new-description": "Add a branch",
+      "table": {
+        "title": "Branches list",
+        "description": "List of all branches",
+        "search": "Search for a branch",
+        "no-data": "No results found",
+        "no-data-description": "No branches found at this time"
+      },
+      "columns": {
+        "designation": "Designation",
+        "description": "Description",
+        "class": "Class"
+      },
+      "new": {
+        "title": "Add new branch",
+        "description": "Create a new branch",
+        "success": "Branch created successfully",
+        "error": "An error occurred while creating the branch",
+        "form-title": "Fill in branch information",
+        "form-description": "Branch information",
+        "form-designation": "Designation",
+        "form-designation-required": "Designation is required",
+        "form-desc": "Description",
+        "form-class": "Class",
+        "form-class-required": "Class is required",
+        "form-submit": "Create branch"
+      },
+      "actions": {
+        "delete": "Delete",
+        "edit": "Edit"
+      }
+    },
+    "products": {
+      "title": "Products",
+      "new-title": "Products",
+      "description": "Product creation",
+      "new-description": "Add a product",
+      "table": {
+        "title": "Products list",
+        "description": "List of all products",
+        "search": "Search for a product",
+        "no-data": "No results found",
+        "no-data-description": "No products found at this time"
+      },
+      "columns": {
+        "designation": "Designation",
+        "description": "Description",
+        "branch": "Branch",
+        "class": "Class"
+      },
+      "new": {
+        "title": "Add new product",
+        "description": "Create a new product",
+        "success": "Product created successfully",
+        "error": "An error occurred while creating the product",
+        "form-title": "Fill in product information",
+        "form-description": "Product information",
+        "form-designation": "Designation",
+        "form-designation-required": "Designation is required",
+        "form-desc": "Description",
+        "form-branch": "Branch",
+        "form-branch-required": "Branch is required",
+        "form-class": "Class",
+        "form-class-required": "Class is required",
+        "form-submit": "Create product"
+      },
+      "actions": {
+        "delete": "Delete",
+        "edit": "Edit"
+      }
+    },
+    "entity-superior": {
+      "title": "Market Organization",
+      "description": "Market organization creation",
+      "linked-list-title": "Linked Market Organizations",
+      "linked-list-description": "Management of linked market organizations",
+      "table": {
+        "title": "Market organizations list",
+        "description": "List of all market organizations",
+        "search": "Search for a market organization",
+        "no-data": "No results found",
+        "no-data-description": "No market organizations found at this time",
+        "linked": "Linked",
+        "demand": "Make a request",
+        "demand-description": "Make a request to link this superior entity",
+        "demand-attestation": "Request attestation",
+        "demand-attestation-description": "Request attestation from this superior entity"
+      },
+      "columns": {
+        "name": "Company name",
+        "acronym": "Acronym",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "legalStatus": "Legal status",
+        "registrationNumber": "Commercial register",
+        "fax": "Fax",
+        "gsm": "GSM"
+      },
+      "new": {
+        "title": "Add new market organization",
+        "description": "Create a new market organization",
+        "success": "Market organization created successfully",
+        "error": "An error occurred while creating the market organization",
+        "form-title": "Fill in market organization information",
+        "form-description": "Market organization information",
+        "form-name": "Company name",
+        "form-name-required": "Company name is required",
+        "form-acronym": "Acronym",
+        "form-email": "Email",
+        "form-email-required": "Email is required",
+        "form-email-invalid": "Email is invalid",
+        "form-phone": "Phone",
+        "form-phone-required": "Phone is required",
+        "form-address": "Address",
+        "form-address-required": "Address is required",
+        "form-legalStatus": "Legal status",
+        "form-legalStatus-required": "Legal status is required",
+        "form-registrationNumber": "Commercial register",
+        "form-registrationNumber-required": "Commercial register is required",
+        "form-fax": "Fax",
+        "form-gsm": "GSM",
+        "form-submit": "Create market organization"
+      },
+      "actions": {
+        "delete": "Delete",
+        "edit": "Edit",
+        "demand": "Make a request",
+        "attribute-attestation": "Assign attestation"
+      }
+    },
+    "company": {
+      "title": "Companies",
+      "new-title": "Companies",
+      "description": "Company creation",
+      "new-description": "Add a company",
+      "table": {
+        "title": "Companies list",
+        "description": "List of all companies",
+        "search": "Search for a company",
+        "no-data": "No results found",
+        "no-data-description": "No companies found at this time",
+        "demand": "Make a request",
+        "demand-description": "Make a request for this company",
+        "attribute-attestation": "Assign attestation",
+        "attribute-attestation-description": "Assign a batch of attestations to this company"
+      },
+      "columns": {
+        "logo": "Logo",
+        "name": "Company name",
+        "acronym": "Acronym",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "legalStatus": "Legal status",
+        "registrationNumber": "Commercial register",
+        "fax": "Fax",
+        "gsm": "GSM"
+      },
+      "new": {
+        "title": "Add new company",
+        "description": "Create a new company",
+        "success": "Company created successfully",
+        "error": "An error occurred while creating the company",
+        "form-title": "Fill in company information",
+        "form-description": "Company information",
+        "form-name": "Company name",
+        "form-name-required": "Company name is required",
+        "form-acronym": "Acronym",
+        "form-email": "Email",
+        "form-email-required": "Email is required",
+        "form-email-invalid": "Email is invalid",
+        "form-phone": "Phone",
+        "form-phone-required": "Phone is required",
+        "form-address": "Address",
+        "form-address-required": "Address is required",
+        "form-legalStatus": "Legal status",
+        "form-legalStatus-required": "Legal status is required",
+        "form-registrationNumber": "Commercial register",
+        "form-registrationNumber-required": "Commercial register is required",
+        "form-fax": "Fax",
+        "form-gsm": "GSM",
+        "form-submit": "Create company"
+      },
+      "actions": {
+        "delete": "Delete",
+        "edit": "Edit",
+        "demand": "Make a request",
+        "attribute-attestation": "Assign attestation"
+      }
+    },
+    "point-of-sale": {
+      "title": "Points of sale: Broker",
+      "description": "Management of broker points of sale",
+      "new-title": "Linked points of sale",
+      "new-description": "Management of linked points of sale",
+      "table": {
+        "title": "Brokers list",
+        "description": "List of all brokers",
+        "search": "Search for a broker",
+        "no-data": "No results found",
+        "no-data-description": "No brokers found at this time",
+        "demand": "Make a request",
+        "demand-description": "Make a request for this point of sale",
+        "attribute-attestation": "Assign attestation",
+        "attribute-attestation-description": "Assign a batch of attestations to this point of sale"
+      },
+      "columns": {
+        "logo": "Logo",
+        "name": "First and last name",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email",
+        "linked": "Linked",
+        "type": "Type",
+        "description": "Description",
+        "created-at": "Created at",
+        "updated-at": "Updated at"
+      },
+      "types": {
+        "GENERAL_AGENT": "General agent",
+        "BROKER": "Broker",
+        "DIRECT_OFFICE": "Direct office"
+      },
+      "new": {
+        "title": "Add new broker",
+        "description": "Create a new broker",
+        "form-title": "Fill in broker information",
+        "form-description": "Broker information",
+        "form-name": "First and last name",
+        "form-name-required": "First and last name is required",
+        "form-address": "Address",
+        "form-address-required": "Address is required",
+        "form-phone": "Phone",
+        "form-phone-required": "Phone is required",
+        "form-email": "Email",
+        "form-email-required": "Email is required",
+        "form-email-invalid": "Email is invalid",
+        "form-submit": "Create broker",
+        "form-type-general-agent": "General agent",
+        "form-type-broker": "Broker",
+        "form-type-direct-office": "Direct office",
+        "form-type-required": "Type is required",
+        "form-type": "Broker type",
+        "form-logo": "Logo",
+        "form-logo-required": "Logo is required",
+        "form-logo-invalid": "Logo is invalid",
+        "form-logo-description": "Click to add logo"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "employee": {
+      "title": "User management",
+      "description": "Users list",
+      "new": {
+        "steps": {
+          "personal_info": {
+            "title": "Personal information",
+            "description": "Fill in personal information"
+          },
+          "profile": {
+            "title": "Profile",
+            "description": "Select user profile"
+          },
+          "confirmation": {
+            "title": "Confirmation",
+            "description": "Verify entered information"
+          }
+        },
+        "summary": {
+          "personal_info": "Personal information",
+          "profile_access": "Profile and access"
+        },
+        "fields": {
+          "last_name": "Last name",
+          "first_name": "First name",
+          "email": "Email",
+          "phone": "Phone",
+          "profile": "Profile",
+          "access_level": "Access level"
+        },
+        "buttons": {
+          "previous": "Previous",
+          "create": "Create"
+        },
+        "title": "Add user",
+        "description": "Create new user",
+        "confirm-dialog-title": "Create user",
+        "confirm-dialog-message": "Do you really want to create this user?",
+        "form-title": "Fill in user information",
+        "form-description": "User information",
+        "form-first-name": "First name",
+        "form-first-name-required": "First name is required",
+        "form-last-name": "Last name",
+        "form-last-name-required": "Last name is required",
+        "form-email": "Email",
+        "form-email-required": "Email is required",
+        "form-email-invalid": "Email is invalid",
+        "form-phone": "Phone",
+        "form-phone-required": "Phone is required",
+        "form-role": "Profile",
+        "form-role-required": "Profile is required",
+        "form-password-title": "Default password is",
+        "form-password-description": "Ask the user to change their password at first login",
+        "form-password-min": "Password must be at least 6 characters",
+        "form-access-level": "Access level",
+        "form-access-level-required": "Access level is required",
+        "form-access-level-description": "User access level",
+        "form-access-level-entreprise": "Company",
+        "form-access-level-entreprise-description": "User has access to company information",
+        "form-access-level-point-of-sale": "Point of sale",
+        "form-access-level-point-of-sale-description": "User only has access to point of sale information",
+        "form-point-of-sale": "Point of sale",
+        "form-submit": "Create user"
+      },
+      "table": {
+        "title": "Users list",
+        "description": "List of all users",
+        "search": "Search for a user",
+        "no-data": "No results found",
+        "no-data-description": "No users found at this time"
+      },
+      "columns": {
+        "first-name": "First name",
+        "last-name": "Last name",
+        "email": "Email",
+        "role": "Profile",
+        "phone": "Phone",
+        "management-entity": "Management entity",
+        "created-at": "Created at",
+        "updated-at": "Updated at"
+      }
+    },
+    "profile": {
+      "table": {
+        "title": "Profile management",
+        "description": "Complete list of available profiles",
+        "empty_state": "No profile found",
+        "columns": {
+          "logo": "Logo",
+          "name": "Profile name",
+          "description": "Description",
+          "admin_description": "has all rights on this management entity",
+          "permissions_count": "Permissions count"
+        }
+      },
+      "form": {
+        "title": "Create new profile",
+        "description": "Fill in information to create a new profile",
+        "step_one_title": "Basic information",
+        "step_one_description": "Profile name and description",
+        "step_two_title": "Permissions",
+        "step_two_description": "Select associated permissions",
+        "step_three_title": "Summary",
+        "step_three_description": "Verify information before creation",
+        "step_three_summary": "New profile summary",
+        "step_three_name": "Profile name",
+        "step_three_desc": "Description",
+        "step_three_permissions": "Associated permissions",
+        "step_three_previous": "Back",
+        "step_three_create": "Create profile"
+      },
+      "new": {
+        "form-name": "Profile name",
+        "form-name-required": "Profile name is required",
+        "form-description": "Description",
+        "form-description-required": "Description is required",
+        "confirm-dialog-title": "Create profile",
+        "confirm-dialog-message": "Do you really want to create this profile?"
+      },
+      "permissions": {
+        "table": {
+          "search": "Search for permission",
+          "choosed": "Selected permissions",
+          "select-row": "Select this row",
+          "no-data": "No permissions available"
+        },
+        "columns": {
+          "name": "Permission name",
+          "description": "Description"
+        }
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "view_permissions": "View permissions",
+        "next": "Next",
+        "previous": "Previous"
+      }
+    }
+  }

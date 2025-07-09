@@ -1,0 +1,49 @@
+<!-- Sign in form -->
+<form
+    class="mt-8 space-y-6"
+    #form
+    [formGroup]="formGroup"
+    *transloco="let t">
+    
+    <div class="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-2">
+        <!-- First name field -->
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                {{ t('auth.sign_up.first_name') }}
+            </mat-label>
+            <input
+                id="firstName"
+                matInput
+                [formControlName]="'firstName'">
+            <mat-error *ngIf="formGroup.get('firstName')?.hasError('required')">
+                {{ t('auth.sign_up.first_name_required') }}
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Last name field -->
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                {{ t('auth.sign_up.last_name') }}
+            </mat-label>
+            <input
+                id="lastName"
+                matInput
+                [formControlName]="'lastName'">
+            <mat-error *ngIf="formGroup.get('lastName')?.hasError('required')">
+                {{ t('auth.sign_up.last_name_required') }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    
+    <!-- Submit button -->
+    <button mat-button matStepperNext
+        class="mat-button-large  mt-6"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="formGroup.invalid"
+        (click)="onNext()"
+        >
+            Suivant
+    </button>
+</form>

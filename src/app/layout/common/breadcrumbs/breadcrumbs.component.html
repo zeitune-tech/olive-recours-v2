@@ -1,0 +1,25 @@
+@if (!isSmallScreen) {
+    <div class="flex items-center">
+        <div>
+            <a [routerLink]="['/']"></a>
+        </div>
+    
+        @for (crumb of crumbs; track $index) {
+    
+            <ng-container >
+                <div class="w-1 h-1 bg-gray rounded-full ltr:mr-2 rtl:ml-2"></div>
+                <div [ngClass]="{'text-xl font-bold': $index == 0,  'text-secondary': true}">
+                    @if (crumb.active) {
+                        <a [routerLink]="[ crumb.link ]">{{ crumb.title }}</a>
+                    } @else {
+                        {{ crumb.title }}
+                    }
+                </div>
+    
+                @if ($index < crumbs.length - 1) {
+                    <mat-icon [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
+                }
+            </ng-container>
+        }
+    </div>
+}

@@ -1,0 +1,16 @@
+<div class=" gap-4 w-full " *transloco="let t">
+
+    <!-- Header -->
+    <div class=" p-4 rounded-lg mb-4">
+        <h2 class="text-xl font-bold">{{ t('entities.claim.details.title') }}</h2>
+        <p class="text-gray-600">{{ t('entities.claim.details.subtitle') }}</p>
+    </div>
+
+    <!-- Claim Information -->
+    <app-claim-details-informations></app-claim-details-informations>
+
+    <!-- Documents -->
+    <app-claim-details-attachment></app-claim-details-attachment>
+
+    <app-claim-details-chat></app-claim-details-chat>
+</div>

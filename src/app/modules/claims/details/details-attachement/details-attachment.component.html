@@ -1,0 +1,22 @@
+<section class="p-6 rounded-xl bg-white shadow mb-6 border border-gray-100" *transloco="let t">
+
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold mb-2">{{ t('entities.claim.details.documents') }}</h3>
+        <button mat-raised-button color="primary" (click)="uploadDocument()">
+            {{ t('buttons.upload-document') }}
+        </button>
+    </div>
+    <div>
+        <ul class="list-disc pl-5">
+            <li *ngFor="let doc of attachments" class="flex justify-between items-center">
+                <span>{{ doc.fileName }}</span>
+                <button class="text-primary-600 hover:underline" (click)="downloadDocument(doc)">
+                    {{ t('buttons.download') }}
+                </button>
+            </li>
+        </ul>
+        <p *ngIf="attachments.length === 0" class="text-gray-500 flex items-center justify-center min-h-32">
+            {{ t('entities.claim.details.no-documents') }}
+        </p>
+    </div>
+</section>

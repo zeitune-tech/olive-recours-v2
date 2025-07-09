@@ -1,0 +1,777 @@
+{
+  "auth": {
+    "sign_in": {
+      "title": "Se connecter",
+      "subtitle": "Connectez-vous à votre compte",
+      "email": "Email",
+      "email_required": "L'email est requis",
+      "email_invalid": "L'email est invalide",
+      "password": "Mot de passe",
+      "password_required": "Le mot de passe est requis",
+      "remember_me": "Se souvenir de moi",
+      "forgot_password": "Mot de passe oublié ?",
+      "no_account": "Pas de compte ?",
+      "sign_up": "S'inscrire",
+      "sign_in": "Se connecter",
+      "error": "Email ou mot de passe incorrect"
+    },
+    "sign_up": {
+      "title": "S'inscrire",
+      "subtitle": "Vous avez déjà un compte ?",
+      "first_name": "Prénom",
+      "first_name_required": "Le prénom est requis",
+      "last_name": "Nom",
+      "last_name_required": "Le nom est requis",
+      "email": "Email",
+      "email_required": "L'email est requis",
+      "email_invalid": "L'email est invalide",
+      "password": "Mot de passe",
+      "password_required": "Le mot de passe est requis",
+      "password_min": "Le mot de passe doit contenir au moins 6 caractères",
+      "password_confirmation": "Confirmer le mot de passe",
+      "password_confirmation_required": "La confirmation du mot de passe est requise",
+      "password_confirmation_same": "Les mots de passe doivent être identiques",
+      "sign_up": "S'inscrire",
+      "already_account": "Déjà un compte ?",
+      "sign_in": "Se connecter"
+    },
+    "forgot_password": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entrez votre email pour réinitialiser votre mot de passe",
+      "email": "Email",
+      "email_required": "L'email est requis",
+      "email_invalid": "L'email est invalide",
+      "send": "Envoyer le lien de réinitialisation",
+      "back": "Retour à la connexion",
+      "back_to": "Retour à",
+      "sign_in": "Se connecter"
+    },
+    "reset_password": {
+      "title": "Réinitialiser le mot de passe",
+      "subtitle": "Entrez votre nouveau mot de passe",
+      "password": "Nouveau mot de passe",
+      "password_required": "Le mot de passe est requis",
+      "password_min": "Le mot de passe doit contenir au moins 6 caractères",
+      "password_confirmation": "Confirmer le mot de passe",
+      "password_confirmation_required": "La confirmation du mot de passe est requise",
+      "password_confirmation_same": "Les mots de passe doivent être identiques",
+      "reset": "Réinitialiser le mot de passe",
+      "back": "Retour à la connexion",
+      "back_to": "Retour à",
+      "sign_in": "Se connecter"
+    },
+    "sign_out": {
+      "title": "Déconnexion",
+      "description": "Voulez-vous vraiment vous déconnecter ?",
+      "redirecting": "Déconnexion en cours...",
+      "seconds": "secondes",
+      "back": "Retour à la connexion",
+      "back_to": "Retour à",
+      "sign_in": "Se connecter"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Tableau de bord",
+
+    "claims": "Recours",
+    "claims-list": "Liste des recours",
+    "claims-new": "Créer un recours",
+    "claims-documents": "Documents",
+    "claims-messages": "Messages",
+
+    "statements": "États",
+    "statements-detailed": "Comptes Courants A/B",
+    "statements-global": "Compte Compensation",
+    "statements-archives": "Archives",
+
+    "companies": "Compagnies",
+    "companies-list": "Liste des compagnies",
+    "companies-logos": "Logos des compagnies",
+
+    "notifications": "Notifications",
+
+    "account": "Mon compte",
+    "profile": "Profil",
+    "change-password": "Changer mot de passe",
+
+    "admin": "Administration",
+    "users": "Utilisateurs",
+    "roles": "Rôles"
+  },
+
+  "buttons": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "validate": "Valider",
+    "reject": "Rejeter",
+    "download-pdf": "Télécharger PDF",
+    "upload-logo": "Uploader le logo",
+    "logout": "Déconnexion"
+  },
+
+  "forms": {
+    "search": "Rechercher...",
+    "select-month": "Sélectionner un mois",
+    "select-year": "Sélectionner une année",
+    "select-company": "Sélectionner une compagnie"
+  },
+
+  "notifications": {
+    "new-message": "Nouveau message reçu",
+    "update-success": "Mise à jour réussie",
+    "delete-success": "Suppression réussie",
+    "error": "Une erreur est survenue",
+    "no-notifications": "Pas de notifications",
+    "no-notifications-description": "Vous n'avez pas de notifications pour le moment"
+  },
+  "user": {
+    "welcome": "Bienvenue",
+    "connected": "Connecté en tant que",
+    "profile": {
+      "title": "Profil",
+      "description": "Informations personnelles"
+    },
+    "logout": {
+      "title": "Déconnexion",
+      "description": "Voulez-vous vraiment vous déconnecter ?"
+    }
+  },
+  "form": {
+    "fields": {
+      "search": "Rechercher",
+      "checkboxes": "Cases à cocher"
+    },
+    "errors": {
+      "required": "Ce champ est requis",
+      "email_invalid": "Format d'adresse e-mail invalide",
+      "min_length": "Ce champ doit contenir au moins {min} caractères",
+      "password_mismatch": "Les mots de passe doivent être identiques"
+    },
+    "actions": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "confirm": "Confirmer",
+      "confirm_delete": "Confirmer la suppression",
+      "next": "Suivant",
+      "previous": "Précédent"
+    }
+  },
+  "entities": {
+    "management_entity": {
+      "form": {
+        "fields": {
+          "name": "Nom",
+          "acronym": "Acronyme",
+          "email": "Email",
+          "phone": "Téléphone",
+          "gsm": "GSM",
+          "fax": "Fax",
+          "address": "Adresse",
+          "registration-number": "Registre de commerce"
+        }
+      },
+      "table": {
+        "title": "Entités de gestion",
+        "subtitle": "Aperçu des entités",
+        "description": "Liste de toutes les entités de gestion avec leurs informations clés.",
+        "columns": {
+          "id": "Identifiant",
+          "name": "Nom",
+          "email": "Email",
+          "phone": "Téléphone",
+          "logo": "Logo",
+          "address": "Adresse",
+          "actions": "Actions"
+        },
+        "empty_state": "Aucune entité trouvée"
+      }
+    },
+    "company": {
+      "form": {
+        "title": "Créer une compagnie",
+        "description": "Veuillez remplir les informations nécessaires pour enregistrer une nouvelle compagnie.",
+
+        "step_one_title": "Étape 1 : Informations générales",
+        "step_one_description": "Ajoutez les informations de base de la compagnie.",
+
+        "step_two_title": "Étape 2 : Création du compte Administrateur",
+        "step_two_description": "Renseignez les informations du compte administrateur de la compagnie.",
+
+        "step_three_title": "Résumé",
+        "step_three_description": "Vérifiez les informations avant de finaliser.",
+        "step_three_summary": "Récapitulatif des informations",
+        "step_three_name": "Nom de la compagnie",
+        "step_three_previous": "Précédent",
+        "step_three_create": "Créer"
+      },
+      "table": {
+        "title": "Gestion des compagnies",
+        "subtitle": "Gérer les compagnies",
+        "description": "Liste de toutes les compagnies enregistrées dans le système.",
+        "columns": {
+          "logo": "Logo",
+          "name": "Nom",
+          "email": "Email",
+          "phone": "Téléphone",
+          "address": "Adresse",
+          "linked": "Liée",
+          "actions": "Actions"
+        },
+        "empty_state": "Aucune compagnie trouvée"
+      }
+    },
+    "market_level_organization": {
+      "form": {
+        "title": "Créer une organisation de niveau marché",
+        "description": "Veuillez remplir les étapes suivantes pour enregistrer une nouvelle organisation de niveau marché.",
+
+        "step_one_title": "Étape 1 : Informations générales",
+        "step_one_description": "Fournissez les informations de base de l'organisation.",
+
+        "step_two_title": "Étape 2 : Création du compte Administrateur",
+        "step_two_description": "Renseignez les informations du compte administrateur de l'organisation.",
+
+        "step_three_title": "Étape 3 : Résumé et confirmation",
+        "step_three_description": "Vérifiez les informations avant la soumission.",
+        "step_three_summary": "Résumé des informations fournies",
+        "step_three_name": "Nom de l'organisation",
+        "step_three_previous": "Précédent",
+        "step_three_create": "Créer l'organisation"
+      },
+      "table": {
+        "title": "Organisations niveau marché",
+        "subtitle": "Aperçu des groupes niveau marché",
+        "description": "Liste et gestion des organisations opérant au niveau marché.",
+        "columns": {
+          "name": "Nom",
+          "points_of_sale_count": "Nombre de points de vente",
+          "createdAt": "Créé le",
+          "updatedAt": "Mis à jour le",
+          "actions": "Actions"
+        },
+        "empty_state": "Aucune organisation trouvée"
+      }
+    },
+    "user": {
+      "form": {
+        "title": "Création d'utilisateur",
+        "subtitle": "Gérer les informations utilisateur",
+        "description": "Renseignez les informations personnelles, associez une compagnie, un point de vente et définissez les permissions de l'utilisateur.",
+        "step_one_title": "Informations personnelles",
+        "step_one_description": "Fournissez les informations personnelles de base de l'utilisateur.",
+        "step_two_title": "Informations sur la compagnie",
+        "step_two_description": "Associez l'utilisateur à une compagnie.",
+        "step_three_title": "Informations sur le point de vente",
+        "step_three_description": "Associez l'utilisateur à un point de vente spécifique.",
+        "step_four_title": "Permissions & accès",
+        "step_four_description": "Définissez les permissions et les droits d'accès de l'utilisateur.",
+        "step_five_title": "Résumé & confirmation",
+        "step_five_description": "Vérifiez les détails de l'utilisateur avant confirmation.",
+        "step_five_summary": "Résumé de l'utilisateur",
+        "step_five_name": "Nom",
+        "step_five_firstname": "Prénom",
+        "step_five_email": "Adresse email",
+        "step_five_phone": "Numéro de téléphone",
+        "step_five_profile": "Informations du profil",
+        "step_five_profile_name": "Nom du rôle",
+        "step_five_profile_description": "Entité de gestion",
+        "step_five_previous": "Précédent",
+        "step_five_confirm": "Confirmer & créer",
+        "fields": {
+          "first_name": {
+            "label": "Prénom",
+            "placeholder": "Saisir le prénom"
+          },
+          "last_name": { "label": "Nom", "placeholder": "Saisir le nom" },
+          "email": {
+            "label": "E-mail",
+            "placeholder": "Saisir l'adresse e-mail"
+          },
+          "phone": {
+            "label": "Téléphone",
+            "placeholder": "Saisir le numéro de téléphone"
+          },
+          "password": {
+            "label": "Mot de passe",
+            "placeholder": "Saisir le mot de passe"
+          },
+          "confirm_password": {
+            "label": "Confirmer le mot de passe",
+            "placeholder": "Confirmer le mot de passe"
+          },
+          "company": {
+            "label": "Compagnie",
+            "placeholder": "Sélectionner la compagnie"
+          },
+          "point_of_sale": {
+            "label": "Point de vente",
+            "placeholder": "Sélectionner le point de vente"
+          },
+          "profile": {
+            "label": "Profil",
+            "placeholder": "Sélectionner le profil"
+          }
+        }
+      },
+      "table": {
+        "title": "Liste des utilisateurs",
+        "subtitle": "Gérer les utilisateurs du système",
+        "description": "Liste de tous les utilisateurs enregistrés dans le système.",
+        "columns": {
+          "first_name": "Prénom",
+          "last_name": "Nom",
+          "email": "Email",
+          "management_entity": "Entité de gestion",
+          "actions": "Actions"
+        },
+        "empty_state": "Aucun utilisateur trouvé"
+      }
+    }
+  },
+
+  "dashboard": {
+    "title": "Tableau de bord",
+    "description": "Vue d'ensemble de votre compte"
+  },
+
+  "classes": {
+    "title": "Classes",
+    "new-title": "Classes",
+    "description": "Création de classes",
+    "new-description": "Ajouter une classe",
+    "table": {
+      "title": "Liste des classes",
+      "description": "Liste de toutes les classes",
+      "search": "Rechercher une classe",
+      "no-data": "Aucun résultat trouvé",
+      "no-data-description": "Aucune classe trouvée pour le moment"
+    },
+    "columns": {
+      "designation": "Désignation",
+      "description": "Description"
+    },
+    "new": {
+      "title": "Ajouter une nouvelle classe",
+      "description": "Créer une nouvelle classe",
+      "success": "La classe a été créée avec succès",
+      "erroe": "Une erreur s'est produite lors de la création de la classe",
+      "error": "Une erreur s'est produite lors de la création de la classe",
+      "form-title": "Remplissez les informations de la classe",
+      "form-description": "Informations de la classe",
+      "form-designation": "Désignation",
+      "form-designation-required": "La désignation est requise",
+      "form-desc": "Description",
+      "form-submit": "Créer la classe"
+    },
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier"
+    }
+  },
+
+  "branches": {
+    "title": "Branches",
+    "new-title": "Branches",
+    "description": "Création de branches",
+    "new-description": "Ajouter une branche",
+    "table": {
+      "title": "Liste des branches",
+      "description": "Liste de toutes les branches",
+      "search": "Rechercher une branche",
+      "no-data": "Aucun résultat trouvé",
+      "no-data-description": "Aucune branche trouvée pour le moment"
+    },
+    "columns": {
+      "designation": "Désignation",
+      "description": "Description",
+      "class": "Classe"
+    },
+    "new": {
+      "title": "Ajouter une nouvelle branche",
+      "description": "Créer une nouvelle branche",
+      "success": "La branche a été créée avec succès",
+      "error": "Une erreur s'est produite lors de la création de la branche",
+      "form-title": "Remplissez les informations de la branche",
+      "form-description": "Informations de la branche",
+      "form-designation": "Désignation",
+      "form-designation-required": "La désignation est requise",
+      "form-desc": "Description",
+      "form-class": "Classe",
+      "form-class-required": "La classe est requise",
+      "form-submit": "Créer la branche"
+    },
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier"
+    }
+  },
+
+  "products": {
+    "title": "Produits",
+    "new-title": "Produits",
+    "description": "Création de produits",
+    "new-description": "Ajouter un produit",
+    "table": {
+      "title": "Liste des produits",
+      "description": "Liste de tous les produits",
+      "search": "Rechercher un produit",
+      "no-data": "Aucun résultat trouvé",
+      "no-data-description": "Aucun produit trouvé pour le moment"
+    },
+    "columns": {
+      "designation": "Désignation",
+      "description": "Description",
+      "branch": "Branche",
+      "class": "Classe"
+    },
+    "new": {
+      "title": "Ajouter un nouveau produit",
+      "description": "Créer un nouveau produit",
+      "success": "Le produit a été créé avec succès",
+      "error": "Une erreur s'est produite lors de la création du produit",
+      "form-title": "Remplissez les informations du produit",
+      "form-description": "Informations du produit",
+      "form-designation": "Désignation",
+      "form-designation-required": "La désignation est requise",
+      "form-desc": "Description",
+      "form-branch": "Branche",
+      "form-branch-required": "La branche est requise",
+      "form-class": "Classe",
+      "form-class-required": "La classe est requise",
+      "form-submit": "Créer le produit"
+    },
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier"
+    }
+  },
+
+  "entity-superior": {
+    "title": "Organisation Marché",
+    "description": "Création d'organisations marché",
+    "linked-list-title": "Organisation Marché liées",
+    "linked-list-description": "Gestion des organisations marché liées",
+    "table": {
+      "title": "Liste des organisations marché",
+      "description": "Liste de toutes les organisations marché",
+      "search": "Rechercher une organisation marché",
+      "no-data": "Aucun résultat trouvé",
+      "no-data-description": "Aucune organisation marché trouvée pour le moment",
+      "linked": "Liée",
+      "demand": "Faire une demande",
+      "demand-description": "Faire une demande pour lier cette entité supérieure",
+      "demand-attestation": "Faire une demande d'attestation",
+      "demand-attestation-description": "Faire une demande d'attestation à cette entité supérieure"
+    },
+    "columns": {
+      "name": "Raison sociale",
+      "acronym": "Sigle",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "legalStatus": "Statut juridique",
+      "registrationNumber": "Registre de commerce",
+      "fax": "Fax",
+      "gsm": "GSM"
+    },
+    "new": {
+      "title": "Ajouter une nouvelle organisation marché",
+      "description": "Créer une nouvelle organisation marché",
+      "success": "La organisation marché a été créée avec succès",
+      "error": "Une erreur s'est produite lors de la création de l'organisation marché",
+      "form-title": "Remplissez les informations de l'organisation marché",
+      "form-description": "Informations de l'organisation marché",
+      "form-name": "Raison sociale",
+      "form-name-required": "La raison sociale est requise",
+      "form-acronym": "Sigle",
+      "form-email": "Email",
+      "form-email-required": "L'email est requis",
+      "form-email-invalid": "L'email est invalide",
+      "form-phone": "Téléphone",
+      "form-phone-required": "Le téléphone est requis",
+      "form-address": "Adresse",
+      "form-address-required": "L'adresse est requise",
+      "form-legalStatus": "Statut juridique",
+      "form-legalStatus-required": "Le statut juridique est requis",
+      "form-registrationNumber": "Registre de commerce",
+      "form-registrationNumber-required": "Le registre de commerce est requis",
+      "form-fax": "Fax",
+      "form-gsm": "GSM",
+      "form-submit": "Créer l'organisation marché"
+    },
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "demand": "Faire une demande",
+      "attribute-attestation": "Attribuer une attestation"
+    }
+  },
+
+  "company": {
+    "title": "Compagnies",
+    "new-title": "Compagnies",
+    "description": "Création de compagnies",
+    "new-description": "Ajouter une compagnie",
+    "table": {
+      "title": "Liste des compagnies",
+      "description": "Liste de toutes les compagnies",
+      "search": "Rechercher une compagnie",
+      "no-data": "Aucun résultat trouvé",
+      "no-data-description": "Aucune compagnie trouvée pour le moment",
+      "demand": "Faire une demande",
+      "demand-description": "Faire une demande pour cette compagnie",
+      "attribute-attestation": "Attribuer une attestation",
+      "attribute-attestation-description": "Attribuer un lot d'attestations à cette compagnie"
+    },
+    "columns": {
+      "logo": "Logo",
+      "name": "Raison sociale",
+      "acronym": "Sigle",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "legalStatus": "Statut juridique",
+      "registrationNumber": "Registre de commerce",
+      "fax": "Fax",
+      "gsm": "GSM"
+    },
+    "new": {
+      "title": "Ajouter une nouvelle compagnie",
+      "description": "Créer une nouvelle compagnie",
+      "success": "La compagnie a été créée avec succès",
+      "error": "Une erreur s'est produite lors de la création de la compagnie",
+      "form-title": "Remplissez les informations de la compagnie",
+      "form-description": "Informations de la compagnie",
+      "form-name": "Raison sociale",
+      "form-name-required": "La raison sociale est requise",
+      "form-acronym": "Sigle",
+      "form-email": "Email",
+      "form-email-required": "L'email est requis",
+      "form-email-invalid": "L'email est invalide",
+      "form-phone": "Téléphone",
+      "form-phone-required": "Le téléphone est requis",
+      "form-address": "Adresse",
+      "form-address-required": "L'adresse est requise",
+      "form-legalStatus": "Statut juridique",
+      "form-legalStatus-required": "Le statut juridique est requis",
+      "form-registrationNumber": "Registre de commerce",
+      "form-registrationNumber-required": "Le registre de commerce est requis",
+      "form-fax": "Fax",
+      "form-gsm": "GSM",
+      "form-submit": "Créer la compagnie"
+    },
+    "actions": {
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "demand": "Faire une demande",
+      "attribute-attestation": "Attribuer une attestation"
+    }
+  },
+  "point-of-sale": {
+    "title": "Points de vente: Courtier",
+    "description": "Gestion des points de vente de type courtier",
+    "new-title": "Points de vente liés",
+    "new-description": "Gestion des points de vente liés",
+    "table": {
+      "title": "Liste des courtiers",
+      "description": "Liste de tous les courtiers",
+      "search": "Rechercher un courtier",
+      "no-data": "Aucun résultat trouvé",
+      "no-data-description": "Aucun courtier trouvé pour le moment",
+      "demand": "Faire une demande",
+      "demand-description": "Faire une demande pour ce point de vente",
+      "attribute-attestation": "Attribuer une attestation",
+      "attribute-attestation-description": "Attribuer un lot d'attestations à ce point de vente"
+    },
+    "columns": {
+      "logo": "Logo",
+      "name": "Prenom et Nom",
+      "address": "Adresse",
+      "phone": "Téléphone",
+      "email": "Email",
+      "linked": "Liée",
+      "type": "Type",
+      "description": "Description",
+      "created-at": "Créé le",
+      "updated-at": "Modifié le"
+    },
+    "types": {
+      "GENERAL_AGENT": "Agent général",
+      "BROKER": "Courtier",
+      "DIRECT_OFFICE": "Bureau direct"
+    },
+    "new": {
+      "title": "Ajouter un nouveau courtier",
+      "description": "Créer un nouveau coutier",
+      "form-title": "Remplissez les informations du courtier",
+      "form-description": "Informations du courtier",
+      "form-name": "Prénom et nom",
+      "form-name-required": "Le prénom et nom est requis",
+      "form-address": "Adresse",
+      "form-address-required": "L'adresse est requise",
+      "form-phone": "Téléphone",
+      "form-phone-required": "Le téléphone est requis",
+      "form-email": "Email",
+      "form-email-required": "L'email est requis",
+      "form-email-invalid": "L'email est invalide",
+      "form-submit": "Créer le courtier",
+      "form-type-general-agent": "Agent général",
+      "form-type-broker": "Courtier",
+      "form-type-direct-office": "Bureau direct",
+      "form-type-required": "Le type est requis",
+      "form-type": "Type de courtier",
+      "form-logo": "Logo",
+      "form-logo-required": "Le logo est requis",
+      "form-logo-invalid": "Le logo est invalide",
+      "form-logo-description": "Cliquez pour ajouter un logo"
+    },
+    "actions": {
+      "edit": "Modifier",
+      "delete": "Supprimer"
+    }
+  },
+  "employee": {
+    "title": "Gestion des utilisateurs",
+    "description": "Liste des utilisateurs",
+    "new": {
+      "steps": {
+        "personal_info": {
+          "title": "Informations personnelles",
+          "description": "Renseignez les informations personnelles"
+        },
+        "profile": {
+          "title": "Profil",
+          "description": "Choisissez le profil de l'utilisateur"
+        },
+        "confirmation": {
+          "title": "Confirmation",
+          "description": "Vérifiez les informations saisies"
+        }
+      },
+      "summary": {
+        "personal_info": "Informations personnelles",
+        "profile_access": "Profil et accès"
+      },
+      "fields": {
+        "last_name": "Nom",
+        "first_name": "Prénom",
+        "email": "Email",
+        "phone": "Téléphone",
+        "profile": "Profil",
+        "access_level": "Niveau d'accès"
+      },
+      "buttons": {
+        "previous": "Précédent",
+        "create": "Créer"
+      },
+      "title": "Ajouter un utilisateur",
+      "description": "Créer un nouvel utilisateur",
+      "confirm-dialog-title": "Créer un utilisateur",
+      "confirm-dialog-message": "Voulez-vous vraiment créer cet utilisateur ?",
+      "form-title": "Remplissez les informations de l'utilisateur",
+      "form-description": "Informations de l'utilisateur",
+      "form-first-name": "Prénom",
+      "form-first-name-required": "Le prénom est requis",
+      "form-last-name": "Nom",
+      "form-last-name-required": "Le nom est requis",
+      "form-email": "Email",
+      "form-email-required": "L'email est requis",
+      "form-email-invalid": "L'email est invalide",
+      "form-phone": "Téléphone",
+      "form-phone-required": "Le téléphone est requis",
+      "form-role": "Profil",
+      "form-role-required": "Le profil est requis",
+      "form-password-title": "Le mot de passe par défaut est",
+      "form-password-description": "Demandez à l'utilisateur de changer son mot de passe lors de la première connexion",
+      "form-password-min": "Le mot de passe doit contenir au moins 6 caractères",
+      "form-access-level": "Niveau d'accès",
+      "form-access-level-required": "Le niveau d'accès est requis",
+      "form-access-level-description": "Niveau d'accès de l'utilisateur",
+      "form-access-level-entreprise": "Entreprise",
+      "form-access-level-entreprise-description": "L'utilisateur a accès aux informations de l'entreprise",
+      "form-access-level-point-of-sale": "Point de vente",
+      "form-access-level-point-of-sale-description": "L'utilisateur a accès uniquement aux informations du point de vente",
+      "form-point-of-sale": "Point de vente",
+      "form-submit": "Créer l'utilisateur"
+    },
+    "table": {
+      "title": "Liste des utilisateurs",
+      "description": "Liste de tous les utilisateurs",
+      "search": "Rechercher un utilisateur",
+      "no-data": "Aucun résultat trouvé",
+      "no-data-description": "Aucun utilisateur trouvé pour le moment"
+    },
+    "columns": {
+      "first-name": "Prénom",
+      "last-name": "Nom",
+      "email": "Email",
+      "role": "Profil",
+      "phone": "Téléphone",
+      "management-entity": "Entité de gestion",
+      "created-at": "Créé le",
+      "updated-at": "Modifié le"
+    }
+  },
+
+  "profile": {
+    "table": {
+      "title": "Gestion des profils",
+      "description": "Liste complète des profils disponibles",
+      "empty_state": "Aucun profil trouvé",
+      "columns": {
+        "logo": "Logo",
+        "name": "Nom du profil",
+        "description": "Description",
+        "admin_description": "possède tous les droits sur cette entité de gestion",
+        "permissions_count": "Nombre de permissions"
+      }
+    },
+    "form": {
+      "title": "Création d'un nouveau profil",
+      "description": "Remplissez les informations pour créer un nouveau profil",
+      "step_one_title": "Informations de base",
+      "step_one_description": "Nom et description du profil",
+      "step_two_title": "Permissions",
+      "step_two_description": "Sélectionnez les permissions associées",
+      "step_three_title": "Récapitulatif",
+      "step_three_description": "Vérifiez les informations avant création",
+      "step_three_summary": "Résumé du nouveau profil",
+      "step_three_name": "Nom du profil",
+      "step_three_desc": "Description",
+      "step_three_permissions": "Permissions associées",
+      "step_three_previous": "Retour",
+      "step_three_create": "Créer le profil"
+    },
+    "new": {
+      "form-name": "Nom du profil",
+      "form-name-required": "Le nom du profil est requis",
+      "form-description": "Description",
+      "form-description-required": "La description est requise",
+      "confirm-dialog-title": "Créer un profil",
+      "confirm-dialog-message": "Voulez-vous vraiment créer ce profil ?"
+    },
+    "permissions": {
+      "table": {
+        "search": "Rechercher une permission",
+        "choosed": "Permissions sélectionnées",
+        "select-row": "Sélectionner cette ligne",
+        "no-data": "Aucune permission disponible"
+      },
+      "columns": {
+        "name": "Nom de la permission",
+        "description": "Description"
+      }
+    },
+    "actions": {
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "view_permissions": "Voir les permissions",
+      "next": "Suivant",
+      "previous": "Précédent"
+    }
+  }
+}

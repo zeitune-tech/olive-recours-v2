@@ -1,0 +1,29 @@
+<!-- Header -->
+<div class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 dark:shadow-none  dark:bg-transparent print:hidden">
+    
+    <div class="flex items-center space-x-0.5 sm:space-x-2">
+        
+        <!-- Navigation toggle button -->
+        <button
+            mat-icon-button
+            class="bg-card rounded-md size-10 flex items-center justify-center"
+            (click)="toggleNavigation()">
+            <mat-icon [svgIcon]="'mat_outline:dotv2'"></mat-icon>
+        </button>
+
+        <!-- Breadcumbs -->
+        <breadcrumbs></breadcrumbs>
+    </div>
+
+
+    <!-- Components -->
+    <div class="flex items-center ml-auto space-x-2">
+        <languages></languages>
+        <!-- <fullscreen class="hidden md:block"></fullscreen> -->
+        <!-- <search [appearance]="'bar'"></search> -->
+        <!-- <shortcuts></shortcuts> -->
+        <messages></messages>
+        <!-- <notifications></notifications> -->
+        <user></user>
+    </div>
+</div>

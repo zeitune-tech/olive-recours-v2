@@ -1,0 +1,44 @@
+<!-- Sign in form -->
+<form
+    class="mt-8 space-y-6"
+    #form
+    [formGroup]="formGroup"
+    *transloco="let t">
+    
+    <div class="flex flex-col gap-6">
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                {{ t('profile.new.form-name') }}
+            </mat-label>
+            <input
+                matInput
+                [formControlName]="'name'">
+            <mat-error *ngIf="formGroup.get('name')?.hasError('required')">
+                {{ t('profile.new.form-name-required') }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                {{ t('profile.new.form-description') }}
+            </mat-label>
+            <input
+                matInput
+                [formControlName]="'description'">
+            <mat-error *ngIf="formGroup.get('description')?.hasError('required')">
+                {{ t('profile.new.form-description-required') }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    
+    <!-- Submit button -->
+    <button mat-button matStepperNext
+        class="mat-button-large  mt-6"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="formGroup.invalid"
+        (click)="onNext()"
+        >
+        {{ t('profile.actions.next') }}
+    </button>
+</form>

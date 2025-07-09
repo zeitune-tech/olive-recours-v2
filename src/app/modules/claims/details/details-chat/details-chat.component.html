@@ -1,0 +1,37 @@
+<section class="p-6 rounded-xl bg-white shadow mb-6 border border-gray-100" *transloco="let t">
+
+	<div class="flex justify-between items-center mb-4">
+		<h3 class="text-lg font-semibold mb-2">{{ t('entities.claim.details.chat') }}</h3>
+		<!-- Reload -->
+		<button mat-icon-button (click)="loadMessages()">
+			<mat-icon>refresh</mat-icon>
+		</button>
+	</div>
+
+	<form [formGroup]="formGroup" class="flex flex-col gap-4">
+		<mat-form-field appearance="outline">
+			<mat-label>Nouveau message</mat-label>
+			<textarea matInput formControlName="content" rows="3"></textarea>
+		</mat-form-field>
+
+		<div class="flex justify-end gap-2">
+			<button mat-raised-button color="primary" [disabled]="formGroup.invalid"
+				(click)="onSubmit()">Envoyer</button>
+		</div>
+	</form>
+
+	<div class="border p-2 rounded overflow-y-auto max-h-96 mt-4 bg-gray-50 flex flex-col">
+		<div *ngFor="let msg of messages"
+			class="bg-white rounded-lg shadow-sm p-3 mb-2 border border-gray-100 hover:shadow transition">
+			<div class="flex justify-between items-center mb-1">
+				<p class="font-semibold text-primary-600">
+					{{ msg.userName }}
+					<span class="text-gray-500 text-sm">({{ msg.companyName }})</span>
+				</p>
+				<p class="text-xs text-gray-400">{{ msg.messageDate | date: 'short' }}</p>
+			</div>
+			<p class="text-gray-700">{{ msg.content }}</p>
+		</div>
+	</div>
+
+</section>

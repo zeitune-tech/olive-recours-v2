@@ -1,0 +1,183 @@
+<div  class="w-full" *transloco="let t;">
+   
+
+    <table  [dataSource]="dataSource" class="w-full rounded-md bg-card overflow-hidden" mat-table matSort>
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="checkbox">
+          <th *matHeaderCellDef mat-header-cell>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          color="primary">
+            </mat-checkbox>
+          </th>
+          <td *matCellDef="let row" class="w-4" mat-cell>
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                          (click)="$event.stopPropagation()"
+                          [checked]="selection.isSelected(row)"
+                          color="primary">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Image Column -->
+         @let imageOptions = tableOptions.imageOptions;
+        <ng-container matColumnDef="image">
+            <th *matHeaderCellDef mat-header-cell>
+                {{ t(imageOptions?.label || "") }}
+            </th>
+            <td *matCellDef="let row" class=" pr-0 py-2" mat-cell>
+                <img [src]="row[imageOptions?.property || 'defaultProperty']" [ngClass]="imageOptions?.cssClasses">
+            </td>
+        </ng-container>
+
+        <!-- Text Columns -->
+         @let columns = tableOptions.columns;
+        <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+            <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property.toString()">
+                <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ t(column.label) }}</th>
+                <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>{{ tableOptions.renderItem(row, column.property) }}</td>
+            </ng-container>
+        </ng-container>
+
+        <!-- Contact Column -->
+        <ng-container matColumnDef="contact">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+            <td *matCellDef="let row" mat-cell>
+                <div class="flex">
+                    <a (click)="$event.stopPropagation()"
+                        class="w-8 h-8 p-0 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10"
+                        mat-icon-button>
+                        <mat-icon class="icon-sm" svgIcon="mat:phone"></mat-icon>
+                    </a>
+
+                    <a (click)="$event.stopPropagation()"
+                        class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal/10"
+                        mat-icon-button>
+                        <mat-icon class="icon-sm" svgIcon="mat:mail"></mat-icon>
+                    </a>
+
+                    <a (click)="$event.stopPropagation()"
+                        class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green/10"
+                        mat-icon-button>
+                        <mat-icon class="icon-sm" svgIcon="mat:map"></mat-icon>
+                    </a>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Badges Column -->
+
+        <ng-container matColumnDef="badges">
+            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
+                {{ t('badges') }}
+            </th>
+            <td *matCellDef="let row" mat-cell>
+                <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+                    {{ tableOptions.renderItem(row, 'badges') }}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Daily Column -->
+        <ng-container matColumnDef="daily">
+            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
+                {{ t('pointages.table.daily') }}
+            </th>
+            <td *matCellDef="let row" mat-cell>
+                <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+                    {{ tableOptions.renderItem(row, 'daily') }}
+                </div>
+            </td>
+        </ng-container>
+         
+        <!-- Weekly Column -->
+        <ng-container matColumnDef="weekly">
+            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
+                {{ t('pointages.table.weekly') }}
+            </th>
+            <td *matCellDef="let row" mat-cell>
+                <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+                    {{ tableOptions.renderItem(row, 'weekly') }}
+                </div>
+            </td>
+        </ng-container>
+        
+        <!-- Monthly Total -->
+        <ng-container matColumnDef="monthly-total">
+            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
+                {{ t('pointages.table.monthly-total') }}
+            </th>
+            <td *matCellDef="let row" mat-cell>
+                <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+                    {{ tableOptions.renderItem(row, 'monthly-total') }}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Monthly Per Day -->
+        <ng-container matColumnDef="monthly-per-day">
+            <th *matHeaderCellDef class="uppercase flex-col"  mat-header-cell mat-sort-header>
+                <span *ngFor="let day of daysInMonth">{{ day | date : "EEE d" }}</span>
+                
+            </th>
+
+            <td *matCellDef="let row" mat-cell>
+                <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+                    {{ tableOptions.renderItem(row,  'monthly-per-day') }}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Monthly By Week -->
+        <ng-container matColumnDef="monthly-by-week">
+            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>
+                {{ t('pointages.table.monthly-by-week') }}
+
+            </th>
+            <td *matCellDef="let row" mat-cell>
+                <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+                    {{ tableOptions.renderItem(row, 'monthly-by-week') }}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+            <td *matCellDef="let row" class="w-10" mat-cell>
+                <div class="flex gap-4">
+                    @let actions = tableOptions.actions;
+                    @for (action of actions; track $index) {
+                        <a (click)="action.action(row)" 
+                            class="w-9 h-9 p-0 leading-none flex items-center justify-center"
+                            [ngClass]="action.cssClasses"
+                            [matTooltip]="action.label"
+                            mat-icon-button
+                        ><mat-icon class="icon-sm" [svgIcon]="action.icon" [ngClass]="action.iconColor"></mat-icon>
+                        </a>
+                    }
+                </div>
+            </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: visibleColumns;"
+            @fadeInBottom
+            class="hover:bg-hover trans-ease-out cursor-pointer"
+            mat-row></tr>
+    </table>
+    @let pageSizeOptions = tableOptions.pageSizeOptions;
+    @let pageSize = tableOptions.pageSize;
+    <mat-paginator class="rounded-b-md" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"></mat-paginator>
+    
+    <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below" class="pl-1 pr-10 mt-1">
+        <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
+                class="mat-menu-item block">
+          <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+            {{ column.label }}
+          </mat-checkbox>
+        </button>
+    </mat-menu>
+</div>
+

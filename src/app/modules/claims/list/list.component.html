@@ -1,0 +1,178 @@
+<div class="w-full p-4" *transloco="let t;" tabindex="0">
+    <!-- ----------------------------------------------------- -->
+    <!-- En-tête de la page                                     -->
+    <!-- ----------------------------------------------------- -->
+    <div class="flex flex-col mb-6">
+        <h1 class="text-2xl md:text-4xl font-bold py-4">
+            {{ t('entities.claim.table.title') }}
+        </h1>
+        <p class="text-sm md:text-base text-gray-600">
+            {{ t('entities.claim.table.description') }}
+        </p>
+    </div>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- Tableau                                               -->
+    <!-- ----------------------------------------------------- -->
+    <div class="overflow-y-hidden overflow-x-auto pb-4">
+        <table mat-table [dataSource]="dataSource" matSort class="w-full rounded-md bg-card">
+
+            <!-- ================================================= -->
+            <!-- Colonnes dynamiques                               -->
+            <!-- ================================================= -->
+            @let columns = tableOptions.columns;
+
+            <!-- Boucle générale -->
+            <ng-container *ngFor="let column of columns; trackBy: trackByProperty" [ngSwitch]="column.type">
+
+                <!-- ---------- Colonnes « simples » (texte, image…) -------- -->
+                <ng-container *ngSwitchCase="'text'" [matColumnDef]="column.property">
+                    <!-- En-tête : 2 lignes fusionnées verticalement -->
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header class="uppercase border-x">
+                        {{ t(column.label) }}
+                    </th>
+
+                    <!-- Cellule de données -->
+                    <td mat-cell *matCellDef="let row" [ngClass]="column.cssClasses">
+                        {{ tableOptions.renderItem(row, column.property) }}
+                    </td>
+                </ng-container>
+
+                <!-- ---------- Colonnes « button » (boutons d’action) -------- -->
+                <ng-container *ngSwitchCase="'button'" [matColumnDef]="column.property">
+                    <!-- En-tête : 2 lignes fusionnées verticalement -->
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header
+                        class="uppercase text-center">
+                        {{ t(column.label) }}
+                    </th>
+
+                    <!-- Cellule de données -->
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <button mat-button color="primary" (click)="onButtonClick(row, column.property)"
+                            class="w-full h-full">
+                            {{ tableOptions.renderItem(row, column.property) }}
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!-- ---------- Colonnes « collapse » (colspan) ------------ -->
+                <ng-container *ngSwitchCase="'collapse'">
+
+                    <!-- Cellule PARENTE (ligne 1) -->
+                    <ng-container [matColumnDef]="column.property + '-parent'">
+                        <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.collapseOptions?.length || 1"
+                            class="uppercase text-center border-x">
+                            {{ t(column.label) }}
+                        </th>
+                    </ng-container>
+
+                    <!-- Sous-colonnes (ligne 2 + données) -->
+                    <ng-container *ngFor="let child of column.collapseOptions" [matColumnDef]="child.property">
+
+                        <!-- En-tête (ligne 2) -->
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase border-x"> 
+                            {{ t(child.label) }}
+                        </th>
+
+                        <!-- Cellule de données -->
+                        <td mat-cell *matCellDef="let row" [ngClass]="child.cssClasses">
+                            {{ tableOptions.renderItem(row, child.property) }}
+                        </td>
+                    </ng-container>
+                </ng-container>
+
+                <!-- (Ajoute ici d’autres *ngSwitchCase* pour badge, image, etc.) -->
+
+                <!-- ---------- Colonnes « badge » (statut, etc.) -------- -->
+                <ng-container *ngSwitchCase="'badge'" [matColumnDef]="column.property">
+                    <!-- En-tête : 2 lignes fusionnées verticalement -->
+                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header
+                        class="uppercase text-center border-x">
+                        {{ t(column.label) }}
+                    </th>
+
+                    <!-- Cellule de données -->
+                    <td mat-cell *matCellDef="let row" class="text-center min-w-24">
+                        <span class="p-1 px-1.5 rounded-sm" [ngClass]="getBadgeClass(row[column.property])">
+                            {{ tableOptions.renderItem(row, column.property) }}
+                        </span>
+                    </td>
+                </ng-container>
+
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- Colonne ACTIONS                                   -->
+            <!-- ================================================= -->
+            <ng-container matColumnDef="actions">
+                <!-- En-tête fusionné verticalement -->
+                <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header
+                    class="uppercase text-center border-l">
+                    {{ 'Actions' }}
+                </th>
+
+                <!-- Cellule de données -->
+                <td mat-cell *matCellDef="let element" class="border-l">
+                    <div class="w-full h-full flex items-center justify-around gap-4">
+
+                        <button mat-icon-button color="accent" (click)="onView(element)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+
+                        <button mat-icon-button color="success" (click)="acceptClaim(element)"
+                            [matTooltip]="t('common.accept')" [matTooltipPosition]="'above'"
+                            [disabled]="element.status === 'ACCEPTED' || element.status === 'REJECTED'">
+                            <mat-icon>check_circle</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="rejectClaim(element)"
+                            [matTooltip]="t('common.reject')" [matTooltipPosition]="'above'"
+                            [disabled]="element.status === 'ACCEPTED' || element.status === 'REJECTED'">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+
+                        <!-- <button mat-icon-button color="secondary" (click)="openMessageDialog(element)">
+                            <mat-icon>chat</mat-icon>
+                        </button>
+                        <button mat-icon-button style="color: #ff9800;" (click)="openAttachmentsDialog(element)">
+                            <mat-icon>attach_file</mat-icon>
+                        </button> -->
+                        <button mat-icon-button color="warn" (click)="onDelete(element)"
+                            [matTooltip]="t('common.delete')" [matTooltipPosition]="'above'"
+                            [disabled]="element.status === 'ACCEPTED' || element.status === 'REJECTED'">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- LIGNES D’EN-TÊTE                                  -->
+            <!-- ================================================= -->
+            <tr mat-header-row *matHeaderRowDef="groupHeader"></tr> <!-- ligne 1 -->
+            <tr mat-header-row *matHeaderRowDef="subHeader"></tr> <!-- ligne 2 -->
+
+            <!-- ================================================= -->
+            <!-- LIGNES DE DONNÉES                                 -->
+            <!-- ================================================= -->
+            <tr mat-row *matRowDef="let row; columns: visibleColumns;" @fadeInBottom
+                class="trans-ease-out cursor-pointer">
+            </tr>
+
+            <!-- Ligne « Aucune donnée » -->
+            @let count = visibleColumns.length;
+            <tr *matNoDataRow>
+                <td [attr.colspan]="count" class="text-center py-4">
+                    {{ t('common.no_data') }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- Paginator                                             -->
+    <!-- ----------------------------------------------------- -->
+    @let pageSizeOptions = tableOptions.pageSizeOptions;
+    @let pageSize = tableOptions.pageSize;
+    <mat-paginator class="rounded-b-md border-t" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize">
+    </mat-paginator>
+</div>

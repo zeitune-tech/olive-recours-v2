@@ -1,0 +1,36 @@
+<div class="space-y-2 p-2 min-w-[480px]" #dialogRef *transloco="let t">
+    <div mat-dialog-title> 
+        <h1 class="text-2xl font-bold">
+            {{ t(title) }}
+        </h1>
+        <p class="text-sm text-gray-600">
+            {{ description }}
+        </p>
+    </div>
+
+    
+    <mat-divider></mat-divider>
+    <mat-dialog-content>
+        <div class="min-h-[200px] flex flex-col justify-center items-center space-y-2">
+            <p class="text-lg font-semibold">
+                {{ t(message) }}
+            </p>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions class="flex justify-end space-x-2">
+        <button mat-button
+            class="mat-button-large  mt-6"
+            mat-flat-button
+            (click)="close()"
+        >
+            Fermer
+        </button>
+        <button mat-button
+            class="mat-button-large  mt-6"
+            mat-flat-button
+            (click)="confirm()"
+        >
+            Confirmer
+        </button>
+    </mat-dialog-actions>
+</div>

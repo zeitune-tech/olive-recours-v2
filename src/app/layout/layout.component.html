@@ -1,0 +1,41 @@
+<!-- ----------------------------------------------------------------------------------------------------- -->
+<!-- Empty layout -->
+<!-- ----------------------------------------------------------------------------------------------------- -->
+<empty-layout *ngIf="layout === 'empty'"></empty-layout>
+
+<!-- Classy -->
+<classy-layout *ngIf="layout === 'classy'">
+    <ng-container asideHeader>
+        <aside-header></aside-header>
+    </ng-container>
+
+    <ng-container asideContentHeader>
+        <aside-content-header></aside-content-header>
+    </ng-container>
+
+    <ng-container asideFooter>
+        <aside-footer></aside-footer>
+    </ng-container>
+    
+</classy-layout>
+
+<!-- Thin -->
+<thin-layout *ngIf="layout === 'thin'" >
+    <ng-container asideHeader>
+        <aside-header></aside-header>
+    </ng-container>
+
+    <ng-container asideContentHeader>
+        <aside-content-header></aside-content-header>
+    </ng-container>
+    
+
+    <ng-container asideFooter>
+        <aside-footer></aside-footer>
+    </ng-container>
+</thin-layout>
+
+<!-- custom -->
+<custom-layout *ngIf="layout === 'custom'"></custom-layout>
+
+<!-- <settings></settings> -->

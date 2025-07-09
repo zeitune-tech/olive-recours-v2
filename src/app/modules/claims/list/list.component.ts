@@ -1,0 +1,242 @@
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
+import { UntypedFormControl } from "@angular/forms";
+import { Claim } from "@core/services/claim/claim.interface";
+import { ClaimService } from "@core/services/claim/claim.service";
+import { Subject, takeUntil } from "rxjs";
+import { animations } from "@lhacksrt/animations";
+import { SelectionModel } from "@angular/cdk/collections";
+import { TableOptions, TableColumn } from "@lhacksrt/components/table/table.interface";
+import { LayoutService } from "@lhacksrt/services/layout/layout.service";
+import { ClaimStatus } from "@core/services/claim/claim-status.enum";
+import { ClaimNewComponent } from "../new/new.component";
+import { MatDialog } from "@angular/material/dialog";
+import { CompanyService } from "@core/services/company/company.service";
+import { Company } from "@core/services/company/company.interface";
+import { Router } from "@angular/router";
+
+@Component({
+    selector: "app-claims-list",
+    templateUrl: "./list.component.html",
+    animations: animations
+})
+export class ClaimsListComponent implements OnInit, OnDestroy {
+
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    tableOptions!: TableOptions<Claim>;
+
+    // Pour les mat-header-row
+    groupHeader: string[] = [];
+    subHeader: string[] = [];
+    visibleColumns: string[] = [];
+
+    dataSource = new MatTableDataSource<Claim>([]); // Ajoute les données réelles ici
+    company: Company = {} as Company;
+
+    constructor(
+        private _claimService: ClaimService,
+        private _companyService: CompanyService,
+        private _layoutService: LayoutService,
+        private _router: Router,
+        private _dialog: MatDialog,
+    ) {
+
+        this._layoutService.setPageTitle('entities.claim.table.title');
+        this._layoutService.setCrumbs([
+            { title: 'entities.claim.table.title', link: '/claims/list', active: true }
+        ]);
+
+        this._claimService.claims$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((data: Claim[]) => {
+                this.data = data;
+                this.dataSource.data = data;
+            });
+
+        this._companyService.myCompany$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((company: Company) => {
+                this.company = company;
+            });
+
+    }
+
+
+    data: Claim[] = [];
+
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
+
+    selection = new SelectionModel<Claim>(true, []);
+    searchInputControl: UntypedFormControl = new UntypedFormControl();
+
+
+
+    ngOnInit(): void {
+        // Initialisation de la configuration de la table
+        this.tableOptions = {
+            title: '',
+            columns: [
+                { property: 'dateOfSinister', type: 'text', label: 'Date Sinistre' },
+                {
+                    property: 'claimNumber', type: 'collapse', label: 'Déclarant', collapseOptions: [
+                        { property: 'claimNumber', type: 'text', label: 'Num Sinistre' },
+                        { property: 'insuredName', type: 'text', label: 'Assuré', cssClasses: ['text-sm','min-w-32'] },
+                        { property: 'declaringCompanyName', type: 'text', label: 'Compagnie', cssClasses: ['text-sm','min-w-32'] },
+                    ]
+                },
+                {
+                    property: 'opponentClaimNumber', type: 'collapse', label: 'Adversaire', collapseOptions: [
+                        { property: 'opponentClaimNumber', type: 'text', label: 'Num Sinistre' },
+                        { property: 'opponentInsuredName', type: 'text', label: 'Assuré', cssClasses: ['text-sm','min-w-32'] },
+                        { property: 'opponentCompanyName', type: 'text', label: 'Compagnie', cssClasses: ['text-sm','min-w-32'] },
+                    ]
+                },
+                { property: 'amount', type: 'text', label: 'P/C Compagnie' },
+                { property: 'insuredAmount', type: 'text', label: 'P/C Assuré' },
+                { property: 'status', type: 'badge', label: 'Statut', }
+
+            ],
+            pageSize: 8,
+            pageSizeOptions: [5, 6, 8],
+            actions: [],
+            renderItem: (element: Claim, property: keyof Claim) => {
+
+                if (property === 'status') {
+                    switch (element.status) {
+                        case ClaimStatus.PENDING:
+                            return 'Soumis';
+                        case ClaimStatus.ACCEPTED:
+                            return 'Accepté';
+                        case ClaimStatus.REFUSED:
+                            return 'Rejeté';
+                        default:
+                            return 'Statut inconnu';
+                    }
+                }
+
+                return element[property] ?? '--';
+            },
+        };
+
+        // Construction des lignes d’en-tête
+        this.buildHeaderRows();
+    }
+
+    getBadgeClass(status: ClaimStatus): string {
+        switch (status) {
+            case ClaimStatus.PENDING:
+                return 'bg-blue-100 text-blue-800';
+            case ClaimStatus.ACCEPTED:
+                return 'bg-green-100 text-green-800';
+            case ClaimStatus.REFUSED:
+                return 'bg-red-100 text-red-800';
+            case ClaimStatus.CANCELED:
+                return 'bg-yellow-100 text-yellow-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    }
+
+    buildHeaderRows(): void {
+        this.tableOptions.columns.forEach(col => {
+            if (col.type === 'collapse' && col.collapseOptions?.length) {
+                // En-tête parent (ligne 1)
+                const parent = col.property as string + '-parent';
+                this.groupHeader.push(parent);
+
+                // Sous-colonnes (ligne 2)
+                col.collapseOptions.forEach(child => {
+                    this.subHeader.push(child.property as string);
+                    this.visibleColumns.push(child.property as string);
+                });
+            } else {
+                // Colonne simple (même valeur dans les 2 lignes)
+                this.groupHeader.push(col.property as string);
+
+                this.visibleColumns.push(col.property as string);
+            }
+        });
+
+        // Ajout de la colonne d’actions si nécessaire
+        this.groupHeader.push('actions');
+        this.visibleColumns.push('actions');
+    }
+
+
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
+    acceptClaim(claim: Claim): void {
+        if (confirm("Confirmer l'acceptation de ce recours ?")) {
+            this._claimService.updateStatus(claim.id!, ClaimStatus.ACCEPTED).subscribe(() => {
+                this.loadClaims();
+            });
+        }
+    }
+
+    rejectClaim(claim: Claim) {
+        if (confirm("Confirmer le rejet de ce recours ?")) {
+            this._claimService.updateStatus(claim.id!, ClaimStatus.REFUSED).subscribe(() => {
+                this.loadClaims();
+            });
+        }
+    }
+
+
+
+    openNewClaimDialog(): void {
+        const dialogRef = this._dialog.open(ClaimNewComponent, {
+            width: '700px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.loadClaims();
+            }
+        });
+    }
+
+    onEdit(claim: Claim): void {
+        console.log("Éditer recours :", claim);
+        // À compléter : ouvrir dialog en mode édition
+    }
+
+    onDelete(claim: Claim): void {
+        if (confirm("Confirmer la suppression de ce recours ?")) {
+            this._claimService.delete(claim.id!)
+                .subscribe(() => {
+                    this.loadClaims();
+                });
+        }
+    }
+
+    onView(claim: Claim): void {
+        console.log("Voir recours :", claim);
+        // À compléter : ouvrir dialog en mode vue détaillée
+        this._router.navigate(['/claims/list', claim.id]);
+    }
+
+    onButtonClick(claim: Claim, column: string): void {
+        if (column === 'claimionRegistry') {
+        }
+    }
+
+
+    loadClaims(): void {
+        this._claimService.getAll().subscribe(claims => {
+            this.dataSource.data = claims;
+        });
+    }
+
+
+    trackByProperty(index: number, column: TableColumn<Claim>) {
+        return column.property;
+    }
+}

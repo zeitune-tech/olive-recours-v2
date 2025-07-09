@@ -1,0 +1,105 @@
+<section class="p-6 rounded-xl bg-white shadow mb-6 border border-gray-100" *transloco="let t">
+    <!-- Toggle Edit -->
+    <div class="flex justify-between mb-4">
+        <div>
+            <h2 class="text-2xl font-bold">{{ t('entities.claim.details.title') }}</h2>
+        <p class="text-gray-600">{{ t('entities.claim.details.subtitle') }}</p>
+        </div>
+        <button mat-raised-button color="primary" (click)="editMode = !editMode">
+            {{ editMode ? t('buttons.cancel') : t('buttons.edit') }}
+        </button>
+    </div>
+
+    <form *ngIf="claim" (ngSubmit)="saveClaim()" class="flex flex-col gap-6">
+
+        <!-- Date and Comment -->
+        <div class="flex flex-col gap-6 w-full">
+            <mat-form-field appearance="outline">
+                <mat-label>{{ t('entities.claim.table.date') }}</mat-label>
+                <input matInput [value]="claim.dateOfSinister | date" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>{{ t('entities.claim.table.comments') }}</mat-label>
+                <textarea matInput [(ngModel)]="claim.comment" name="comment" [readonly]="!editMode"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div class="flex flex-col lg:flex-row justify-between gap-6">
+            <!-- Company A -->
+            <div class="flex items-start gap-4 flex-1  p-4 rounded-lg shadow-sm">
+                <div>
+                    <img class="w-20 h-20 min-w-20 rounded-full object-cover ring-2 ring-primary-600"
+                        [src]="claim.declaringCompanyLogo" alt=" ">
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.declaringCompanyName') }}</mat-label>
+                        <input matInput [(ngModel)]="claim.declaringCompanyName" name="declaringCompanyName"
+                            [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.claimNumber') }}</mat-label>
+                        <input matInput [(ngModel)]="claim.claimNumber" name="claimNumber" [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.insuredName') }}</mat-label>
+                        <input matInput [(ngModel)]="claim.insuredName" name="insuredName" [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.insuredAmount') }}</mat-label>
+                        <input matInput type="number" [(ngModel)]="claim.insuredAmount" name="insuredAmount"
+                            [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.amount') }}</mat-label>
+                        <input matInput type="number" [(ngModel)]="claim.amount" name="amount" [readonly]="!editMode">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- VS text -->
+            <div class="hidden lg:flex items-center justify-center">
+                <span class="text-gray-400 font-bold text-xl">VS</span>
+            </div>
+
+            <!-- Company B -->
+            <div class="flex items-start gap-4 flex-1  p-4 rounded-lg shadow-sm">
+                <div>
+                    <img class="w-20 h-20 min-w-20 rounded-full object-cover ring-2 ring-red-600"
+                        [src]="claim.opponentCompanyLogo" alt="">
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.opponentCompanyName') }}</mat-label>
+                        <input matInput [(ngModel)]="claim.opponentCompanyName" name="opponentCompanyName"
+                            [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.opponentInsuredName') }}</mat-label>
+                        <input matInput [(ngModel)]="claim.opponentInsuredName" name="opponentInsuredName"
+                            [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.opponentClaimNumber') }}</mat-label>
+                        <input matInput [(ngModel)]="claim.opponentClaimNumber" name="opponentClaimNumber"
+                            [readonly]="!editMode">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Save button -->
+    <div *ngIf="editMode" class="flex justify-end mt-4">
+        <button mat-raised-button color="accent" type="submit" (click)="saveClaim()">
+            {{ t('buttons.save') }}
+        </button>
+    </div>
+</section>

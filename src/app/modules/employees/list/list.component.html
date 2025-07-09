@@ -1,0 +1,74 @@
+<div class="w-full p-4" *transloco="let t;" tabindex="0">
+    <div class="flex flex-col mb-6">
+        <h1 class="text-2xl md:text-4xl font-bold py-4">
+            {{ t('employee.title') }}
+        </h1>
+        <!-- Description -->
+        <p class="text-sm md:text-base text-gray-600">
+            {{ t('employee.table.title') }}
+        </p>
+    </div>
+
+    <mat-dialog-content class="overflow-auto">
+        <!-- Table -->
+        <table [dataSource]="dataSource" class="w-full rounded-md bg-card" mat-table matSort>
+        
+            <!-- Text Columns -->
+            @let columns = tableOptions.columns;
+            <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+                    <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>{{ t(column.label) }}</th>
+                    <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+                        {{ tableOptions.renderItem(row, column.property) }}
+                    </td>
+                </ng-container>
+            </ng-container>
+
+
+            
+            <!-- Action Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase text-center border-l">
+                    Actions
+                </th>
+                <td *matCellDef="let row" mat-cell class="border-l">
+                    <div class="flex items-center justify-center gap-4">
+                        @let actions = tableOptions.actions;
+                        @for (action of actions; track $index) {
+                            @let label = t(action.label);
+                            <button 
+                                mat-button matStepperNext
+                                class="mat-button-large"
+                                mat-flat-button
+                                [color]="'primary'"
+                                (click)="action.action(row)"
+                            >
+                                {{label}}
+                            </button>
+                        }
+                    </div>
+                </td>
+            </ng-container>
+
+                    
+            <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+            <tr *matRowDef="let row; columns: visibleColumns;"
+                @fadeInBottom
+                class="trans-ease-out cursor-pointer"
+                mat-row>
+            </tr>
+
+            <!-- No Data Row -->
+            <tr *matNoDataRow>
+                <td [attr.colspan]="4" class="text-center py-4">
+                    {{ t('employee.table.no-data') }}
+                </td>
+            </tr>
+        </table>
+    </mat-dialog-content>
+
+    @let pageSizeOptions = tableOptions.pageSizeOptions;
+    @let pageSize = tableOptions.pageSize;
+    <mat-paginator class="rounded-b-md" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"></mat-paginator>
+</div>
+

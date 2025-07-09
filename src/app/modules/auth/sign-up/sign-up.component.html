@@ -1,0 +1,76 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 pb-10" *transloco="let t">
+    <div class="w-full sm:w-auto py-8 px-4 sm:p-12 sm:rounded-2xl sm:shadow sm:bg-card">
+        <div class="w-full  sm:w-auto mx-auto sm:mx-0">
+            <!-- Logo -->
+            <div class="flex items-end  gap-4">
+                <div class="w-12">
+                    <img src="assets/images/logo/logo_fssa.png">
+                </div>
+                <h1 class="text-3xl font-extrabold tracking-tight leading-tight">
+                    FSSA <span class="text-secondary text-xs"></span>
+                </h1>
+            </div>
+
+            <!-- Title -->
+            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight text-center">
+                {{ t('auth.sign_up.title') }}
+            </div>
+
+            <!-- Sign in link -->
+            <div class="mt-4 text-center">
+                <span class="text-md">
+                    {{ t('auth.sign_up.subtitle') }}
+                </span>
+                <a
+                    class="text-md font-medium text-primary-500 hover:underline"
+                    [routerLink]="['/sign-in']">
+                    {{ t('auth.sign_up.sign_in') }}
+                </a>
+            </div>
+
+            <mat-vertical-stepper  #stepper class="mt-8 rounded-md" [selectedIndex]="selectedIndex">
+                <mat-step [stepControl]="formStepOne">
+                    <ng-template matStepLabel>
+                        <!-- Informations personnelles -->
+                        <div class="flex flex-col items-start">
+                            <div class="text-lg font-semibold">Informations personnelles</div>
+                            <div class="text-sm text-gray-500">Renseignez vos informations personnelles</div>
+                        </div>
+                    </ng-template>
+                    <auth-step-one (formReady)="onStepOneNext($event)" ></auth-step-one>
+                </mat-step>
+                <mat-step [stepControl]="formStepTwo">
+                    <ng-template matStepLabel>
+
+                        <!-- Type of structure -->
+                        <div class="flex flex-col items-start">
+                            <div class="text-lg font-semibold">Type de structure</div>
+                            <div class="text-sm text-gray-500">Choisissez le type de structure de votre entreprise</div>
+                        </div>
+                    </ng-template>
+                    <auth-step-two (formReady)="onStepTwoNext($event)" ></auth-step-two>
+                </mat-step>
+                <mat-step [stepControl]="formStepThree">
+                    <ng-template matStepLabel>
+                        <!-- Structure informations -->
+                        <div class="flex flex-col items-start">
+                            <div class="text-lg font-semibold">Informations de la structure</div>
+                            <div class="text-sm text-gray-500">Renseignez les informations de votre entreprise</div>
+                        </div>
+                    </ng-template>
+                    <auth-step-three (formReady)="onStepThreeNext($event)" ></auth-step-three>
+                </mat-step>
+                <mat-step [stepControl]="formStepFour">
+                    <ng-template matStepLabel>
+                        <!-- Informations de connexion -->
+                        <div class="flex flex-col items-start">
+                            <div class="text-lg font-semibold">Informations de connexion</div>
+                            <div class="text-sm text-gray-500">Renseignez les informations de connexion</div>
+                        </div>
+                    </ng-template>
+                    <auth-step-four (formReady)="onStepFourNext($event)" ></auth-step-four>
+                </mat-step>
+            </mat-vertical-stepper>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<!-- Flippable card -->
+<ng-container *ngIf="flippable">
+
+    <!-- Front -->
+    <div class="card-front">
+        <ng-content select="[cardFront]"></ng-content>
+    </div>
+
+    <!-- Back -->
+    <div class="card-back">
+        <ng-content select="[cardBack]"></ng-content>
+    </div>
+
+</ng-container>
+
+<!-- Normal card -->
+<ng-container *ngIf="!flippable">
+
+    <!-- Content -->
+    <ng-content></ng-content>
+
+    <!-- Expansion -->
+    <div
+        class="card-expansion"
+        *ngIf="expanded"
+        [@collapse]>
+        <ng-content select="[cardExpansion]"></ng-content>
+    </div>
+
+</ng-container>

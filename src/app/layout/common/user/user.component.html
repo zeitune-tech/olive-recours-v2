@@ -1,0 +1,46 @@
+<div *transloco="let t">
+
+    <div mat-flat-button [matMenuTriggerFor]="userActions" class="flex items-center bg-card rounded-md cursor-pointer hover:bg-accent-200">
+        <!-- Button -->
+        <button  class="flex items-center justify-center w-10 h-10 rounded-full">
+            <mat-icon
+
+                *ngIf="!showAvatar || !user.avatar"
+                [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+        </button>
+        <span>
+            <span class="hidden md:block text-sm font-bold pr-3 ">{{user.firstName}} {{user.lastName}}</span>
+        </span>
+    </div>
+
+    <mat-menu
+        [xPosition]="'before'"
+        class="mt-2 min-w-64"
+        #userActions="matMenu">
+        <button mat-menu-item>
+            <span class="flex flex-col leading-none">
+                <span class="text-md font-medium">
+                    {{t("user.connected")}}
+                </span>
+                <span class="mt-2 text-md font-medium">{{user.email}}</span>
+            </span>
+        </button>
+        <mat-divider class="my-2"></mat-divider>
+        <button mat-menu-item>
+            <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+            <span>
+                {{t("user.profile.title")}}
+            </span>
+        </button>
+
+        <mat-divider class="my-2"></mat-divider>
+        <button
+            mat-menu-item
+            (click)="signOut()">
+            <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+            <span>
+                {{t("user.logout.title")}}
+            </span>
+        </button>
+    </mat-menu>
+</div>

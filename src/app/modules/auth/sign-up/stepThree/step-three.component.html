@@ -1,0 +1,70 @@
+
+<form [formGroup]="formGroup"
+*transloco="let t">
+
+    <div class="space-y-6 mt-4">
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                Nom de votre entreprise
+            </mat-label>
+            <input
+                id="name"
+                matInput
+                [formControlName]="'name'">
+            <mat-error *ngIf="formGroup.get('name')?.hasError('required')">
+                Le nom de votre entreprise est requis
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                Email de votre entreprise
+            </mat-label>
+            <input
+                id="email"
+                matInput
+                [formControlName]="'email'">
+            <mat-error *ngIf="formGroup.get('email')?.hasError('required')">
+                L'email de votre entreprise est requis
+            </mat-error>
+            <mat-error *ngIf="formGroup.get('email')?.hasError('email')">
+                Veuillez saisir un email valide
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                téléphone de votre entreprise
+            </mat-label>
+            <input
+                id="phone"
+                matInput
+                [formControlName]="'phone'">
+        </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>
+                Adresse de votre entreprise
+            </mat-label>
+            <input
+                id="address"
+                matInput
+                [formControlName]="'address'">
+        </mat-form-field>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <button mat-button matStepperPrevious
+            class="mat-button-large mt-6 bg-accent-200"
+            mat-flat-button
+        >
+            Précédent
+        </button>
+        <button mat-button matStepperNext
+            class="mat-button-large  mt-6"
+            mat-flat-button
+            [color]="'primary'"
+            [disabled]="formGroup.invalid"
+            (click)="onNext()"
+        >
+            Suivant
+        </button>
+    </div>
+</form>

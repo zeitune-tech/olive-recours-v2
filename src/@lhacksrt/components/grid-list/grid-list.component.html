@@ -1,0 +1,39 @@
+<!-- Main -->
+<div class="flex flex-auto p-6 sm:p-10">
+
+    <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
+        <!-- Filters -->
+        
+        <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none">
+
+
+            <div class="bg-card rounded-full px-4 max-w-[300px] flex-auto flex items-center dark:border-none">
+                <mat-icon [svgIcon]="'mat_outline:search'" class="text-primary"></mat-icon>
+                <input [formControl]="searchCtrl"
+                    class="px-4 py-2 border-0 outline-none w-full bg-transparent"
+                    placeholder="Search..."
+                    type="search">
+            </div>
+
+        </div>
+
+
+        <!-- Items -->
+        <ng-container *ngIf="this.filteredItems.length; else noItems">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
+                <ng-container *ngFor="let item of filteredItems; trackBy: trackByFn">
+                    <template-grid-list-item [item]="item">
+                    </template-grid-list-item>
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <!-- No Items -->
+        <ng-template #noItems>
+            <ng-container>
+                <ng-content select="[noItemsFound]"></ng-content>
+            </ng-container>
+        </ng-template>
+    </div>
+
+</div>

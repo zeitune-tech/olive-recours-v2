@@ -1,0 +1,99 @@
+<div class="w-full pb-10"  *transloco="let t">
+
+    <div class="flex flex-col mb-10">
+        <h1 class="text-2xl md:text-4xl font-bold py-4">
+            {{ t('profile.form.title') }}
+        </h1>
+        <!-- Description -->
+        <p class="text-sm md:text-base text-gray-600">
+            {{ t('profile.form.description') }}
+        </p>
+    </div>
+
+
+    <mat-vertical-stepper  #stepper class="mt-8 rounded-md" [selectedIndex]="selectedIndex">
+        <mat-step [stepControl]="formStepOne">
+            <ng-template matStepLabel>
+                <!-- Informations personnelles -->
+                <div class="flex flex-col items-start">
+                    <div class="text-lg font-semibold">
+                        {{ t('profile.form.step_one_title') }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ t('profile.form.step_one_description') }}
+                    </div>
+                </div>
+            </ng-template>
+            <app-profiles-new-step-one (formReady)="onStepOneNext($event)" ></app-profiles-new-step-one>
+        </mat-step>
+
+        <mat-step [stepControl]="formStepTwo">
+            <ng-template matStepLabel>
+                <div class="flex flex-col items-start">
+                    <div class="text-lg font-semibold">
+                        {{ t('profile.form.step_two_title') }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ t('profile.form.step_two_description') }}
+                    </div>
+                </div>
+            </ng-template>
+            <app-profiles-new-step-two (formReady)="onStepTwoNext($event)" ></app-profiles-new-step-two>
+        </mat-step>
+        <mat-step [stepControl]="formStepThree">
+            <ng-template matStepLabel>
+                <div class="flex flex-col items-start">
+                    <div class="text-lg font-semibold">
+                        {{ t('profile.form.step_three_title') }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ t('profile.form.step_three_description') }}
+                    </div>
+                </div>
+            </ng-template>
+            <div class="flex flex-col gap-4 py-4">
+                <div class="text-lg font-semibold">
+                    {{t('profile.form.step_three_summary')}}
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex gap-6">
+                        <div class="flex flex-col gap-1">
+                            <div class="text-sm font-semibold">
+                                {{t('profile.form.step_three_name')}}
+                            </div>
+                            <div>{{ data.name }}</div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="text-sm font-semibold">
+                                {{t('profile.form.step_three_desc')}}
+                            </div>
+                            <div>{{ data.description }}</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="flex flex-col gap-1">
+                            <div class="text-sm font-semibold">
+                                {{t('profile.form.step_three_permissions')}}
+                            </div>
+                            <div>
+                                <ng-container *ngFor="let permission of data.permissions; let i = index">
+                                    <span>{{ permission.name }}</span>
+                                    <span *ngIf="i < data.permissions.length - 1">, </span>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-4">
+                <button mat-button matStepperPrevious class="mat-button-large mt-6" mat-flat-button [color]="'primary'">
+                    {{ t('profile.form.step_three_previous') }}
+                </button>
+                <button mat-button class="mat-button-large mt-6" mat-flat-button [color]="'primary'" (click)="save()">
+                    {{ t('profile.form.step_three_create') }}
+                </button>
+            </div>
+        </mat-step>
+        <!-- -->
+    </mat-vertical-stepper>
+</div>
