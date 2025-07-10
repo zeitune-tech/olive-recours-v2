@@ -3,6 +3,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 import { ClaimsListComponent } from "./list/list.component";
 import { ClaimNewComponent } from "./new/new.component";
 import { ClaimDetailsComponent } from "./details/details.component";
+import { claimsResolver } from "./claims.resolver";
 
 export const routes: Routes = [
     {
@@ -12,7 +13,10 @@ export const routes: Routes = [
     },
     {
         path: "list",
-        component: ClaimsListComponent
+        component: ClaimsListComponent,
+        resolve: {
+            claims: claimsResolver
+        }
     },
     {
         path: "list/:id",

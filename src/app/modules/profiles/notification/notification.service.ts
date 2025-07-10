@@ -10,6 +10,9 @@ export class NotificationService {
 
   showMessage(message: string) {
     this.messageSubject.next(message);
+    setTimeout(() => {
+      this.dismissMessage();
+    }, 3000);
   }
 
   dismissMessage() {

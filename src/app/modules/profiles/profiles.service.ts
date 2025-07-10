@@ -32,6 +32,6 @@ export class ProfilesService {
   }
 
   updatePassword(data: { oldPassword: string; newPassword: string; confirmNewPassword: string }): Observable<any> {
-    return this.http.put(`${this.baseUrl}/profiles/password`, data);
+    return this.http.put(`${this.baseUrl}/employees/me/password`, data);
   }
 }

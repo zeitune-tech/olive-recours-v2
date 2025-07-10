@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfilesService } from '../profiles.service';
 import { UserService } from '@core/services/user/user.service';
@@ -40,6 +40,8 @@ export class ProfilesComponent implements OnInit {
   companyEdit = false;
   passwordEdit = false;
   notificationMessage = '';
+  logo: string | null = null;
+  timestamp: number = Date.now();
 
   personalForm!: FormGroup;
   companyForm!: FormGroup;
@@ -49,19 +51,61 @@ export class ProfilesComponent implements OnInit {
   loadingCompany = false;
   loadingPassword = false;
 
+  selectedImage: string | null = null;
+  selectedFile: File | null = null;
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      this.selectedFile = input.files[0];
+      
+      reader.onload = (e) => {
+        this.selectedImage = e.target?.result as string;
+      };
+      
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  validateImage(): void {
+    if (this.selectedFile) {
+      this.userService.uploadFile(this.selectedFile).subscribe({
+        next: () => {
+          // Reset selected image and file
+          this.selectedImage = null;
+          this.selectedFile = null;
+          
+          // Refresh the logo from the server
+          this.userService.getManagementEntity().subscribe((entity: ManagementEntity) => {
+            this.logo = entity.logo;
+            this.timestamp = Date.now(); // Update timestamp to force new image load
+            this.notificationService.showMessage('Image mise à jour avec succès.');
+            this._changeDetectorRef.markForCheck();
+          });
+        },
+        error: (err) => {
+          console.error('Erreur lors de l\'upload de l\'image:', err);
+        }
+      });
+    }
+  }
+
+  rejectImage(): void {
+    this.selectedImage = null;
+    this.selectedFile = null;
+  }
+
   errorPersonal = '';
   errorCompany = '';
   errorPassword = '';
-
-  // uuid fictif à remplacer par la vraie valeur (ex: depuis le store ou l'auth)
-  userUuid = localStorage.getItem('userUuid') || 'user-uuid-demo';
-  companyUuid = localStorage.getItem('companyUuid') || 'company-uuid-demo';
 
   constructor(
     private fb: FormBuilder,
     private profilesService: ProfilesService,
     private notificationService: NotificationService,
-    private userService: UserService
+    private userService: UserService,
+    private _changeDetectorRef: ChangeDetectorRef,
   ) {
     // Initialisation des formulaires
     this.initForms();
@@ -76,11 +120,11 @@ export class ProfilesComponent implements OnInit {
         lastname: user.lastName,
         email: user.email
       });
-
+      this._changeDetectorRef.markForCheck();
     });
 
     this.userService.getManagementEntity().subscribe((entity: ManagementEntity) => {
-      console.log(entity);
+      this.logo = entity.logo;
       // Patch du formulaire entreprise
       this.companyForm.patchValue({
         name: entity.name || '',
@@ -88,12 +132,12 @@ export class ProfilesComponent implements OnInit {
         email: entity.email || '',
         phone: entity.phone || '',
         address: entity.address || '',
-        logo: entity.logo || '',
         fax: entity.fax || '',
         gsm: entity.gsm || '',
         legalStatus: entity.legalStatus || '',
         registrationNumber: entity.registrationNumber || ''
       });
+      this._changeDetectorRef.markForCheck();
     });
   }
 
@@ -110,7 +154,6 @@ export class ProfilesComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
       address: [''],
-      logo: [''],
       fax: [''],
       gsm: [''],
       legalStatus: [''],
@@ -148,7 +191,7 @@ export class ProfilesComponent implements OnInit {
           next: (response) => {
             this.personalEdit = false;
             this.personalForm.patchValue(response);
-            this.showSuccess('Informations personnelles mises à jour avec succès.');
+            this.notificationService.showMessage('Informations personnelles mises à jour avec succès.');
           },
           error: (err) => {
             this.errorPersonal = err.error?.message || 'Erreur lors de la sauvegarde.';
@@ -167,7 +210,7 @@ export class ProfilesComponent implements OnInit {
           next: (response) => {
             this.companyEdit = false;
             this.companyForm.patchValue(response);
-            this.showSuccess('Informations de la compagnie mises à jour avec succès.');
+            this.notificationService.showMessage('Informations de la compagnie mises à jour avec succès.');
           },
           error: (err) => {
             this.errorCompany = err.error?.message || 'Erreur lors de la sauvegarde.';
@@ -186,7 +229,7 @@ export class ProfilesComponent implements OnInit {
           next: () => {
             this.passwordEdit = false;
             this.passwordForm.reset();
-            this.showSuccess('Mot de passe mis à jour avec succès.');
+            this.notificationService.showMessage('Mot de passe mis à jour avec succès.');
           },
           error: (err) => {
             this.errorPassword = err.error?.message || 'Erreur lors du changement de mot de passe.';
@@ -203,10 +246,4 @@ export class ProfilesComponent implements OnInit {
   get company() { return this.companyForm.controls; }
   get password() { return this.passwordForm.controls; }
 
-  private showSuccess(message: string) {
-    this.notificationMessage = message;
-    setTimeout(() => {
-      this.notificationMessage = '';
-    }, 3000);
-  }
 }

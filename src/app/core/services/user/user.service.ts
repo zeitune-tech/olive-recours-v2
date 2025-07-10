@@ -98,4 +98,11 @@ export class UserService{
             catchError(() => of({} as ManagementEntity))
         );
     }
+
+    uploadFile(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        return this._httpClient.post(`${this._managementEntityBaseUrl}/logo`, formData);
+    }
 }

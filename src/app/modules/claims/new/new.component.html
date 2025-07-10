@@ -101,7 +101,7 @@
 
 					<div class="flex justify-between">
 						<button mat-button matStepperPrevious>{{ t('buttons.back') }}</button>
-						<button mat-raised-button color="primary" type="submit"
+						<button mat-raised-button color="primary" type="submit" (click)="createClaim()"
 							[disabled]="!step3Group.valid || isSubmitting">
 							{{ t('buttons.create') }}
 						</button>

@@ -73,21 +73,24 @@ export class ClaimNewComponent implements OnInit {
 	}
 
 	createClaim(): void {
+		console.log("submitting");
 		if (this.isSubmitting) return;
-
+		
 		// Construction payload final
 		const payload = {
 			dateOfSinister: this.step1Group.value.dateOfSinister,
 			claimNumber: this.step1Group.value.claimNumber,
 			insuredName: this.step1Group.value.insuredName,
-			opponentCompanyName: this.step2Group.value.opponentCompanyName,
+			opponentCompanyId: this.step2Group.value.opponentCompanyId,
 			opponentClaimNumber: this.step2Group.value.opponentClaimNumber,
 			opponentInsuredName: this.step2Group.value.opponentInsuredName,
 			amount: this.step3Group.value.amount,
 			insuredAmount: this.step3Group.value.insuredAmount,
 			comment: this.step3Group.value.comment
 		};
-
+		
+		console.log(payload);
+		
 		this.isSubmitting = true;
 		this._claimService.create(payload).subscribe({
 			next: () => {
