@@ -3,11 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, ReplaySubject, tap } from 'rxjs';
 import { User } from './user.interface';
 import { environment } from '@env/environment';
+import { ManagementEntity } from '../management-entity/management-entity.interface';
 
 @Injectable()
 export class UserService{
     private baseUrl = environment.request_url + '/employees';
+    private _managementEntityBaseUrl = environment.request_url + '/companies';
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
+    private _managementEntity: ReplaySubject<ManagementEntity> = new ReplaySubject<ManagementEntity>(1);
     private _hasEntity: boolean = false;
 
     /**
@@ -31,6 +34,15 @@ export class UserService{
 
     get user$(): Observable<User> {
         return this._user.asObservable();
+    }
+
+    get managementEntity$(): Observable<ManagementEntity> {
+        return this._managementEntity.asObservable();
+    }
+
+    set managementEntity(value: ManagementEntity) {
+        // Store the value
+        this._managementEntity.next(value);
     }
 
     hasEntity(): Observable<boolean> {
@@ -67,6 +79,23 @@ export class UserService{
             map((response) => {
                 this._user.next(response);
             })
+        );
+    }
+
+    updateManagementEntity(entity: ManagementEntity): Observable<any> {
+        return this._httpClient.put<ManagementEntity>(`${this._managementEntityBaseUrl}/update`, entity).pipe(
+            map((response) => {
+                this._managementEntity.next(response);
+            })
+        );
+    }
+
+    getManagementEntity(): Observable<ManagementEntity> {
+        return this._httpClient.get<ManagementEntity>(`${this._managementEntityBaseUrl}/me`).pipe(
+            tap((entity) => {
+                this.managementEntity = entity;
+            }),
+            catchError(() => of({} as ManagementEntity))
         );
     }
 }

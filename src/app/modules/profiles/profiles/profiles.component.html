@@ -1,0 +1,189 @@
+<div
+  class="w-full max-w-6xl mx-auto pb-16 px-4 flex flex-start flex-col gap-6 transition-all duration-500 ease-in-out">
+  <app-notification></app-notification>
+
+  <div class="flex flex-col mb-6">
+    <h1 class="text-2xl md:text-4xl font-bold py-4">
+      Informations du profil
+    </h1>
+    <p class="text-sm md:text-base text-gray-600">
+      Configuration des informations personnelles et de la compagnie
+    </p>
+  </div>
+  <!-- Bloc Informations personnelles -->
+  <mat-card class="p-6 w-full">
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center gap-2">
+        <mat-icon color="primary">person</mat-icon>
+        <h2 class="text-2xl font-semibold">Informations personnelles</h2>
+      </div>
+      <button mat-stroked-button color="primary" *ngIf="!personalEdit" (click)="personalEdit = true">
+        <mat-icon>edit</mat-icon> Modifier
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div *ngIf="!personalEdit" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-base">
+      <div><strong>Prénom :</strong> {{ personal['firstname'].value }}</div>
+      <div><strong>Nom :</strong> {{ personal['lastname'].value }}</div>
+      <div><strong>Email :</strong> {{ personal['email'].value }}</div>
+    </div>
+    <form *ngIf="personalEdit" [formGroup]="personalForm" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
+      (ngSubmit)="save('personal')">
+      <label class="font-medium mb-1" for="firstname">Prénom</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="firstname" id="firstname" />
+        <mat-error *ngIf="personal['firstname'].hasError('required')">Champ requis</mat-error>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="lastname">Nom</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="lastname" id="lastname" />
+        <mat-error *ngIf="personal['lastname'].hasError('required')">Champ requis</mat-error>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="email">Email</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput type="email" formControlName="email" id="email" />
+        <mat-hint>Format : nom&#64;domaine.com</mat-hint>
+        <mat-error *ngIf="personal['email'].hasError('required')">Champ requis</mat-error>
+        <mat-error *ngIf="personal['email'].hasError('email')">Email invalide</mat-error>
+      </mat-form-field>
+      <div *ngIf="errorPersonal" class="text-red-600">{{ errorPersonal }}</div>
+      <div class="flex gap-4 mt-2">
+        <button mat-flat-button color="primary" type="submit" [disabled]="loadingPersonal">
+          <mat-progress-spinner *ngIf="loadingPersonal" diameter="20" mode="indeterminate"></mat-progress-spinner>
+          <span *ngIf="!loadingPersonal">Valider</span>
+        </button>
+        <button mat-stroked-button color="warn" type="button" (click)="cancelEdit('personal')"
+          [disabled]="loadingPersonal">Annuler</button>
+      </div>
+    </form>
+  </mat-card>
+
+  <!-- Bloc Informations de la compagnie -->
+  <mat-card class="p-6 w-full">
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center gap-2">
+        <mat-icon color="primary">business</mat-icon>
+        <h2 class="text-2xl font-semibold">Informations de la compagnie</h2>
+      </div>
+      <button mat-stroked-button color="primary" *ngIf="!companyEdit" (click)="companyEdit = true">
+        <mat-icon>edit</mat-icon> Modifier
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div *ngIf="!companyEdit" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+      <div><strong>Nom de la société :</strong> {{ company['name'].value }}</div>
+      <div><strong>Sigle :</strong> {{ company['acronym'].value }}</div>
+      <div><strong>Email :</strong> {{ company['email'].value }}</div>
+      <div><strong>Téléphone :</strong> {{ company['phone'].value }}</div>
+      <div><strong>Adresse :</strong> {{ company['address'].value }}</div>
+      <div><strong>Fax :</strong> {{ company['fax'].value }}</div>
+      <div><strong>GSM :</strong> {{ company['gsm'].value }}</div>
+      <div><strong>Statut juridique :</strong> {{ company['legalStatus'].value }}</div>
+      <div><strong>Numéro d'enregistrement :</strong> {{ company['registrationNumber'].value }}</div>
+    </div>
+    <form *ngIf="companyEdit" [formGroup]="companyForm" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+      (ngSubmit)="save('company')">
+      <label class="font-medium mb-1" for="name">Nom de la société</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="name" id="name" />
+        <mat-error *ngIf="company['name'].hasError('required')">Champ requis</mat-error>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="acronym">Sigle</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="acronym" id="acronym" />
+      </mat-form-field>
+      <label class="font-medium mb-1" for="companyEmail">Email</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput type="email" formControlName="email" id="companyEmail" />
+        <mat-hint>Format : nom&#64;domaine.com</mat-hint>
+        <mat-error *ngIf="company['email'].hasError('required')">Champ requis</mat-error>
+        <mat-error *ngIf="company['email'].hasError('email')">Email invalide</mat-error>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="phone">Téléphone</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="phone" id="phone" />
+        <mat-hint>Format international recommandé</mat-hint>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="address">Adresse</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="address" id="address" />
+      </mat-form-field>
+      <label class="font-medium mb-1" for="logo">Logo</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="logo" id="logo" />
+      </mat-form-field>
+      <label class="font-medium mb-1" for="fax">Fax</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="fax" id="fax" />
+      </mat-form-field>
+      <label class="font-medium mb-1" for="gsm">GSM</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="gsm" id="gsm" />
+        <mat-hint>Format international recommandé</mat-hint>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="legalStatus">Statut juridique</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="legalStatus" id="legalStatus" />
+      </mat-form-field>
+      <label class="font-medium mb-1" for="registrationNumber">Numéro d'enregistrement</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput formControlName="registrationNumber" id="registrationNumber" />
+      </mat-form-field>
+      <div *ngIf="errorCompany" class="text-red-600">{{ errorCompany }}</div>
+      <div class="flex gap-4 mt-2">
+        <button mat-flat-button color="primary" type="submit" [disabled]="loadingCompany">
+          <mat-progress-spinner *ngIf="loadingCompany" diameter="20" mode="indeterminate"></mat-progress-spinner>
+          <span *ngIf="!loadingCompany">Valider</span>
+        </button>
+        <button mat-stroked-button color="warn" type="button" (click)="cancelEdit('company')"
+          [disabled]="loadingCompany">Annuler</button>
+      </div>
+    </form>
+  </mat-card>
+
+  <!-- Bloc Mot de passe -->
+  <mat-card class="p-6 w-full">
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center gap-2">
+        <mat-icon color="primary">lock</mat-icon>
+        <h2 class="text-2xl font-semibold">Mot de passe</h2>
+      </div>
+      <button mat-stroked-button color="primary" *ngIf="!passwordEdit" (click)="passwordEdit = true">
+        <mat-icon>edit</mat-icon> Modifier
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div *ngIf="!passwordEdit" class="mt-4 text-lg">
+      <span>************</span>
+    </div>
+    <form *ngIf="passwordEdit" [formGroup]="passwordForm" class="mt-6 flex flex-col gap-4"
+      (ngSubmit)="save('password')">
+      <label class="font-medium mb-1" for="oldPassword">Ancien mot de passe</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput type="password" formControlName="oldPassword" id="oldPassword" />
+        <mat-error *ngIf="password['oldPassword'].hasError('required')">Champ requis</mat-error>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="newPassword">Nouveau mot de passe</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput type="password" formControlName="newPassword" id="newPassword" />
+        <mat-error *ngIf="password['newPassword'].hasError('required')">Champ requis</mat-error>
+        <mat-error *ngIf="password['newPassword'].hasError('minlength')">8 caractères minimum</mat-error>
+      </mat-form-field>
+      <label class="font-medium mb-1" for="confirmNewPassword">Confirmer le mot de passe</label>
+      <mat-form-field appearance="fill" floatLabel="always" class="w-full mb-2">
+        <input matInput type="password" formControlName="confirmNewPassword" id="confirmNewPassword" />
+        <mat-error *ngIf="password['confirmNewPassword'].hasError('required')">Champ requis</mat-error>
+        <mat-error *ngIf="passwordForm.hasError('passwordMismatch')">Les mots de passe ne correspondent pas</mat-error>
+      </mat-form-field>
+      <div *ngIf="errorPassword" class="text-red-600">{{ errorPassword }}</div>
+      <div class="flex gap-4 mt-2">
+        <button mat-flat-button color="primary" type="submit" [disabled]="loadingPassword">
+          <mat-progress-spinner *ngIf="loadingPassword" diameter="20" mode="indeterminate"></mat-progress-spinner>
+          <span *ngIf="!loadingPassword">Valider</span>
+        </button>
+        <button mat-stroked-button color="warn" type="button" (click)="cancelEdit('password')"
+          [disabled]="loadingPassword">Annuler</button>
+      </div>
+    </form>
+  </mat-card>
+</div>

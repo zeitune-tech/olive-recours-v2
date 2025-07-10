@@ -1,0 +1,13 @@
+.notification {
+  transition: all 0.3s ease;
+  
+  &.fade-out {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+button {
+  padding: 0;
+  margin: -0.5rem;
+}

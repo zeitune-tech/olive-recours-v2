@@ -26,7 +26,7 @@
             </span>
         </button>
         <mat-divider class="my-2"></mat-divider>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="goToProfile()">
             <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
             <span>
                 {{t("user.profile.title")}}

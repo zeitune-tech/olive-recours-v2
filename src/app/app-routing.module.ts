@@ -7,7 +7,7 @@ import { AuthGuard } from '@core/auth/guards/auth.guard';
 import { NoAuthGuard } from '@core/auth/guards/noAuth.guard';
 
 const routerConfig: ExtraOptions = {
-  preloadingStrategy       : PreloadAllModules,
+    preloadingStrategy       : PreloadAllModules,
   scrollPositionRestoration: 'enabled'
 };
 
@@ -52,12 +52,12 @@ const routes: Routes = [
         },
         children   : [
             {
-                path: 'dashboard', 
+                path: 'dashboard',
                 canActivate: [],
                 canActivateChild: [],
-                data: { 
+                data: {
                     permission: "USER"
-                }, 
+                },
                 resolve: {
                     // data: DashboardResolver
                 },
@@ -111,6 +111,7 @@ const routes: Routes = [
                 },
                 loadChildren: () => import('./modules/employees/employees.module').then(m => m.EmployeesModule)
             },
+            {path: 'profile', loadChildren: () => import('./modules/profiles/profiles.module').then(m => m.ProfilesModule)},
 
             // 404 & Catch all
             {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('./modules/error/error.module').then(m => m.ErrorModule), data: {layout: "empty"}},
@@ -121,7 +122,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, routerConfig)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes, routerConfig)],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }
