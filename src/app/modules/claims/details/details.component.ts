@@ -25,10 +25,10 @@ export class ClaimDetailsComponent implements OnInit {
         private _attachmentService: AttachmentService,
         private _claimMessageService: ClaimMessageService
     ) { 
-        this._layoutService.setPageTitle('entities.claim.details.title');
+        this._layoutService.setPageTitle('Détails du recours');
         this._layoutService.setCrumbs([
-            { title: 'entities.claim.table.title', link: '/claims/list', active: true },
-            { title: 'entities.claim.details.title', link: '', active: false }
+            { title: 'Liste des recours', link: '/claims/list', active: true },
+            { title: 'Détails du recours', link: '', active: false }
         ]);
     }
 

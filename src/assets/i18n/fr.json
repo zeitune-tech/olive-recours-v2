@@ -98,7 +98,6 @@
     "users": "Utilisateurs",
     "roles": "Rôles"
   },
-
   "buttons": {
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -108,16 +107,25 @@
     "reject": "Rejeter",
     "download-pdf": "Télécharger PDF",
     "upload-logo": "Uploader le logo",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "confirm": "Confirmer",
+    "confirm_and_create": "Confirmer & Créer",
+    "submit": "Soumettre",
+    "create": "Créer",
+    "loadStatement": "charger les états",
+    "downloadPdf": "Télécharger PDF",
+    "upload-document": "Uploader un document",
+    "download": "Télécharger"
   },
-
   "forms": {
     "search": "Rechercher...",
     "select-month": "Sélectionner un mois",
     "select-year": "Sélectionner une année",
     "select-company": "Sélectionner une compagnie"
   },
-
   "notifications": {
     "new-message": "Nouveau message reçu",
     "update-success": "Mise à jour réussie",
@@ -330,14 +338,92 @@
         },
         "empty_state": "Aucun utilisateur trouvé"
       }
+    },
+    "claim": {
+      "table": {
+        "title": "Liste des recours",
+        "subtitle": "Gestion des recours",
+        "description": "Liste des recours enregistrés dans le système.",
+        "columns": {
+          "id": "ID",
+          "claim_number": "Numéro de recours",
+          "claim_date": "Date de recours",
+          "claim_amount": "Montant du recours",
+          "claim_status": "Statut du recours",
+          "actions": "Actions"
+        },
+        "empty_state": "Aucun recours trouvé",
+        "dateOfSinister": "Date du sinistre",
+        "claimNumber": "Numéro de recours",
+        "insuredName": "Nom de l'assuré",
+        "opponentCompanyName": "compagnie de l'adversaire",
+        "opponentClaimNumber": "Numéro de recours de l'adversaire",
+        "opponentInsuredName": "Nom de l'assuré de l'adversaire",
+        "declaringCompanyName": "compagnie déclarante",
+        "amount": "Montant du recours",
+        "insuredAmount": "Montant de l'assuré",
+        "comment": "Commentaire",
+        "comments": "Commentaires",
+        "date": "Date"
+      },
+      "create": {
+        "title": "suivez les étapes suivantes pour créer un recours",
+        "description": "remplissez les champs suivants pour créer un recours",
+        "fields": {
+          "claim_number": "Numéro de recours",
+          "claim_date": "Date de recours",
+          "claim_amount": "Montant du recours",
+          "claim_status": "Statut du recours",
+          "stock": "Stock du produit"
+        },
+        "step1": "étape 1",
+        "step2": "étape 2",
+        "step3": "étape 3"
+      },
+      "details": {
+        "chat": "Discussion",
+        "documents": "Documents",
+        "no-documents": "Aucun document chargé",
+        "title": "Détails du recours",
+        "subtitle": "Informations sur le recours",
+        "description": "Informations sur le recours"
+      }
+    },
+    "product": {
+      "form": {
+        "title": "Création d'un recours",
+        "description": "remplissez les champs suivants pour créer un recours",
+        "fields": {
+          "claim_number": "Numéro de recours",
+          "claim_date": "Date de recours",
+          "claim_amount": "Montant du recours",
+          "claim_status": "Statut du recours",
+          "stock": "Stock du produit"
+        }
+      }
+    },
+    "statement":{
+      "title":"état des comptes",
+      "month":"mois",
+      "year":"année",
+      "date": "Date",
+      "debit": "Débit",
+      "credit": "Crédit",
+      "label": "Libellé",
+      "amount": "Montant",
+      "balance": "Solde",
+      "globalTitle": "état des comptes globaux",
+      "accountTitle": "état des comptes de ",
+      "table": {
+        "title": "état des comptes",
+        "description": "informations sur les états des comptes des compagnies"
+      }
     }
   },
-
   "dashboard": {
     "title": "Tableau de bord",
     "description": "Vue d'ensemble de votre compte"
   },
-
   "classes": {
     "title": "Classes",
     "new-title": "Classes",
@@ -372,7 +458,6 @@
       "edit": "Modifier"
     }
   },
-
   "branches": {
     "title": "Branches",
     "new-title": "Branches",
@@ -409,7 +494,6 @@
       "edit": "Modifier"
     }
   },
-
   "products": {
     "title": "Produits",
     "new-title": "Produits",
@@ -449,7 +533,6 @@
       "edit": "Modifier"
     }
   },
-
   "entity-superior": {
     "title": "Organisation Marché",
     "description": "Création d'organisations marché",
@@ -510,7 +593,6 @@
       "attribute-attestation": "Attribuer une attestation"
     }
   },
-
   "company": {
     "title": "Compagnies",
     "new-title": "Compagnies",
@@ -716,7 +798,6 @@
       "updated-at": "Modifié le"
     }
   },
-
   "profile": {
     "table": {
       "title": "Gestion des profils",

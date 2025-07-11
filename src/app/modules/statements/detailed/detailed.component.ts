@@ -65,10 +65,10 @@ export class DetailedComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._layoutService.setPageTitle("Statements - Detailed");
+        this._layoutService.setPageTitle("États détaillés");
         this._layoutService.setCrumbs([
-            { title: "Statements", link: "/statements/detailed" },
-            { title: "Detailed", link: "/statements/detailed" }
+            { title: "États", link: "/statements/detailed" },
+            { title: "États détaillés", link: "/statements/detailed" }
         ]);
 
         

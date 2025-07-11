@@ -56,9 +56,10 @@ export class ClaimNewComponent implements OnInit {
 	}
 	ngOnInit(): void {
 
-		this._layoutService.setPageTitle('entities.claim.create.title');
+		this._layoutService.setPageTitle('Création d\'un recours');
 		this._layoutService.setCrumbs([
-			{ title: 'entities.claim.create.title', link: '/claims/new', active: true }
+			{ title: 'Liste des recours', link: '/claims/list', active: true },
+			{ title: 'Création d\'un recours', link: '/claims/new', active: true }
 		]);
 		
 		// Load companies for step 2

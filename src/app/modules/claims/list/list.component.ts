@@ -44,9 +44,9 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
         private _dialog: MatDialog,
     ) {
 
-        this._layoutService.setPageTitle('entities.claim.table.title');
+        this._layoutService.setPageTitle('Liste des recours');
         this._layoutService.setCrumbs([
-            { title: 'entities.claim.table.title', link: '/claims/list', active: true }
+            { title: 'Liste des recours', link: '/claims/list', active: true }
         ]);
 
         this._claimService.claims$

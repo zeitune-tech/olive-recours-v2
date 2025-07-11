@@ -52,10 +52,10 @@ export class GlobalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._layoutService.setPageTitle("Statements - Global");
+        this._layoutService.setPageTitle("États globaux");
         this._layoutService.setCrumbs([
-            { title: "Statements", link: "/statements/global" },
-            { title: "Global", link: "/statements/global" }
+            { title: "États", link: "/statements/global" },
+            { title: "États globaux", link: "/statements/global" }
         ]);
 
         this.loadGlobalStatement();

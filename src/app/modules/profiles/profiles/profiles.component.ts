@@ -15,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ManagementEntity } from '@core/services/management-entity/management-entity.interface';
+import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 
 @Component({
   selector: 'app-profiles',
@@ -106,7 +107,12 @@ export class ProfilesComponent implements OnInit {
     private notificationService: NotificationService,
     private userService: UserService,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _layoutService: LayoutService,
   ) {
+    this._layoutService.setPageTitle('Profil');
+    this._layoutService.setCrumbs([
+        { title: 'Profil', link: '/profiles', active: true }
+    ]);
     // Initialisation des formulaires
     this.initForms();
   }
