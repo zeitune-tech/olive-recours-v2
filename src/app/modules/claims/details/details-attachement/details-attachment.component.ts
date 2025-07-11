@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { ClaimService } from "@core/services/claim/claim.service";
 import { Subject, takeUntil } from "rxjs";
 import { Claim } from "@core/services/claim/claim.interface";
+import { Attachment } from "@core/services/attachement/attachment.interface";
+import { environment } from "@env/environment";
 
 @Component({
     selector: "app-claim-details-attachment",
@@ -12,6 +14,7 @@ import { Claim } from "@core/services/claim/claim.interface";
 export class DetailsAttachmentComponent implements OnInit {
 
     attachments: any[] = [];
+    downloadPath: string = environment.request_url + '/attachments/download/';
     showUploadModal = false;
     uploadData: any = {
         name: '',
@@ -22,8 +25,6 @@ export class DetailsAttachmentComponent implements OnInit {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
-        private http: HttpClient,
-        private fb: FormBuilder,
         private _claimService: ClaimService,
         private _changeDetectorRef: ChangeDetectorRef
     ) { }
@@ -88,8 +89,14 @@ export class DetailsAttachmentComponent implements OnInit {
         });
     }
 
-    downloadDocument(documentId: string): void {
-        // Logic to handle document download
-        console.log(`Downloading document with ID: ${documentId}`);
+    downloadDocument(document: Attachment): void {
+        console.log(`Downloading document with ID: ${document.fileName}`);
+        
+        this._claimService.downloadAttachment(document.id, document.fileName).subscribe({
+            error: (error) => {
+                console.error('Error downloading document:', error);
+                alert('Failed to download document. Please try again.');
+            }
+        });
     }
 }

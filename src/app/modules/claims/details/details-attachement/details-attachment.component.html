@@ -6,18 +6,21 @@
             {{ t('buttons.upload-document') }}
         </button>
     </div>
-    <div>
-        <ul class="list-disc pl-5">
-            <li *ngFor="let doc of attachments" class="flex justify-between items-center">
-                <span>{{ doc.fileName }}</span>
-                <button class="text-primary-600 hover:underline" (click)="downloadDocument(doc)">
+    <div class="space-y-4">
+        <div *ngFor="let doc of attachments" class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h4 class="font-medium text-lg mb-1">{{ doc.fileName }}</h4>
+                    <p class="text-gray-600 text-sm" *ngIf="doc.description">{{ doc.description }}</p>
+                </div>
+                <a mat-raised-button color="primary" (click)="downloadDocument(doc)" class="ml-4">
                     {{ t('buttons.download') }}
-                </button>
-            </li>
-        </ul>
-        <p *ngIf="attachments.length === 0" class="text-gray-500 flex items-center justify-center min-h-32">
+                </a>
+            </div>
+        </div>
+        <div *ngIf="attachments.length === 0" class="text-gray-500 text-center py-8">
             {{ t('entities.claim.details.no-documents') }}
-        </p>
+        </div>
     </div>
 
     <!-- Document Upload Modal -->

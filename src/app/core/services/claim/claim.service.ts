@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable, ReplaySubject, tap } from "rxjs";
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { catchError, map, Observable, ReplaySubject, tap, throwError } from "rxjs";
 import { Claim } from "./claim.interface";
 import { environment } from "@env/environment";
 import { ClaimStatus } from "./claim-status.enum";
@@ -66,4 +66,31 @@ export class ClaimService {
     getAttachmentsByClaimId(uuid: string): Observable<any> {
         return this._httpClient.get(`${this.attachmentsUrl}/claim/${uuid}`);
     }
+
+    downloadAttachment(uuid: string, fileName: string): Observable<void> {
+        return this._httpClient.get(`${this.attachmentsUrl}/download/${uuid}`, {
+          responseType: 'blob',
+          observe: 'response'
+        }).pipe(
+          tap((response: HttpResponse<Blob>) => {
+            console.log(response);
+            const contentDisposition = response.headers.get('content-disposition');
+            const filename = fileName || contentDisposition?.split('filename=')[1]?.replace(/['"]/g, '') || `attachment-${uuid}`;
+            const blob = new Blob([response.body!], { type: response.headers.get('content-type') || 'application/octet-stream' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          }),
+          map(() => void 0), // Return void since the method triggers a download
+          catchError(error => {
+            console.error('Download failed:', error);
+            return throwError(() => new Error('Failed to download attachment'));
+          })
+        );
+      }
 }

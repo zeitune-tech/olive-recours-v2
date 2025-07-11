@@ -235,14 +235,14 @@ export const defaultNavigation: NavigationItem[] = [
                 link: '/statements/global',
                 permission: PERMISSIONS.VIEW_STATEMENTS
             },
-            {
-                id: 'statements-archives',
-                title: 'sidebar.statements-archives',
-                type: 'basic',
-                icon: 'mat_outline:archive',
-                link: '/statements/archives',
-                permission: PERMISSIONS.VIEW_STATEMENTS
-            }
+            // {
+            //     id: 'statements-archives',
+            //     title: 'sidebar.statements-archives',
+            //     type: 'basic',
+            //     icon: 'mat_outline:archive',
+            //     link: '/statements/archives',
+            //     permission: PERMISSIONS.VIEW_STATEMENTS
+            // }
         ]
     },
     {
