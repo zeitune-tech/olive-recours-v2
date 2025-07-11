@@ -11,10 +11,11 @@ import { ClaimStatus } from "./claim-status.enum";
 export class ClaimService {
 
     private baseUrl = environment.base_url + '/app/claims';
+    private attachmentsUrl = environment.base_url + '/app/attachments';
     private _claim: ReplaySubject<Claim> = new ReplaySubject<Claim>(1);
     private _claims: ReplaySubject<Claim[]> = new ReplaySubject<Claim[]>(1);
 
-    constructor(private _httpClient: HttpClient) {}
+    constructor(private _httpClient: HttpClient) { }
 
     set claim(value: Claim) {
         this._claim.next(value);
@@ -56,5 +57,13 @@ export class ClaimService {
 
     updateStatus(uuid: string, status: ClaimStatus): Observable<Claim> {
         return this._httpClient.patch<Claim>(`${this.baseUrl}/${uuid}/status`, { status });
+    }
+
+    uploadAttachment(payload: FormData): Observable<any> {
+        return this._httpClient.post(`${this.attachmentsUrl}/upload`, payload);
+    }
+    
+    getAttachmentsByClaimId(uuid: string): Observable<any> {
+        return this._httpClient.get(`${this.attachmentsUrl}/claim/${uuid}`);
     }
 }

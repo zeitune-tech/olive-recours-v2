@@ -2,7 +2,7 @@
 
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold mb-2">{{ t('entities.claim.details.documents') }}</h3>
-        <button mat-raised-button color="primary" (click)="uploadDocument()">
+        <button mat-raised-button color="primary" (click)="openUploadModal()">
             {{ t('buttons.upload-document') }}
         </button>
     </div>
@@ -18,5 +18,32 @@
         <p *ngIf="attachments.length === 0" class="text-gray-500 flex items-center justify-center min-h-32">
             {{ t('entities.claim.details.no-documents') }}
         </p>
+    </div>
+
+    <!-- Document Upload Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" *ngIf="showUploadModal">
+        <div class="bg-white rounded-lg p-6 w-96">
+            <h3 class="text-lg font-semibold mb-4">{{ t('entities.claim.details.upload-document') }}</h3>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">{{ t('entities.claim.details.document-name') }}</label>
+                <input type="text" [(ngModel)]="uploadData.name" class="w-full p-2 border rounded" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">{{ t('entities.claim.details.description') }}</label>
+                <textarea [(ngModel)]="uploadData.description" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">{{ t('entities.claim.details.select-file') }}</label>
+                <input type="file" (change)="onFileSelected($event)" class="w-full">
+            </div>
+
+            <div class="flex justify-end space-x-2">
+                <button mat-button (click)="closeUploadModal()">{{ t('buttons.cancel') }}</button>
+                <button mat-raised-button color="primary" (click)="submitDocument()">{{ t('buttons.upload') }}</button>
+            </div>
+        </div>
     </div>
 </section>

@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Company } from "@core/services/company/company.interface";
-import { CompanyService } from "@core/services/company/company.service";
+import { ManagementEntity } from "@core/services/management-entity/management-entity.interface";
 import { User } from "@core/services/user/user.interface";
 import { UserService } from "@core/services/user/user.service";
 import { LayoutService } from "@lhacksrt/services/layout/layout.service";
@@ -11,13 +10,12 @@ import { LayoutService } from "@lhacksrt/services/layout/layout.service";
 })
 export class DashboardComponent implements OnInit {
 
-    entity: Company = {} as Company;
+    entity: ManagementEntity = {} as ManagementEntity;
     user: User = {} as User;
 
     constructor(
         private _userService: UserService,
         private _layoutService: LayoutService,
-        private _compagnieService: CompanyService
     ) { 
         this._layoutService.setPageTitle("Dashboard");
         this._layoutService.setCrumbs([
@@ -30,8 +28,8 @@ export class DashboardComponent implements OnInit {
             this.user = user;
         });
 
-        this._compagnieService.myCompany$.subscribe((company: Company) => {
-            this.entity = company;
+        this._userService.managementEntity$.subscribe((entity: ManagementEntity) => {
+            this.entity = entity;
         });
     }
 

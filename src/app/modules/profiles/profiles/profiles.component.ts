@@ -187,7 +187,7 @@ export class ProfilesComponent implements OnInit {
         if (this.personalForm.invalid) { this.personalForm.markAllAsTouched(); return; }
         this.loadingPersonal = true;
         this.errorPersonal = '';
-        this.profilesService.updatePersonalInfos(this.personalForm.value).subscribe({
+        this.userService.updatePersonalInfos(this.personalForm.value).subscribe({
           next: (response) => {
             this.personalEdit = false;
             this.personalForm.patchValue(response);
@@ -206,7 +206,7 @@ export class ProfilesComponent implements OnInit {
         if (this.companyForm.invalid) { this.companyForm.markAllAsTouched(); return; }
         this.loadingCompany = true;
         this.errorCompany = '';
-        this.userService.updateManagementEntity(this.companyForm.value).subscribe({
+        this.userService.updateManagementEntity({...this.companyForm.value, logo: this.logo}).subscribe({
           next: (response) => {
             this.companyEdit = false;
             this.companyForm.patchValue(response);
@@ -225,7 +225,7 @@ export class ProfilesComponent implements OnInit {
         if (this.passwordForm.invalid) { this.passwordForm.markAllAsTouched(); return; }
         this.loadingPassword = true;
         this.errorPassword = '';
-        this.profilesService.updatePassword(this.passwordForm.value).subscribe({
+        this.userService.updatePassword(this.passwordForm.value).subscribe({
           next: () => {
             this.passwordEdit = false;
             this.passwordForm.reset();

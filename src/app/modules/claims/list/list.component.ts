@@ -220,6 +220,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     onView(claim: Claim): void {
         console.log("Voir recours :", claim);
         // À compléter : ouvrir dialog en mode vue détaillée
+        this._claimService.claim = claim;
         this._router.navigate(['/claims/list', claim.id]);
     }
 

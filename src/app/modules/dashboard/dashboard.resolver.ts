@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { UserService } from '@core/services/user/user.service';
 import { forkJoin, map, Observable } from 'rxjs';
 
 @Injectable({
@@ -8,6 +9,7 @@ import { forkJoin, map, Observable } from 'rxjs';
 export class DashboardResolver implements Resolve<any> { 
 
     constructor(
+        private _userService: UserService
     ) { }
 
     resolve(
@@ -22,7 +24,8 @@ export class DashboardResolver implements Resolve<any> {
                     }
                 });
                 observer.complete();
-            })
+            }),
+            this._userService.getManagementEntity()
         ])
     }
 }
