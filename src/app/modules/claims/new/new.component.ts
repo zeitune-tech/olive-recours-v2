@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ClaimService } from '@core/services/claim/claim.service';
 import { Company } from '@core/services/company/company.interface';
 import { CompanyService } from '@core/services/company/company.service';
+import { ManagementEntity } from '@core/services/management-entity/management-entity.interface';
+import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 
 @Component({
@@ -18,12 +20,14 @@ export class ClaimNewComponent implements OnInit {
 
 	isSubmitting = false;
 	companies: Company[] = [];
+	managementEntity: ManagementEntity = {} as ManagementEntity;
 
 	constructor(
 		private _fb: FormBuilder,
 		private _claimService: ClaimService,
 		private _companyService: CompanyService,
 		private _layoutService: LayoutService,
+		private _userService: UserService,
 		private _router: Router
 	) {
 		// Step 1
@@ -61,11 +65,20 @@ export class ClaimNewComponent implements OnInit {
 			{ title: 'Liste des recours', link: '/claims/list', active: true },
 			{ title: 'Création d\'un recours', link: '/claims/new', active: true }
 		]);
+
+		this._userService.managementEntity$.subscribe({
+			next: (managementEntity) => {
+				this.managementEntity = managementEntity;
+			},
+			error: (error) => {
+				console.error('Erreur lors du chargement de l\'entité de gestion', error);
+			}
+		});
 		
 		// Load companies for step 2
 		this._companyService.companies$.subscribe({
 			next: (companies) => {
-				this.companies = companies;
+				this.companies = companies.filter((company) => company.id !== this.managementEntity.id);
 			},
 			error: (error) => {
 				console.error('Erreur lors du chargement des entreprises', error);

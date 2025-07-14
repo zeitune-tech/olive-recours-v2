@@ -4,6 +4,7 @@ import { ClaimsListComponent } from "./list/list.component";
 import { ClaimNewComponent } from "./new/new.component";
 import { ClaimDetailsComponent } from "./details/details.component";
 import { claimsResolver } from "./claims.resolver";
+import { newClaimResolver } from "./new/new-claim.resolver";
 
 export const routes: Routes = [
     {
@@ -24,6 +25,9 @@ export const routes: Routes = [
     },
     {
         path: "new",
-        component: ClaimNewComponent
+        component: ClaimNewComponent,
+        resolve: {
+            claim: newClaimResolver
+        }
     }
 ];
