@@ -1,10 +1,9 @@
-import { UsersListComponent } from "./users/list/list.component";
-import { UserDetailsComponent } from "./users/details/details.component";
+import { CompaniesListComponent } from "./users/companies/list/list.component";
 import { RolesListComponent } from "./roles/list/list.component";
-import { RoleDetailsComponent } from "./roles/details/details.component";
 import { usersResolver } from "./users/users.resolver";
 import { rolesResolver } from "./roles/roles.resolver";
 import { Routes } from "@angular/router";
+import { UsersListComponent } from "./users/employees/list/list.component";
 
 export const adminRoutes: Routes = [
     {
@@ -13,15 +12,18 @@ export const adminRoutes: Routes = [
         redirectTo: "users",
     },
     {
-        path: "users",
+        path: "users/employees",
         component: UsersListComponent,
         resolve: {
             users: usersResolver
         }
     },
     {
-        path: "users/:id",
-        component: UserDetailsComponent
+        path: "users/companies",
+        component: CompaniesListComponent,
+        resolve: {
+            companies: usersResolver
+        }
     },
     {
         path: "roles",
@@ -29,9 +31,5 @@ export const adminRoutes: Routes = [
         resolve: {
             roles: rolesResolver
         }
-    },
-    {
-        path: "roles/:id",
-        component: RoleDetailsComponent
     }
 ]

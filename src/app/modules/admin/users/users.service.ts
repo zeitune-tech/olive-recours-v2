@@ -66,7 +66,7 @@ export class UsersService {
 
   // Company operations
   getAllCompanies(): Observable<Company[]> {
-    return this.http.get<Company[]>(`${this.base_url}${this.request_url}/companies`).pipe(
+    return this.http.get<Company[]>(`${this.request_url}/companies`).pipe(
       tap((response) => {
         this.setCompanies(response);
         return response;
@@ -75,7 +75,7 @@ export class UsersService {
   }
 
   getCompanyById(id: string): Observable<Company> {
-    return this.http.get<Company>(`${this.base_url}${this.request_url}/companies/${id}`).pipe(
+    return this.http.get<Company>(`${this.request_url}/companies/${id}`).pipe(
       tap((response) => {
         this.setCompany(response);
         return response;
@@ -84,7 +84,7 @@ export class UsersService {
   }
 
   createCompany(company: CompanyRequest): Observable<Company> {
-    return this.http.post<Company>(`${this.base_url}${this.request_url}/companies`, company).pipe(
+    return this.http.post<Company>(`${this.request_url}/companies`, company).pipe(
       tap((response) => {
         const currentCompanies = this.companies.getValue();
         this.setCompanies([...currentCompanies, response]);
@@ -94,7 +94,7 @@ export class UsersService {
   }
 
   updateCompany(id: string, company: CompanyRequest): Observable<Company> {
-    return this.http.put<Company>(`${this.base_url}${this.request_url}/companies/${id}`, company).pipe(
+    return this.http.put<Company>(`${this.request_url}/companies/${id}`, company).pipe(
       tap((response) => {
         const currentCompanies = this.companies.getValue();
         const updatedCompanies = currentCompanies.map(c => c.id === id ? response : c);
@@ -105,7 +105,7 @@ export class UsersService {
   }
 
   deleteCompany(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.base_url}${this.request_url}/companies/${id}`).pipe(
+    return this.http.delete<void>(`${this.request_url}/companies/${id}`).pipe(
       tap(() => {
         const currentCompanies = this.companies.getValue();
         const updatedCompanies = currentCompanies.filter(c => c.id !== id);
@@ -116,7 +116,7 @@ export class UsersService {
 
   // Employee operations
   getAllUsers(): Observable<Employee[]> {
-    return this.http.get<Employee[]>(`${this.base_url}${this.request_url}/employees`).pipe(
+    return this.http.get<Employee[]>(`${this.request_url}/employees`).pipe(
       tap((response) => {
         this.setUsers(response);
         return response;
@@ -125,7 +125,7 @@ export class UsersService {
   }
 
   getUserById(id: string): Observable<Employee> {
-    return this.http.get<Employee>(`${this.base_url}${this.request_url}/employees/${id}`).pipe(
+    return this.http.get<Employee>(`${this.request_url}/employees/${id}`).pipe(
       tap((response) => {
         this.setUser(response);
         return response;
@@ -134,7 +134,7 @@ export class UsersService {
   }
 
   createUser(employee: EmployeeRequest): Observable<Employee> {
-    return this.http.post<Employee>(`${this.base_url}${this.request_url}/employees`, employee).pipe(
+    return this.http.post<Employee>(`${this.request_url}/employees`, employee).pipe(
       tap((response) => {
         const currentUsers = this.users.getValue();
         this.setUsers([...currentUsers, response]);
@@ -144,7 +144,7 @@ export class UsersService {
   }
 
   updateUser(id: string, employee: EmployeeRequest): Observable<Employee> {
-    return this.http.put<Employee>(`${this.base_url}${this.request_url}/employees/${id}`, employee).pipe(
+    return this.http.put<Employee>(`${this.request_url}/employees/${id}`, employee).pipe(
       tap((response) => {
         const currentUsers = this.users.getValue();
         const updatedUsers = currentUsers.map(u => u.id === id ? response : u);
@@ -156,7 +156,7 @@ export class UsersService {
   }
 
   activateUser(id: string): Observable<Employee> {
-    return this.http.put<Employee>(`${this.base_url}${this.request_url}/employees/${id}/activate`, {}).pipe(
+    return this.http.put<Employee>(`${this.request_url}/employees/${id}/activate`, {}).pipe(
       tap((response) => {
         const currentUsers = this.users.getValue();
         const updatedUsers = currentUsers.map(u => u.id === id ? response : u);
@@ -168,7 +168,7 @@ export class UsersService {
   }
 
   deactivateUser(id: string): Observable<Employee> {
-    return this.http.put<Employee>(`${this.base_url}${this.request_url}/employees/${id}/deactivate`, {}).pipe(
+    return this.http.put<Employee>(`${this.request_url}/employees/${id}/deactivate`, {}).pipe(
       tap((response) => {
         const currentUsers = this.users.getValue();
         const updatedUsers = currentUsers.map(u => u.id === id ? response : u);
@@ -180,7 +180,7 @@ export class UsersService {
   }
 
   deleteUser(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.base_url}${this.request_url}/employees/${id}`).pipe(
+    return this.http.delete<void>(`${this.request_url}/employees/${id}`).pipe(
       tap(() => {
         const currentUsers = this.users.getValue();
         const updatedUsers = currentUsers.filter(u => u.id !== id);
@@ -191,7 +191,7 @@ export class UsersService {
 
   // Profile operations
   getAllProfiles(): Observable<ProfileResponse[]> {
-    return this.http.get<ProfileResponse[]>(`${this.base_url}${this.request_url}/profiles`).pipe(
+    return this.http.get<ProfileResponse[]>(`${this.request_url}/profiles`).pipe(
       tap((response) => {
         this.setProfiles(response);
         return response;

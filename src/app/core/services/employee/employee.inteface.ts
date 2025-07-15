@@ -10,6 +10,8 @@ export class Employee {
     phone: string;
     birthDate: string;
     managementEntity: ManagementEntity;
+    isActive?: boolean;
+    profiles?: any[];
 
     constructor(employee: any) {
         this.id = employee?.id;
@@ -20,6 +22,8 @@ export class Employee {
         this.phone = employee?.phone;
         this.birthDate = employee?.birthDate;
         this.managementEntity = new ManagementEntity(employee?.managementEntity);
+        this.isActive = employee?.isActive;
+        this.profiles = employee?.profiles;
     }
 }
 

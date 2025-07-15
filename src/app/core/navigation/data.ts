@@ -255,10 +255,27 @@ export const defaultNavigation: NavigationItem[] = [
             {
                 id: 'admin-users',
                 title: 'sidebar.users',
-                type: 'basic',
+                type: 'collapsable',
                 icon: 'mat_outline:groups',
-                link: '/admin/users',
-                permission: PERMISSIONS.MANAGE_USERS
+                permission: PERMISSIONS.MANAGE_USERS,
+                children:[
+                    {
+                        id: 'admin-users-companies',
+                        title: 'sidebar.companies',
+                        type: 'basic',
+                        icon: 'mat_outline:business',
+                        link: '/admin/users/companies',
+                        permission: PERMISSIONS.MANAGE_USERS
+                    },
+                    {
+                        id: 'admin-users-employees',
+                        title: 'sidebar.employees',
+                        type: 'basic',
+                        icon: 'mat_outline:person_add',
+                        link: '/admin/users/employees',
+                        permission: PERMISSIONS.MANAGE_USERS
+                    }
+                ]
             },
             {
                 id: 'admin-roles',
