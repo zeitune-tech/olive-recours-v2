@@ -4,7 +4,7 @@ import { Company } from '@core/services/company/company.interface';
 import { environment } from '@env/environment';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { Employee } from '@core/services/employee/employee.inteface';
-import { EmployeeRequest, ProfileResponse } from './dto';
+import { CompanyRequest, EmployeeRequest, ProfileResponse } from './dto';
 
 
 @Injectable({
@@ -79,6 +79,37 @@ export class UsersService {
       tap((response) => {
         this.setCompany(response);
         return response;
+      })
+    );
+  }
+
+  createCompany(company: CompanyRequest): Observable<Company> {
+    return this.http.post<Company>(`${this.base_url}${this.request_url}/companies`, company).pipe(
+      tap((response) => {
+        const currentCompanies = this.companies.getValue();
+        this.setCompanies([...currentCompanies, response]);
+        return response;
+      })
+    );
+  }
+
+  updateCompany(id: string, company: CompanyRequest): Observable<Company> {
+    return this.http.put<Company>(`${this.base_url}${this.request_url}/companies/${id}`, company).pipe(
+      tap((response) => {
+        const currentCompanies = this.companies.getValue();
+        const updatedCompanies = currentCompanies.map(c => c.id === id ? response : c);
+        this.setCompanies(updatedCompanies);
+        return response;
+      })
+    );
+  }
+
+  deleteCompany(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.base_url}${this.request_url}/companies/${id}`).pipe(
+      tap(() => {
+        const currentCompanies = this.companies.getValue();
+        const updatedCompanies = currentCompanies.filter(c => c.id !== id);
+        this.setCompanies(updatedCompanies);
       })
     );
   }
