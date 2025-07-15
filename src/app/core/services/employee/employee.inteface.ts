@@ -2,7 +2,7 @@ import { ManagementEntity } from "../management-entity/management-entity.interfa
 
 export class Employee {
 
-    id: number;
+    id: string;
     name: string;
     firstName: string;
     lastName: string;
