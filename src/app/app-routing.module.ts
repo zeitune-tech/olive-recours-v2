@@ -88,6 +88,17 @@ const routes: Routes = [
                 loadChildren: () => import('./modules/claims/claims.module').then(m => m.ClaimsModule)
             },
             {
+                path: "admin",
+                canActivate: [],
+                canActivateChild: [],
+                data: {
+                },
+                resolve: {
+                    // ClaimsResolver
+                },
+                loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)
+            },
+            {
                 path: 'statements',
                 canActivate: [],
                 canActivateChild: [],
