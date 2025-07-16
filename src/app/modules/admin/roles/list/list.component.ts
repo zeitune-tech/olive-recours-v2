@@ -4,12 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { RolesService } from '../roles.service';
-import { ProfileResponse, PermissionResponse, ProfileRequest } from '../../users/dto';
+import { ProfileResponse, PermissionResponse, ProfileRequest, ManagementEntityType } from '../../users/dto';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
 
 @Component({
   selector: 'app-roles-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatSelectModule],
   templateUrl: './list.component.html',
 })
 export class RolesListComponent implements OnInit, OnDestroy {
@@ -21,21 +23,35 @@ export class RolesListComponent implements OnInit, OnDestroy {
   showModal: boolean = false;
   isEditMode: boolean = false;
   selectedProfile: ProfileResponse | null = null;
+  levelValues = Object.values(ManagementEntityType);
 
   roleData: ProfileRequest = {
     name: '',
     description: '',
-    level: '',
+    level: ManagementEntityType.COMPANY,
     permissions: []
   };
 
   private destroy$ = new Subject<void>();
 
-  constructor(private rolesService: RolesService) {}
+  constructor(private rolesService: RolesService) { }
+
+  enumToText(enumValue: string): string {
+    switch (enumValue) {
+      case ManagementEntityType.COMPANY:
+        return 'Compagnie';
+      case ManagementEntityType.MARKET_LEVEL_ORGANIZATION:
+        return 'Organisation de niveau marché';
+      default:
+        return enumValue;
+    }
+  }
 
   ngOnInit(): void {
     this.loadData();
     this.setupSubscriptions();
+
+    console.log(this.roleData.permissions);
   }
 
   ngOnDestroy(): void {
@@ -60,7 +76,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.loading = true;
-    
+
     this.rolesService.getAllProfiles()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -89,10 +105,10 @@ export class RolesListComponent implements OnInit, OnDestroy {
     }
 
     const searchTerm = this.searchTerm.toLowerCase();
-    this.filteredProfiles = this.profiles.filter(profile => 
+    this.filteredProfiles = this.profiles.filter(profile =>
       profile.name.toLowerCase().includes(searchTerm) ||
       profile.description?.toLowerCase().includes(searchTerm) ||
-      profile.permissions.some(permission => 
+      profile.permissions.some(permission =>
         permission.name.toLowerCase().includes(searchTerm)
       )
     );
@@ -115,21 +131,18 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this.roleData = {
       name: profile.name,
       description: profile.description || '',
-      level: profile.managementEntityId,
+      level: profile.level,
       permissions: profile.permissions.map(p => p.id)
     };
-    
+
     // Initialize permission checkboxes
     this.permissions.forEach(permission => {
       this.roleData.permissions.push(permission.id);
     });
-    
+
     this.showModal = true;
   }
 
-  viewRole(profile: ProfileResponse): void {
-    console.log('View role:', profile);
-  }
 
   deleteRole(profile: ProfileResponse): void {
     if (confirm(`Are you sure you want to delete the role "${profile.name}"?`)) {
@@ -154,12 +167,10 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const selectedPermissionIds = this.roleData.permissions;
-
     const payload: ProfileRequest = {
       ...this.roleData,
-      permissions: selectedPermissionIds
     };
+
 
     if (this.isEditMode && this.selectedProfile) {
       this.loading = true;
@@ -199,9 +210,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
       level: '',
       permissions: []
     };
-    this.permissions.forEach(permission => {
-      this.roleData.permissions.push(permission.id);
-    });
   }
 
   getInitials(name: string): string {
