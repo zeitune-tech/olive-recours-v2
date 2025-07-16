@@ -9,6 +9,7 @@ export const ManagementEntityTypes = {
 export class ManagementEntity {
 
     id: string;
+    uuid: string;
     name: string;
     acronym: string;
     email: string;
@@ -23,6 +24,7 @@ export class ManagementEntity {
 
     constructor(entity: any) {
         this.id = entity?.id || '';
+        this.uuid = entity?.uuid || '';
         this.name = entity?.name || '';
         this.acronym = entity?.acronym || '';
         this.legalStatus = entity?.legalStatus || '';

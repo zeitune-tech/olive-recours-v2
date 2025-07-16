@@ -218,7 +218,7 @@
                             placeholder="Enter email address" />
                     </div>
 
-                    <div *ngIf="!isEditMode">
+                    <div *ngIf="!isViewMode && !isEditMode">
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password *</label>
                         <input type="password" id="password" name="password" [(ngModel)]="employeeData.password"
                             [required]="!isViewMode && !isEditMode" [readonly]="isViewMode"

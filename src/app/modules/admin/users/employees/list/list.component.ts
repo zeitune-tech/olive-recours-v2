@@ -178,7 +178,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
       email: employee.email,
       password: '', // Don't populate password for security
       accessLevel: employee.accessLevel || '',
-      managementEntity: employee.managementEntity?.id || '',
+      managementEntity: employee.managementEntity?.uuid || '',
       profiles: employee.profiles?.map(p => p.id) || [],
     };
     this.showModal = true;
@@ -194,7 +194,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
       email: employee.email,
       password: '',
       accessLevel: employee.accessLevel || '',
-      managementEntity: employee.managementEntity?.id || '',
+      managementEntity: employee.managementEntity?.uuid || '',
       profiles: employee.profiles?.map(p => p.id) || [],
     };
     this.showModal = true;
@@ -282,6 +282,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
           }
         });
     } else {
+      console.log('Creating new employee:', submitData);
       this.usersService.createUser(submitData)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
