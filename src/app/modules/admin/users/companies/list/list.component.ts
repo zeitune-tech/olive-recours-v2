@@ -21,6 +21,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   showModal: boolean = false;
   isEditMode: boolean = false;
   selectedCompany: Company | null = null;
+  loading: boolean = false;
   
   companyData: CompanyRequest = {
     name: '',
@@ -95,16 +96,20 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     this.showModal = true;
   }
 
-  viewCompany(company: Company) {
-    // TODO: Implement view company functionality
-  }
-
   deleteCompany(company: Company) {
     if (confirm(`Are you sure you want to delete ${company.name}?`)) {
-      // TODO: Implement delete functionality
-      // this.usersService.deleteCompany(company.id).subscribe(() => {
-      //   this.loadCompanies();
-      // });
+      this.loading = true;
+      this.usersService.deleteCompany(company.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadCompanies();
+          },
+          error: (error) => {
+            console.error('Error deleting company:', error);
+            this.loading = false;
+          }
+        });
     }
   }
 
@@ -115,19 +120,33 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.isEditMode && this.selectedCompany) {
-      // TODO: Implement update functionality
-      // this.usersService.updateCompany(this.selectedCompany.id, this.companyData)
-      //   .subscribe(() => {
-      //     this.loadCompanies();
-      //     this.closeModal();
-      //   });
+      this.loading = true;
+      this.usersService.updateCompany(this.selectedCompany.id, this.companyData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadCompanies();
+            this.closeModal();
+          },
+          error: (error) => {
+            console.error('Error updating company:', error);
+            this.loading = false;
+          }
+        });
     } else {
-      // TODO: Implement create functionality
-      // this.usersService.createCompany(this.companyData)
-      //   .subscribe(() => {
-      //     this.loadCompanies();
-      //     this.closeModal();
-      //   });
+      this.loading = true;
+      this.usersService.createCompany(this.companyData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadCompanies();
+            this.closeModal();
+          },
+          error: (error) => {
+            console.error('Error creating company:', error);
+            this.loading = false;
+          }
+        });
     }
   }
 
