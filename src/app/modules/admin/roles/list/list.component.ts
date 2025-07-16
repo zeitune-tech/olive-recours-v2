@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { RolesService } from '../roles.service';
-import { ProfileResponse, PermissionResponse } from '../../users/dto';
+import { ProfileResponse, PermissionResponse, ProfileRequest } from '../../users/dto';
 
 @Component({
   selector: 'app-roles-list',
@@ -18,7 +18,17 @@ export class RolesListComponent implements OnInit, OnDestroy {
   filteredProfiles: ProfileResponse[] = [];
   searchTerm: string = '';
   loading: boolean = false;
-  
+  showModal: boolean = false;
+  isEditMode: boolean = false;
+  selectedProfile: ProfileResponse | null = null;
+
+  roleData: ProfileRequest = {
+    name: '',
+    description: '',
+    level: '',
+    permissions: []
+  };
+
   private destroy$ = new Subject<void>();
 
   constructor(private rolesService: RolesService) {}
@@ -34,7 +44,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   private setupSubscriptions(): void {
-    // Subscribe to profiles changes
     this.rolesService.profiles$
       .pipe(takeUntil(this.destroy$))
       .subscribe(profiles => {
@@ -42,7 +51,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
         this.filterRoles();
       });
 
-    // Subscribe to permissions changes
     this.rolesService.permissions$
       .pipe(takeUntil(this.destroy$))
       .subscribe(permissions => {
@@ -53,7 +61,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
   private loadData(): void {
     this.loading = true;
     
-    // Load both profiles and permissions
     this.rolesService.getAllProfiles()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -95,34 +102,106 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
-  createNewRole(): void {
-    // Navigate to create role page or open modal
-    console.log('Create new role');
-  }
-
-  viewRole(profile: ProfileResponse): void {
-    // Navigate to view role page or open modal
-    console.log('View role:', profile);
+  openCreateModal(): void {
+    this.isEditMode = false;
+    this.selectedProfile = null;
+    this.resetRoleData();
+    this.showModal = true;
   }
 
   editRole(profile: ProfileResponse): void {
-    // Navigate to edit role page or open modal
-    console.log('Edit role:', profile);
+    this.isEditMode = true;
+    this.selectedProfile = profile;
+    this.roleData = {
+      name: profile.name,
+      description: profile.description || '',
+      level: profile.managementEntityId,
+      permissions: profile.permissions.map(p => p.id)
+    };
+    
+    // Initialize permission checkboxes
+    this.permissions.forEach(permission => {
+      this.roleData.permissions.push(permission.id);
+    });
+    
+    this.showModal = true;
+  }
+
+  viewRole(profile: ProfileResponse): void {
+    console.log('View role:', profile);
   }
 
   deleteRole(profile: ProfileResponse): void {
     if (confirm(`Are you sure you want to delete the role "${profile.name}"?`)) {
+      this.loading = true;
       this.rolesService.deleteProfile(profile.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            console.log('Role deleted successfully');
+            this.loadData();
           },
           error: (error) => {
             console.error('Error deleting role:', error);
+            this.loading = false;
           }
         });
     }
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.resetRoleData();
+  }
+
+  onSubmit(): void {
+    const selectedPermissionIds = this.roleData.permissions;
+
+    const payload: ProfileRequest = {
+      ...this.roleData,
+      permissions: selectedPermissionIds
+    };
+
+    if (this.isEditMode && this.selectedProfile) {
+      this.loading = true;
+      this.rolesService.updateProfile(this.selectedProfile.id, payload)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadData();
+            this.closeModal();
+          },
+          error: (error) => {
+            console.error('Error updating role:', error);
+            this.loading = false;
+          }
+        });
+    } else {
+      this.loading = true;
+      this.rolesService.createProfile(payload)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadData();
+            this.closeModal();
+          },
+          error: (error) => {
+            console.error('Error creating role:', error);
+            this.loading = false;
+          }
+        });
+    }
+  }
+
+  resetRoleData(): void {
+    this.roleData = {
+      name: '',
+      description: '',
+      level: '',
+      permissions: []
+    };
+    this.permissions.forEach(permission => {
+      this.roleData.permissions.push(permission.id);
+    });
   }
 
   getInitials(name: string): string {

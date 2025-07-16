@@ -37,7 +37,7 @@ export class RolesService {
 
 
   getAllPermissions(): Observable<PermissionResponse[]> {
-    return this.http.get<PermissionResponse[]>(`${this.request_url}/profiles/permissions`).pipe(
+    return this.http.get<PermissionResponse[]>(`${this.request_url}/profiles/permissions/all`).pipe(
       tap((response) => {
         this.setPermissions(response);
         return response;

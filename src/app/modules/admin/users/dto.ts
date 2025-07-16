@@ -105,7 +105,7 @@ export interface CompanyRequest {
     name: string;
     description?: string;
     permissions: string[];
-    managementEntityId: string;
+    level: string;
   }
   
   export interface ProfileUpdate {
