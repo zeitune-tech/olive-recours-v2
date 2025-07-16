@@ -143,7 +143,7 @@ export class UsersService {
     );
   }
 
-  updateUser(id: string, employee: EmployeeRequest): Observable<Employee> {
+  updateUser(id: string, employee: EmployeeRequest | any): Observable<Employee> {
     return this.http.put<Employee>(`${this.request_url}/employees/${id}`, employee).pipe(
       tap((response) => {
         const currentUsers = this.users.getValue();
@@ -179,6 +179,18 @@ export class UsersService {
     );
   }
 
+  updateProfiles(uuid: string, profileIds: string[]): Observable<Employee> {
+    return this.http.put<Employee>(`${this.request_url}/employees/${uuid}/profiles`, { profileIds }).pipe(
+      tap((response) => {
+        const currentUsers = this.users.getValue();
+        const updatedUsers = currentUsers.map(u => u.id === uuid ? response : u);
+        this.setUsers(updatedUsers);
+        this.setUser(response);
+        return response;
+      })
+    );
+  }
+
   deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.request_url}/employees/${id}`).pipe(
       tap(() => {
@@ -191,7 +203,7 @@ export class UsersService {
 
   // Profile operations
   getAllProfiles(): Observable<ProfileResponse[]> {
-    return this.http.get<ProfileResponse[]>(`${this.request_url}/profiles`).pipe(
+    return this.http.get<ProfileResponse[]>(`${this.request_url}/profiles/all`).pipe(
       tap((response) => {
         this.setProfiles(response);
         return response;

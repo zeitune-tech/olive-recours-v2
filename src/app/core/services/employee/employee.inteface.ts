@@ -3,26 +3,24 @@ import { ManagementEntity } from "../management-entity/management-entity.interfa
 export class Employee {
 
     id: string;
-    name: string;
     firstName: string;
     lastName: string;
     email: string;
-    phone: string;
-    birthDate: string;
+    password: string;
+    accessLevel: string;
     managementEntity: ManagementEntity;
-    isActive?: boolean;
+    accountNonLocked?: boolean;
     profiles?: any[];
 
     constructor(employee: any) {
         this.id = employee?.id;
-        this.name = employee?.name;
         this.lastName = employee?.lastName;
         this.firstName = employee?.firstName;
         this.email = employee?.email;
-        this.phone = employee?.phone;
-        this.birthDate = employee?.birthDate;
+        this.password = employee?.password;
+        this.accessLevel = employee?.accessLevel;
         this.managementEntity = new ManagementEntity(employee?.managementEntity);
-        this.isActive = employee?.isActive;
+        this.accountNonLocked = employee?.accountNonLocked;
         this.profiles = employee?.profiles;
     }
 }

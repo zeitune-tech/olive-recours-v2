@@ -11,6 +11,8 @@ export class User {
     entityAccessLevel: string;
     managementEntity: ManagementEntity;
     permissions: string[];
+    accountNonLocked?: boolean;
+    
 
     constructor(user: any) {
         this.id = user?.id || '';
@@ -22,5 +24,6 @@ export class User {
         this.entityAccessLevel = user?.entityAccessLevel || '';
         this.permissions = user?.permissions || [];
         this.managementEntity = user?.managementEntity || null;
+        this.accountNonLocked = user?.accountNonLocked || true;
     }
 }

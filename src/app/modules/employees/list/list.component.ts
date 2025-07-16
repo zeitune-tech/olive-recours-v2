@@ -24,7 +24,6 @@
             { label: 'employee.columns.first-name', property: 'firstName', type: 'text', visible: true },
             { label: 'employee.columns.last-name', property: 'lastName', type: 'text', visible: true },
             { label: 'employee.columns.email', property: 'email', type: 'text', visible: true },
-            { label: 'employee.columns.phone', property: 'phone', type: 'text', visible: true },
             { label: 'employee.columns.management-entity', property: 'managementEntity', type: 'text', visible: true },
         ],
         pageSize: 8,

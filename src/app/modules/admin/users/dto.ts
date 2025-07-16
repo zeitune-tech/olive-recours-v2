@@ -80,9 +80,9 @@ export interface EmployeeRequest {
   firstname: string;
   lastname: string;
   email: string;
-  phone?: string;
-  address?: string;
-  managementEntityId: string;
+  password: string;
+  accessLevel: string;
+  managementEntity: string;
   profiles?: string[];
 }
 
@@ -99,9 +99,8 @@ export interface EmployeeResponse {
   firstname: string;
   lastname: string;
   email: string;
-  phone?: string;
-  address?: string;
-  managementEntityId: string;
+  accessLevel: string;
+  managementEntity: string;
   isActive: boolean;
   profiles: ProfileResponse[];
 }

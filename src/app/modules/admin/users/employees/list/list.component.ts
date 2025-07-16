@@ -4,7 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { UsersService } from '../../users.service';
 import { Employee } from '@core/services/employee/employee.inteface';
-import { EmployeeRequest, ProfileResponse } from '../../dto';
+import { EmployeeRequest, ManagementEntityType, ProfileResponse } from '../../dto';
+
+// Management Entity interface
+interface ManagementEntity {
+  id: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-employees-list',
@@ -12,34 +18,47 @@ import { EmployeeRequest, ProfileResponse } from '../../dto';
   imports: [CommonModule, FormsModule],
   templateUrl: "./list.component.html"
 })
-
 export class UsersListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   availableProfiles: ProfileResponse[] = [];
+  availableManagementEntities: ManagementEntity[] = [];
+  
   searchTerm: string = '';
   statusFilter: string = '';
+  
   showModal: boolean = false;
   isEditMode: boolean = false;
+  isViewMode: boolean = false;
   selectedEmployee: Employee | null = null;
 
   employeeData: EmployeeRequest = {
     firstname: '',
     lastname: '',
     email: '',
-    phone: '',
-    address: '',
-    managementEntityId: '',
-    profiles: []
+    password: '',
+    accessLevel: '',
+    managementEntity: '',
+    profiles: [],
   };
+
+  levelValues = Object.values(ManagementEntityType);
+
+  // Modal mode enum for better type safety
+  get modalTitle(): string {
+    if (this.isViewMode) return 'View Employee';
+    if (this.isEditMode) return 'Edit Employee';
+    return 'Create New Employee';
+  }
 
   constructor(private usersService: UsersService) { }
 
   ngOnInit() {
     this.loadEmployees();
     this.loadProfiles();
+    this.loadManagementEntities();
   }
 
   ngOnDestroy() {
@@ -47,20 +66,57 @@ export class UsersListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  enumToText(enumValue: string): string {
+    switch (enumValue) {
+      case ManagementEntityType.COMPANY:
+        return 'Compagnie';
+      case ManagementEntityType.MARKET_LEVEL_ORGANIZATION:
+        return 'Organisation de niveau marché';
+      default:
+        return enumValue;
+    }
+  }
+
   loadEmployees() {
     this.usersService.getAllUsers()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(employees => {
-        this.employees = employees;
-        this.filteredEmployees = employees;
+      .subscribe({
+        next: (employees) => {
+          this.employees = employees;
+          this.filteredEmployees = employees;
+        },
+        error: (error) => {
+          console.error('Error loading employees:', error);
+          // Handle error appropriately
+        }
       });
   }
 
   loadProfiles() {
     this.usersService.getAllProfiles()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(profiles => {
-        this.availableProfiles = profiles;
+      .subscribe({
+        next: (profiles) => {
+          this.availableProfiles = profiles;
+        },
+        error: (error) => {
+          console.error('Error loading profiles:', error);
+        }
+      });
+  }
+
+  loadManagementEntities() {
+    // Assuming you have a method to get management entities
+    // If not, you can mock this or create the method in your service
+    this.usersService.getAllCompanies()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (companies) => {
+          this.availableManagementEntities = companies;
+        },
+        error: (error) => {
+          console.error('Error loading management entities:', error);
+        }
       });
   }
 
@@ -82,15 +138,15 @@ export class UsersListComponent implements OnInit, OnDestroy {
         employee.lastName.toLowerCase().includes(term) ||
         employee.firstName.toLowerCase().includes(term) ||
         employee.email.toLowerCase().includes(term) ||
-        (employee.phone && employee.phone.toLowerCase().includes(term))
+        (employee.accessLevel && employee.accessLevel.toLowerCase().includes(term))
       );
     }
 
     // Apply status filter
     if (this.statusFilter) {
       filtered = filtered.filter(employee => {
-        if (this.statusFilter === 'active') return employee.isActive;
-        if (this.statusFilter === 'inactive') return !employee.isActive;
+        if (this.statusFilter === 'active') return employee.accountNonLocked;
+        if (this.statusFilter === 'inactive') return !employee.accountNonLocked;
         return true;
       });
     }
@@ -106,6 +162,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   openCreateModal() {
     this.isEditMode = false;
+    this.isViewMode = false;
     this.selectedEmployee = null;
     this.resetEmployeeData();
     this.showModal = true;
@@ -113,68 +170,129 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   editEmployee(employee: Employee) {
     this.isEditMode = true;
+    this.isViewMode = false;
     this.selectedEmployee = employee;
     this.employeeData = {
       firstname: employee.firstName,
       lastname: employee.lastName,
       email: employee.email,
-      phone: employee.phone || '',
-      address: employee.birthDate || '',
-      managementEntityId: employee.managementEntity.id,
-      profiles: employee.profiles?.map(p => p.id) || []
+      password: '', // Don't populate password for security
+      accessLevel: employee.accessLevel || '',
+      managementEntity: employee.managementEntity?.id || '',
+      profiles: employee.profiles?.map(p => p.id) || [],
     };
     this.showModal = true;
   }
 
   viewEmployee(employee: Employee) {
-    // TODO: Implement view employee functionality
+    this.isEditMode = false;
+    this.isViewMode = true;
+    this.selectedEmployee = employee;
+    this.employeeData = {
+      firstname: employee.firstName,
+      lastname: employee.lastName,
+      email: employee.email,
+      password: '',
+      accessLevel: employee.accessLevel || '',
+      managementEntity: employee.managementEntity?.id || '',
+      profiles: employee.profiles?.map(p => p.id) || [],
+    };
+    this.showModal = true;
   }
 
   activateEmployee(employee: Employee) {
-    // TODO: Implement activate functionality
-    // this.usersService.activateUser(employee.id).subscribe(() => {
-    //   this.loadEmployees();
-    // });
+    this.usersService.activateUser(employee.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.loadEmployees();
+        },
+        error: (error) => {
+          console.error('Error activating employee:', error);
+        }
+      });
   }
 
   deactivateEmployee(employee: Employee) {
     if (confirm(`Are you sure you want to deactivate ${employee.firstName} ${employee.lastName}?`)) {
-      // TODO: Implement deactivate functionality
-      // this.usersService.deactivateUser(employee.id).subscribe(() => {
-      //   this.loadEmployees();
-      // });
+      this.usersService.deactivateUser(employee.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadEmployees();
+          },
+          error: (error) => {
+            console.error('Error deactivating employee:', error);
+          }
+        });
     }
   }
 
   deleteEmployee(employee: Employee) {
-    if (confirm(`Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`)) {
-      // TODO: Implement delete functionality
-      // this.usersService.deleteUser(employee.id).subscribe(() => {
-      //   this.loadEmployees();
-      // });
+    if (confirm(`Are you sure you want to delete ${employee.firstName} ${employee.lastName}? This action cannot be undone.`)) {
+      this.usersService.deleteUser(employee.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadEmployees();
+          },
+          error: (error) => {
+            console.error('Error deleting employee:', error);
+          }
+        });
     }
   }
 
   closeModal() {
     this.showModal = false;
+    this.isEditMode = false;
+    this.isViewMode = false;
+    this.selectedEmployee = null;
     this.resetEmployeeData();
   }
 
   onSubmit() {
+    if (this.isViewMode) {
+      this.closeModal();
+      return;
+    }
+
+    // Prepare data for submission
+    const submitData: EmployeeRequest = {
+      firstname: this.employeeData.firstname,
+      lastname: this.employeeData.lastname,
+      email: this.employeeData.email,
+      password: this.employeeData.password,
+      accessLevel: this.employeeData.accessLevel,
+      managementEntity: this.employeeData.managementEntity,
+      profiles: this.employeeData.profiles || []
+    };
+
     if (this.isEditMode && this.selectedEmployee) {
-      // TODO: Implement update functionality
-      // this.usersService.updateUser(this.selectedEmployee.id, this.employeeData)
-      //   .subscribe(() => {
-      //     this.loadEmployees();
-      //     this.closeModal();
-      //   });
+      const { password, ...data } = submitData;
+      this.usersService.updateUser(this.selectedEmployee.id, data)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadEmployees();
+            this.closeModal();
+          },
+          error: (error) => {
+            console.error('Error updating employee:', error);
+          }
+        });
     } else {
-      // TODO: Implement create functionality
-      // this.usersService.createUser(this.employeeData)
-      //   .subscribe(() => {
-      //     this.loadEmployees();
-      //     this.closeModal();
-      //   });
+      this.usersService.createUser(submitData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.loadEmployees();
+            this.closeModal();
+          },
+          error: (error) => {
+            console.error('Error creating employee:', error);
+          }
+        });
     }
   }
 
@@ -183,10 +301,10 @@ export class UsersListComponent implements OnInit, OnDestroy {
       firstname: '',
       lastname: '',
       email: '',
-      phone: '',
-      address: '',
-      managementEntityId: '',
-      profiles: []
+      password: '',
+      accessLevel: '',
+      managementEntity: '',
+      profiles: [],
     };
   }
 
@@ -195,6 +313,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   onProfileChange(profileId: string, event: any) {
+    if (this.isViewMode) return; // Don't allow changes in view mode
+
     if (!this.employeeData.profiles) {
       this.employeeData.profiles = [];
     }
@@ -208,6 +328,11 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   getEmployeeInitials(firstname: string, lastname: string): string {
     return (firstname.charAt(0) + lastname.charAt(0)).toUpperCase();
+  }
+
+  getManagementEntityName(entityId: string): string {
+    const entity = this.availableManagementEntities.find(e => e.id === entityId);
+    return entity ? entity.name : 'Unknown';
   }
 
   trackByEmployee(index: number, employee: Employee): string {
