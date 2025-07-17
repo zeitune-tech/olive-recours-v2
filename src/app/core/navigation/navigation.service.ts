@@ -31,13 +31,13 @@ export class NavigationService {
         private _userService: UserService
     ) {
 
-        // this._userService.user$.subscribe(
-        //     (user: User) => {
-        //         this.items.default = this.checkPermissions(user, this.items.default);
-        //         this.items.compact = this.checkPermissions(user, this.items.compact);
-        //         this._navigation.next(this.items);
-        //     }
-        // );
+        this._userService.user$.subscribe(
+            (user: User) => {
+                this.items.default = this.checkPermissions(user, this.items.default);
+                this.items.compact = this.checkPermissions(user, this.items.compact);
+                this._navigation.next(this.items);
+            }
+        );
 
         this._navigation.next(this.items);
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, ReplaySubject, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, ReplaySubject, tap } from 'rxjs';
 import { User } from './user.interface';
 import { environment } from '@env/environment';
 import { ManagementEntity } from '../management-entity/management-entity.interface';
@@ -13,6 +13,7 @@ export class UserService{
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
     private _managementEntity: ReplaySubject<ManagementEntity> = new ReplaySubject<ManagementEntity>(1);
     private _hasEntity: boolean = false;
+    private _permissions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
     /**
      * Constructor
@@ -50,6 +51,15 @@ export class UserService{
         return of(this._hasEntity)
     }
 
+    get permissions$(): Observable<string[]> {
+        return this._permissions.asObservable();
+    }
+
+    set permissions(value: string[]) {
+        // Store the value
+        this._permissions.next(value);
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -65,6 +75,8 @@ export class UserService{
                 this.user = user;
                 if (user.managementEntity)
                     this._hasEntity = true;
+                if(user.permissions)
+                    this.permissions = user.permissions;
             }),
             catchError(() => of({} as User))
         );
@@ -76,9 +88,11 @@ export class UserService{
      * @param user
      */
     update(user: User): Observable<any> {
-        return this._httpClient.put<User>(`${this.baseUrl}/update`, {user}).pipe(
+        return this._httpClient.put<User>(`${this.baseUrl}/${user.id}`, user).pipe(
             map((response) => {
                 this._user.next(response);
+                if(response.permissions)
+                    this.permissions = response.permissions;
             })
         );
     }

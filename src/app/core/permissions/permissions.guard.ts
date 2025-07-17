@@ -1,45 +1,43 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  CanActivateChild,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
-import { Observable, of, switchMap } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { UserService } from '@core/services/user/user.service';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { PermissionsService } from './permissions.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class PermissionsGuard implements CanActivate, CanActivateChild {
+export class PermissionGuard implements CanActivate {
   constructor(
-    private _permissionsService: PermissionsService,
-    private _router: Router
+    private router: Router,
+    private permissionsService: PermissionsService
   ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> {
-    const permission = route.data['permission'];
-    const redirectRoute = route.data['redirectRoute'] || '/';
+  ): Observable<boolean> | boolean {
+    const requiredPermissions = route.data['permissions'] as string | string[];
+    const mode = (route.data['permissionMode'] as 'all' | 'any') || 'all';
 
-    return this._permissionsService.check(permission).pipe(
-        switchMap((hasPermission) => {
-            if (!hasPermission) {
-                this._router.navigate([redirectRoute]);
-                return of(false);
-            }
-            return of(true);
-        })
+    if (!requiredPermissions) {
+      return true; // Pas de permissions requises, accès autorisé
+    }
+
+    return this.permissionsService.hasPermissionAsync(requiredPermissions, mode).pipe(
+      map(hasAccess => {
+        if (!hasAccess) {
+          // Rediriger vers une page non autorisée ou la page d'accueil
+          this.router.navigate(['/error/unauthorized']);
+          return false;
+        }
+        return true;
+      }),
+      catchError(() => {
+        this.router.navigate(['/error/unauthorized']);
+        return of(false);
+      })
     );
-  }
-
-  canActivateChild(
-    childRoute: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> {
-    return this.canActivate(childRoute, state);
   }
 }

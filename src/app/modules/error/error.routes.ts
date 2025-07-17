@@ -12,5 +12,9 @@ export const routes: Routes = [
     {
         path     : 'error-500',
         loadComponent : () => import('./error-500/error-500.component').then(m => m.Error500Component)
+    },
+    {
+        path     : 'unauthorized',
+        loadComponent : () => import('./error-403/error-403.component').then(m => m.Error403Component)
     }
 ];

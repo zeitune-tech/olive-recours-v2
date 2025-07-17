@@ -41,7 +41,7 @@ export interface NavigationItem
     children?: NavigationItem[];
     meta?: any;
     visible?: boolean;
-    permission?: string;
+    permission?: string | string[];
 }
 
 export type VerticalNavigationAppearance =

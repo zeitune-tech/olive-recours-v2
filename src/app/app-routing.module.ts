@@ -56,7 +56,7 @@ const routes: Routes = [
                 canActivate: [],
                 canActivateChild: [],
                 data: {
-                    permission: "USER"
+                    permission: null
                 },
                 resolve: {
                     // data: DashboardResolver
@@ -68,7 +68,7 @@ const routes: Routes = [
                 canActivate: [],
                 canActivateChild: [],
                 data: {
-                    permission: PERMISSIONS.USER
+                    permission: null
                 },
                 resolve: {
                     // CompaniesResolver
@@ -80,7 +80,7 @@ const routes: Routes = [
                 canActivate: [],
                 canActivateChild: [],
                 data: {
-                    permission: PERMISSIONS.USER
+                    permission: null
                 },
                 resolve: {
                     // ClaimsResolver
@@ -103,7 +103,7 @@ const routes: Routes = [
                 canActivate: [],
                 canActivateChild: [],
                 data: {
-                    permission: PERMISSIONS.USER
+                    permission: null
                 },
                 resolve: {
                     // StatementsResolver
@@ -115,7 +115,7 @@ const routes: Routes = [
                 canActivate: [],
                 canActivateChild: [],
                 data: {
-                    permission: PERMISSIONS.USER
+                    permission: null
                 },
                 resolve: {
                     // data: EmployeesResolver
@@ -125,8 +125,8 @@ const routes: Routes = [
             {path: 'profile', loadChildren: () => import('./modules/profiles/profiles.module').then(m => m.ProfilesModule)},
 
             // 404 & Catch all
-            {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('./modules/error/error.module').then(m => m.ErrorModule), data: {layout: "empty"}},
-            {path: '**', redirectTo: '404-not-found'},
+            {path: 'error', pathMatch: 'full', loadChildren: () => import('./modules/error/error.module').then(m => m.ErrorModule), data: {layout: "empty"}},
+            {path: '**', redirectTo: 'error'},
         ]
     },
 ];

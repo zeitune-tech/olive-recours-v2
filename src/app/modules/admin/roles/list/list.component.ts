@@ -135,11 +135,6 @@ export class RolesListComponent implements OnInit, OnDestroy {
       permissions: profile.permissions.map(p => p.id)
     };
 
-    // Initialize permission checkboxes
-    this.permissions.forEach(permission => {
-      this.roleData.permissions.push(permission.id);
-    });
-
     this.showModal = true;
   }
 

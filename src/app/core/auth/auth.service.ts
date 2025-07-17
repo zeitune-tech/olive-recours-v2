@@ -5,6 +5,7 @@ import { AuthUtils } from './auth.utils';
 import { environment } from '../../../environments/environment';
 import { TokenService } from './token.service';
 import { AuthResponse, RegisterRequest, UserCredentials } from './auth.model';
+import { UserService } from '@core/services/user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
      */
     constructor(
         private _httpClient: HttpClient,
-        private _tokenService: TokenService
+        private _tokenService: TokenService,
+        private _userService: UserService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -88,6 +90,7 @@ export class AuthService {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
                 this.refreshToken = response.refreshToken;
+                this._userService.permissions = response.permissions;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;

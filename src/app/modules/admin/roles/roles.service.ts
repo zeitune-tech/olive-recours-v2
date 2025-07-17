@@ -46,7 +46,7 @@ export class RolesService {
   }
 
   getAllProfiles(): Observable<ProfileResponse[]> {
-    return this.http.get<ProfileResponse[]>(`${this.request_url}/profiles`).pipe(
+    return this.http.get<ProfileResponse[]>(`${this.request_url}/profiles/all`).pipe(
       tap((response) => {
         this.setProfiles(response);
         return response;

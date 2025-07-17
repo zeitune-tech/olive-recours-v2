@@ -9,14 +9,14 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //         type: 'basic',
 //         icon: 'fluent:home-16-regular',
 //         link: '/dashboard',
-//         permission: PERMISSIONS.VIEW_DASHBOARD
+//         permission: PERMISSIONS.ALL
 //     },
 //         // {
 //         //     id: 'companies',
 //         //     title: 'sidebar.companies',
 //         //     type: 'group',
 //         //     icon: 'fluent:building-16-regular',
-//         //     permission: PERMISSIONS.VIEW_COMPANIES,
+//         //     permission: PERMISSIONS.ALL,
 //         //     children: [
 //         //         {
 //         //             id: 'companies-list',
@@ -24,7 +24,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //         //             type: 'basic',
 //         //             icon: 'fluent:building-people-16-regular',
 //         //             link: '/companies/list',
-//         //             permission: PERMISSIONS.VIEW_COMPANIES
+//         //             permission: PERMISSIONS.ALL
 //         //         },
 //         //         {
 //         //             id: 'companies-logos',
@@ -32,7 +32,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //         //             type: 'basic',
 //         //             icon: 'fluent:image-16-regular',
 //         //             link: '/companies/logos',
-//         //             permission: PERMISSIONS.UPDATE_COMPANY_LOGO
+//         //             permission: PERMISSIONS.ALL
 //         //         }
 //         //     ]
 //         // },
@@ -41,7 +41,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //         title: 'sidebar.claims',
 //         type: 'group',
 //         icon: 'fluent:document-16-regular',
-//         permission: PERMISSIONS.VIEW_CLAIMS,
+//         permission: PERMISSIONS.ALL,
 //         children: [
 //             {
 //                 id: 'claims-list',
@@ -49,7 +49,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:document-bullet-list-16-regular',
 //                 link: '/claims/list',
-//                 permission: PERMISSIONS.VIEW_CLAIMS
+//                 permission: PERMISSIONS.ALL
 //             },
 //             {
 //                 id: 'claims-new',
@@ -57,7 +57,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:document-add-16-regular',
 //                 link: '/claims/new',
-//                 permission: PERMISSIONS.CREATE_CLAIM
+//                 permission: PERMISSIONS.ALL
 //             },
 //             {
 //                 id: 'claims-documents',
@@ -65,7 +65,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:attach-16-regular',
 //                 link: '/claims/documents',
-//                 permission: PERMISSIONS.VIEW_CLAIM_DOCUMENTS
+//                 permission: PERMISSIONS.ALL
 //             },
 //             {
 //                 id: 'claims-messages',
@@ -73,7 +73,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:chat-16-regular',
 //                 link: '/claims/messages',
-//                 permission: PERMISSIONS.VIEW_CLAIM_MESSAGES
+//                 permission: PERMISSIONS.ALL
 //             }
 //         ]
 //     },
@@ -82,7 +82,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //         title: 'sidebar.statements',
 //         type: 'group',
 //         icon: 'fluent:chart-multiple-16-regular',
-//         permission: PERMISSIONS.VIEW_STATEMENTS,
+//         permission: PERMISSIONS.ALL,
 //         children: [
 //             {
 //                 id: 'statements-detailed',
@@ -90,7 +90,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:document-table-16-regular',
 //                 link: '/statements/detailed',
-//                 permission: PERMISSIONS.VIEW_STATEMENTS
+//                 permission: PERMISSIONS.ALL
 //             },
 //             {
 //                 id: 'statements-global',
@@ -98,7 +98,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:document-mention-16-regular',
 //                 link: '/statements/global',
-//                 permission: PERMISSIONS.VIEW_STATEMENTS
+//                 permission: PERMISSIONS.ALL
 //             },
 //             {
 //                 id: 'statements-archives',
@@ -106,7 +106,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:archive-16-regular',
 //                 link: '/statements/archives',
-//                 permission: PERMISSIONS.VIEW_STATEMENTS
+//                 permission: PERMISSIONS.ALL
 //             }
 //         ]
 //     },
@@ -115,7 +115,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //     //     title: 'sidebar.account',
 //     //     type: 'group',
 //     //     icon: 'fluent:person-16-regular',
-//     //     permission: PERMISSIONS.VIEW_PROFILE,
+//     //     permission: PERMISSIONS.ALL,
 //     //     children: [
 //     //         {
 //     //             id: 'account-profile',
@@ -123,7 +123,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //     //             type: 'basic',
 //     //             icon: 'fluent:person-20-regular',
 //     //             link: '/account/profile',
-//     //             permission: PERMISSIONS.VIEW_PROFILE
+//     //             permission: PERMISSIONS.ALL
 //     //         },
 //     //         {
 //     //             id: 'account-password',
@@ -131,7 +131,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //     //             type: 'basic',
 //     //             icon: 'fluent:key-16-regular',
 //     //             link: '/account/change-password',
-//     //             permission: PERMISSIONS.UPDATE_PROFILE
+//     //             permission: PERMISSIONS.ALL
 //     //         }
 //     //     ]
 //     // },
@@ -140,7 +140,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //         title: 'sidebar.admin',
 //         type: 'group',
 //         icon: 'fluent:shield-checkmark-16-regular',
-//         permission: PERMISSIONS.MANAGE_USERS,
+//         permission: PERMISSIONS.ALL,
 //         children: [
 //             {
 //                 id: 'admin-users',
@@ -148,7 +148,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:people-16-regular',
 //                 link: '/admin/users',
-//                 permission: PERMISSIONS.MANAGE_USERS
+//                 permission: PERMISSIONS.ALL
 //             },
 //             {
 //                 id: 'admin-roles',
@@ -156,7 +156,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 //                 type: 'basic',
 //                 icon: 'fluent:apps-list-16-regular',
 //                 link: '/admin/roles',
-//                 permission: PERMISSIONS.MANAGE_ROLES
+//                 permission: PERMISSIONS.ALL
 //             }
 //         ]
 //     }
@@ -169,14 +169,14 @@ export const defaultNavigation: NavigationItem[] = [
         type: 'basic',
         icon: 'mat_outline:dashboard',
         link: '/dashboard',
-        permission: PERMISSIONS.VIEW_DASHBOARD
+        permission: [PERMISSIONS.READ_COMPANY_DASHBOARD, PERMISSIONS.READ_MLA_DASHBOARD, PERMISSIONS.ALL]
     },
     {
         id: 'claims',
         title: 'sidebar.claims',
         type: 'group',
         icon: 'mat_outline:description',
-        permission: PERMISSIONS.VIEW_CLAIMS,
+        permission: [PERMISSIONS.READ_CLAIMS, PERMISSIONS.ALL],
         children: [
             {
                 id: 'claims-list',
@@ -184,7 +184,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:list_alt',
                 link: '/claims/list',
-                permission: PERMISSIONS.VIEW_CLAIMS
+                permission: [PERMISSIONS.READ_CLAIMS, PERMISSIONS.ALL]
             },
             {
                 id: 'claims-new',
@@ -192,7 +192,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:add_circle',
                 link: '/claims/new',
-                permission: PERMISSIONS.CREATE_CLAIM
+                permission: [PERMISSIONS.CREATE_CLAIM, PERMISSIONS.ALL]
             },
             // {
             //     id: 'claims-documents',
@@ -200,7 +200,7 @@ export const defaultNavigation: NavigationItem[] = [
             //     type: 'basic',
             //     icon: 'mat_outline:attach_file',
             //     link: '/claims/documents',
-            //     permission: PERMISSIONS.VIEW_CLAIM_DOCUMENTS
+            //     permission: PERMISSIONS.ALL
             // },
             // {
             //     id: 'claims-messages',
@@ -208,7 +208,7 @@ export const defaultNavigation: NavigationItem[] = [
             //     type: 'basic',
             //     icon: 'mat_outline:chat',
             //     link: '/claims/messages',
-            //     permission: PERMISSIONS.VIEW_CLAIM_MESSAGES
+            //     permission: PERMISSIONS.ALL
             // }
         ]
     },
@@ -217,7 +217,7 @@ export const defaultNavigation: NavigationItem[] = [
         title: 'sidebar.statements',
         type: 'group',
         icon: 'mat_outline:bar_chart',
-        permission: PERMISSIONS.VIEW_STATEMENTS,
+        permission: [PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS, PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN, PERMISSIONS.ALL],
         children: [
             {
                 id: 'statements-detailed',
@@ -225,7 +225,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:table_chart',
                 link: '/statements/detailed',
-                permission: PERMISSIONS.VIEW_STATEMENTS
+                permission: [PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS, PERMISSIONS.ALL]
             },
             {
                 id: 'statements-global',
@@ -233,7 +233,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:leaderboard',
                 link: '/statements/global',
-                permission: PERMISSIONS.VIEW_STATEMENTS
+                permission: [PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN, PERMISSIONS.ALL]
             },
             // {
             //     id: 'statements-archives',
@@ -241,7 +241,7 @@ export const defaultNavigation: NavigationItem[] = [
             //     type: 'basic',
             //     icon: 'mat_outline:archive',
             //     link: '/statements/archives',
-            //     permission: PERMISSIONS.VIEW_STATEMENTS
+            //     permission: PERMISSIONS.ALL
             // }
         ]
     },
@@ -250,22 +250,22 @@ export const defaultNavigation: NavigationItem[] = [
         title: 'sidebar.admin',
         type: 'group',
         icon: 'mat_outline:admin_panel_settings',
-        permission: PERMISSIONS.MANAGE_USERS,
+        permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.READ_PROFILES, PERMISSIONS.READ_COMPANIES, PERMISSIONS.ALL],
         children: [
             {
                 id: 'admin-users',
                 title: 'sidebar.users',
                 type: 'collapsable',
                 icon: 'mat_outline:groups',
-                permission: PERMISSIONS.MANAGE_USERS,
-                children:[
+                permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.READ_COMPANIES, PERMISSIONS.ALL],
+                children: [
                     {
                         id: 'admin-users-companies',
                         title: 'sidebar.companies',
                         type: 'basic',
                         icon: 'mat_outline:business',
                         link: '/admin/users/companies',
-                        permission: PERMISSIONS.MANAGE_USERS
+                        permission: [PERMISSIONS.READ_COMPANIES, PERMISSIONS.ALL]
                     },
                     {
                         id: 'admin-users-employees',
@@ -273,7 +273,7 @@ export const defaultNavigation: NavigationItem[] = [
                         type: 'basic',
                         icon: 'mat_outline:person_add',
                         link: '/admin/users/employees',
-                        permission: PERMISSIONS.MANAGE_USERS
+                        permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.ALL]
                     }
                 ]
             },
@@ -283,7 +283,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:security',
                 link: '/admin/roles',
-                permission: PERMISSIONS.MANAGE_ROLES
+                permission: [PERMISSIONS.READ_PROFILES, PERMISSIONS.ALL]
             }
         ]
     }
