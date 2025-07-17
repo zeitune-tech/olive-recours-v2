@@ -7,6 +7,10 @@ import { RolesService } from '../roles.service';
 import { ProfileResponse, PermissionResponse, ProfileRequest, ManagementEntityType } from '../../users/dto';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
+import { LayoutService } from '@lhacksrt/services/layout/layout.service';
+import { UserService } from '@core/services/user/user.service';
+import { PermissionsService } from '@core/permissions/permissions.service';
+import { PERMISSIONS } from '@core/permissions/permissions.data';
 
 @Component({
   selector: 'app-roles-list',
@@ -32,9 +36,18 @@ export class RolesListComponent implements OnInit, OnDestroy {
     permissions: []
   };
 
+  features = {
+    create: false,
+    update: false,
+    delete: false,
+  }
+
   private destroy$ = new Subject<void>();
 
-  constructor(private rolesService: RolesService) { }
+  constructor(private rolesService: RolesService,
+    private _layoutService: LayoutService,
+    private _userService: UserService,
+    private _permissionService: PermissionsService) { }
 
   enumToText(enumValue: string): string {
     switch (enumValue) {
@@ -92,6 +105,19 @@ export class RolesListComponent implements OnInit, OnDestroy {
     this.rolesService.getAllPermissions()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
+        error: (error) => {
+          console.error('Error loading permissions:', error);
+        }
+      });
+
+      this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({
+        next: (user) => {
+          this.features = {
+            create: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.CREATE_PROFILE]),
+            update: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.UPDATE_PROFILE]),
+            delete: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.DELETE_PROFILE])
+          }
+        },
         error: (error) => {
           console.error('Error loading permissions:', error);
         }

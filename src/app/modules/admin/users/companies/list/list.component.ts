@@ -5,6 +5,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { UsersService } from '../../users.service';
 import { Company } from '@core/services/company/company.interface';
 import { CompanyRequest } from '../../dto';
+import { PermissionsService } from '@core/permissions/permissions.service';
+import { UserService } from '@core/services/user/user.service';
+import { LayoutService } from '@lhacksrt/services/layout/layout.service';
+import { PERMISSIONS } from '@core/permissions/permissions.data';
 
 @Component({
   selector: 'app-companies-list',
@@ -33,10 +37,32 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     acronym: ''
   };
 
-  constructor(private usersService: UsersService) {}
+  features = {
+    create: false,
+    update: false,
+    delete: false,
+  }
+
+  constructor(private usersService: UsersService,
+    private _layoutService: LayoutService,
+    private _userService: UserService,
+    private _permissionService: PermissionsService) { }
 
   ngOnInit() {
     this.loadCompanies();
+
+    this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({
+            next: (user) => {
+              this.features = {
+                create: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.CREATE_COMPANY]),
+                update: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.UPDATE_COMPANY]),
+                delete: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.DELETE_COMPANY])
+              }
+            },
+            error: (error) => {
+              console.error('Error loading permissions:', error);
+            }
+          });
   }
 
   ngOnDestroy() {

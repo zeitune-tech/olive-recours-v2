@@ -5,6 +5,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { UsersService } from '../../users.service';
 import { Employee } from '@core/services/employee/employee.inteface';
 import { EmployeeRequest, ManagementEntityType, ProfileResponse } from '../../dto';
+import { PERMISSIONS } from '@core/permissions/permissions.data';
+import { PermissionsService } from '@core/permissions/permissions.service';
+import { UserService } from '@core/services/user/user.service';
+import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 
 // Management Entity interface
 interface ManagementEntity {
@@ -44,6 +48,15 @@ export class UsersListComponent implements OnInit, OnDestroy {
     profiles: [],
   };
 
+  features = {
+    create: false,
+    update: false,
+    delete: false,
+    view: false,
+    grant: false,
+    revoke: false,
+  }
+
   levelValues = Object.values(ManagementEntityType);
 
   // Modal mode enum for better type safety
@@ -53,12 +66,31 @@ export class UsersListComponent implements OnInit, OnDestroy {
     return 'Create New Employee';
   }
 
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService,
+    private _layoutService: LayoutService,
+    private _userService: UserService,
+    private _permissionService: PermissionsService) { }
 
   ngOnInit() {
     this.loadEmployees();
     this.loadProfiles();
     this.loadManagementEntities();
+
+    this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({
+            next: (user) => {
+              this.features = {
+                create: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.CREATE_EMPLOYEE]),
+                update: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.UPDATE_EMPLOYEE]),
+                delete: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.DELETE_EMPLOYEE]),
+                view: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.READ_EMPLOYEE]),
+                grant: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.GRANT_PROFILE]),
+                revoke: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.REVOKE_PROFILE])
+              }
+            },
+            error: (error) => {
+              console.error('Error loading permissions:', error);
+            }
+          });
   }
 
   ngOnDestroy() {
