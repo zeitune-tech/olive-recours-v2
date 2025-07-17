@@ -31,10 +31,12 @@ export class MLAGlobalComponent implements OnInit {
         { value: 12, label: 'Décembre' },
     ];
 
+    companies: Company[] = [];
+
     globalLines: CompanyCounterpartySummary[] = [];
     globalBalanceText = '';
 
-    myCompany!: Company;
+    myCompany: Company | null = null;
 
     constructor(
         private _layoutService: LayoutService,
@@ -52,24 +54,53 @@ export class MLAGlobalComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this._companyService.companies$.subscribe({
+            next: (companies) => {
+                this.companies = companies;
+                console.log("Companies loaded:", this.companies);
+            },
+            error: (error) => {
+                console.error("Error fetching companies:", error);
+            }
+        });
         this._layoutService.setPageTitle("États globaux");
         this._layoutService.setCrumbs([
             { title: "États", link: "/statements/global" },
             { title: "États globaux", link: "/statements/global" }
         ]);
 
-        this.loadGlobalStatement();
+        // this.loadGlobalStatement();
     }
 
-    globalStatement!: GlobalStatementSummary;
+    globalStatement: GlobalStatementSummary | null = null;
+
+    selectCompany(company: Company): void {
+        this.myCompany = company;
+        this.globalStatement = null;
+    }
 
     loadGlobalStatement(): void {
-        this._statementService.getGlobalStatement(this.selectedMonth, this.selectedYear)
+        if (!this.myCompany) return;
+        this._statementService.getGlobalStatementBetween(this.myCompany.id, this.selectedMonth, this.selectedYear)
             .subscribe(data => {
                 this.globalStatement = data;
                 console.log("Global statement loaded:", this.globalStatement);
                 this.globalLines = data.counterparties;
                 this.globalBalanceText = `de ${data.globalBalance.toLocaleString()} FCFA`;
+            });
+    }
+
+    downloadPdf(): void {
+        if (!this.myCompany) return;
+    
+        this._statementService.downloadGlobalStatementPdfBetween(this.myCompany.id, this.selectedMonth, this.selectedYear)
+            .subscribe(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `statement_${this.myCompany?.name}_${this.selectedMonth}_${this.selectedYear}.pdf`;
+                a.click();
+                window.URL.revokeObjectURL(url);
             });
     }
 

@@ -10,6 +10,18 @@
         </p>
     </div>
 
+    <!-- Liste des compagnies -->
+    <div class="flex flex-wrap justify-center items-center gap-4 mb-6">
+        <div *ngFor="let company of companies"
+            (click)="selectCompany(company)"
+            class="flex flex-col items-center bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow transition min-w-52 max-w-52"
+            [class.ring-2]="myCompany?.id === company.id"
+            [class.ring-primary-600]="myCompany?.id === company.id">
+            <img [src]="company.logo" alt="{{ company.acronym }}" class="w-auto h-12 object-cover rounded-md mb-2" />
+            <p class="text-center text-xs font-medium">{{ company.name }}</p>
+        </div>
+    </div>
+
 
     <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
         <h2 class="text-xl font-bold mb-4">{{ t('entities.statement.globalTitle') }}</h2>
@@ -33,12 +45,16 @@
             <button mat-raised-button color="primary" (click)="loadGlobalStatement()">
                 {{ t('buttons.loadStatement') }}
             </button>
+            <button mat-raised-button color="primary" (click)="downloadPdf()">
+                <mat-icon>download</mat-icon>
+                {{ t('buttons.downloadPdf') }}
+            </button>
         </div>
 
         <!-- Tableau global -->
         <div *ngIf="globalLines && globalLines.length > 0" class="mt-6">
             <h3 class="text-lg font-semibold mb-3">
-                {{ t('entities.statement.accountTitle') }}: {{ myCompany.name }}
+                {{ t('entities.statement.accountTitle') }}: {{ myCompany?.name }}
             </h3>
 
             <table class="min-w-full border text-sm">
@@ -51,7 +67,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let cp of globalStatement.counterparties">
+                    <tr *ngFor="let cp of globalStatement?.counterparties">
                         <td class="border px-2 py-1 flex items-center gap-2">
                             <img *ngIf="cp.counterpartyLogo" [src]="cp.counterpartyLogo" alt="Logo"
                                 class="w-6 h-6 object-contain bg-black" />

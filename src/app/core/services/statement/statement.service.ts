@@ -26,12 +26,38 @@ export class StatementService {
   }
 
   /**
+   * Get detailed statement between two companies for a given month and year
+   */
+  getDetailedStatementBetween(companyOpponentId: string, companyUuid: string, month: number, year: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/summary/between`, {
+      params: {
+        companyOpponentId,
+        companyUuid,
+        month,
+        year
+      }
+    });
+  }
+
+  /**
    * Download detailed statement PDF
    */
   downloadDetailedStatementPdf(companyOpponentId: string, month: number, year: number): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/summary/pdf`, {
       params: {
         companyOpponentId,
+        month,
+        year
+      },
+      responseType: 'blob'
+    });
+  }
+
+  downloadDetailedStatementPdfBetween(companyOpponentId: string,companyUuid: string, month: number, year: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/summary/pdf/between`, {
+      params: {
+        companyOpponentId,
+        companyUuid,
         month,
         year
       },
@@ -51,12 +77,33 @@ export class StatementService {
     });
   }
 
+  getGlobalStatementBetween(companyUuid: string, month: number, year: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/global/between`, {
+      params: {
+        companyUuid,
+        month,
+        year
+      }
+    });
+  }
+
   /**
    * Download global statement PDF
    */
   downloadGlobalStatementPdf(month: number, year: number): Observable<Blob> {
     return this.http.get(`${this.baseUrl}/global/pdf`, {
       params: {
+        month,
+        year
+      },
+      responseType: 'blob'
+    });
+  }
+
+  downloadGlobalStatementPdfBetween(companyUuid: string, month: number, year: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/global/pdf/between`, {
+      params: {
+        companyUuid,
         month,
         year
       },

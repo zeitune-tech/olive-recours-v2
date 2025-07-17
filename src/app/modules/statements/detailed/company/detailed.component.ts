@@ -13,29 +13,29 @@ import { LayoutService } from "@lhacksrt/services/layout/layout.service";
 export class CompanyDetailedComponent implements OnInit {
 
     companies: Company[] = [];
-  selectedCompany: Company | null = null;
+    selectedCompany: Company | null = null;
 
-  selectedMonth = new Date().getMonth() + 1;
-  selectedYear = new Date().getFullYear();
+    selectedMonth = new Date().getMonth() + 1;
+    selectedYear = new Date().getFullYear();
 
-  months = [
-    { value: 1, label: 'Janvier' },
-    { value: 2, label: 'Février' },
-    { value: 3, label: 'Mars' },
-    { value: 4, label: 'Avril' },
-    { value: 5, label: 'Mai' },
-    { value: 6, label: 'Juin' },
-    { value: 7, label: 'Juillet' },
-    { value: 8, label: 'Août' },
-    { value: 9, label: 'Septembre' },
-    { value: 10, label: 'Octobre' },
-    { value: 11, label: 'Novembre' },
-    { value: 12, label: 'Décembre' },
-  ];
+    months = [
+        { value: 1, label: 'Janvier' },
+        { value: 2, label: 'Février' },
+        { value: 3, label: 'Mars' },
+        { value: 4, label: 'Avril' },
+        { value: 5, label: 'Mai' },
+        { value: 6, label: 'Juin' },
+        { value: 7, label: 'Juillet' },
+        { value: 8, label: 'Août' },
+        { value: 9, label: 'Septembre' },
+        { value: 10, label: 'Octobre' },
+        { value: 11, label: 'Novembre' },
+        { value: 12, label: 'Décembre' },
+    ];
 
-  statement: CompanyStatementSummary | null = null;
+    statement: CompanyStatementSummary | null = null;
 
-  myCompany!: Company;
+    myCompany!: Company;
 
     constructor(
         private _layoutService: LayoutService,
@@ -71,35 +71,35 @@ export class CompanyDetailedComponent implements OnInit {
             { title: "États détaillés", link: "/statements/detailed" }
         ]);
 
-        
+
     }
 
 
-  selectCompany(company: Company): void {
-    this.selectedCompany = company;
-    this.statement = null;
-  }
+    selectCompany(company: Company): void {
+        this.selectedCompany = company;
+        this.statement = null;
+    }
 
-  loadStatement(): void {
-    if (!this.selectedCompany) return;
+    loadStatement(): void {
+        if (!this.selectedCompany) return;
 
-    this._statementService.getDetailedStatement(this.selectedCompany.id, this.selectedMonth, this.selectedYear)
-      .subscribe(data => {
-        this.statement = data;
-      });
-  }
+        this._statementService.getDetailedStatement(this.selectedCompany.id, this.selectedMonth, this.selectedYear)
+            .subscribe(data => {
+                this.statement = data;
+            });
+    }
 
     downloadPdf(): void {
         if (!this.selectedCompany) return;
-    
+
         this._statementService.downloadDetailedStatementPdf(this.selectedCompany.id, this.selectedMonth, this.selectedYear)
-        .subscribe(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `statement_${this.selectedCompany?.name}_${this.selectedMonth}_${this.selectedYear}.pdf`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        });
+            .subscribe(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `statement_${this.selectedCompany?.name}_${this.selectedMonth}_${this.selectedYear}.pdf`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
     }
 }
