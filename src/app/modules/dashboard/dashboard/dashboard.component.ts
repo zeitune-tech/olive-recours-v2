@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { PERMISSIONS } from "@core/permissions/permissions.data";
 import { ManagementEntity } from "@core/services/management-entity/management-entity.interface";
 import { User } from "@core/services/user/user.interface";
 import { UserService } from "@core/services/user/user.service";
@@ -12,6 +13,7 @@ export class DashboardComponent implements OnInit {
 
     entity: ManagementEntity = {} as ManagementEntity;
     user: User = {} as User;
+    PERMISSIONS_DATA = PERMISSIONS;
 
     constructor(
         private _userService: UserService,
@@ -32,7 +34,5 @@ export class DashboardComponent implements OnInit {
             this.entity = entity;
         });
     }
-
-    
 
 }

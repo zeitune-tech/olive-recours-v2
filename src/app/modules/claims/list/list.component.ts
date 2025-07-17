@@ -16,6 +16,10 @@ import { MatDialog } from "@angular/material/dialog";
 import { CompanyService } from "@core/services/company/company.service";
 import { Company } from "@core/services/company/company.interface";
 import { Router } from "@angular/router";
+import { PermissionsService } from "@core/permissions/permissions.service";
+import { User } from "@core/services/user/user.interface";
+import { UserService } from "@core/services/user/user.service";
+import { PERMISSIONS } from "@core/permissions/permissions.data";
 
 @Component({
     selector: "app-claims-list",
@@ -32,6 +36,12 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     groupHeader: string[] = [];
     subHeader: string[] = [];
     visibleColumns: string[] = [];
+    features: any = {
+        view: false,
+        accept: false,
+        reject: false,
+        delete: false,
+    };
 
     dataSource = new MatTableDataSource<Claim>([]); // Ajoute les données réelles ici
     company: Company = {} as Company;
@@ -42,6 +52,8 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
         private _layoutService: LayoutService,
         private _router: Router,
         private _dialog: MatDialog,
+        private permissionsService: PermissionsService,
+        private _userService: UserService,
     ) {
 
         this._layoutService.setPageTitle('Liste des recours');
@@ -61,6 +73,19 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
             .subscribe((company: Company) => {
                 this.company = company;
             });
+
+        this._userService.user$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((user: User) => {
+                this.features = {
+                    view: this.permissionsService.hasPermission(user, [PERMISSIONS.READ_CLAIM, PERMISSIONS.ALL]),
+                    accept: this.permissionsService.hasPermission(user, [PERMISSIONS.VALIDATE_CLAIMS, PERMISSIONS.ALL]),
+                    reject: this.permissionsService.hasPermission(user, [PERMISSIONS.VALIDATE_CLAIMS, PERMISSIONS.ALL]),
+                    delete: this.permissionsService.hasPermission(user, [PERMISSIONS.DELETE_CLAIM, PERMISSIONS.ALL]),
+                }
+            });
+
+        
 
     }
 

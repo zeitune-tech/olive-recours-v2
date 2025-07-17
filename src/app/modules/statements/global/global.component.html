@@ -1,73 +1,17 @@
-<div class="w-full mb-20" *transloco="let t">
+<main class="w-full">
+    <ng-container *hasPermission="{
+      has: [PERMISSIONS_DATA.ALL,PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS],
+      mode: 'any',
+      not: PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN
+    }">
+            <app-mla-global />
+        </ng-container>
 
-
-    <div class="flex flex-col mb-6">
-        <h1 class="text-2xl md:text-4xl font-bold py-4">
-            {{ t('entities.statement.table.title') }}
-        </h1>
-        <p class="text-sm md:text-base text-gray-600">
-            {{ t('entities.statement.table.description') }}
-        </p>
-    </div>
-
-
-    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-        <h2 class="text-xl font-bold mb-4">{{ t('entities.statement.globalTitle') }}</h2>
-
-        <!-- Sélecteurs -->
-        <div class="flex items-center gap-4 mb-6">
-            <div class="flex-1 flex gap-6">
-                <mat-form-field appearance="outline" class="w-40">
-                    <mat-label>{{ t('entities.statement.month') }}</mat-label>
-                    <mat-select [(value)]="selectedMonth">
-                        <mat-option *ngFor="let m of months" [value]="m.value">{{ m.label }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="w-32">
-                    <mat-label>{{ t('entities.statement.year') }}</mat-label>
-                    <input matInput type="number" [(ngModel)]="selectedYear">
-                </mat-form-field>
-            </div>
-
-            <button mat-raised-button color="primary" (click)="loadGlobalStatement()">
-                {{ t('buttons.loadStatement') }}
-            </button>
-        </div>
-
-        <!-- Tableau global -->
-        <div *ngIf="globalLines && globalLines.length > 0" class="mt-6">
-            <h3 class="text-lg font-semibold mb-3">
-                {{ t('entities.statement.accountTitle') }}: {{ myCompany.name }}
-            </h3>
-
-            <table class="min-w-full border text-sm">
-                <thead>
-                    <tr>
-                        <th class="border px-2 py-1">{{ t('entities.statement.label') }}</th>
-                        <th class="border px-2 py-1">{{ t('entities.statement.debit') }}</th>
-                        <th class="border px-2 py-1">{{ t('entities.statement.credit') }}</th>
-                        <th class="border px-2 py-1">{{ t('entities.statement.balance') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let cp of globalStatement.counterparties">
-                        <td class="border px-2 py-1 flex items-center gap-2">
-                            <img *ngIf="cp.counterpartyLogo" [src]="cp.counterpartyLogo" alt="Logo"
-                                class="w-6 h-6 object-contain bg-black" />
-                            {{ cp.counterpartyCompany }}
-                        </td>
-                        <td class="border px-2 py-1">{{ cp.totalDebit | number:'1.0-0' }}</td>
-                        <td class="border px-2 py-1">{{ cp.totalCredit | number:'1.0-0' }}</td>
-                        <td class="border px-2 py-1">{{ cp.balance | number:'1.0-0' }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="mt-4 text-lg font-semibold text-center">
-                {{ t('entities.statement.balance') }} {{ globalBalanceText }}
-            </div>
-        </div>
-    </div>
-
-</div>
+        <ng-container *hasPermission="{
+      has: [PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN],
+      mode: 'any',
+      not: PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS
+    }">
+            <app-company-global />
+        </ng-container>
+</main>

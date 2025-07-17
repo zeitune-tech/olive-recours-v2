@@ -18,11 +18,20 @@ import { SharedModule } from "@shared/shared.module";
 import { routes } from "./statements.routing";
 import { DetailedComponent } from "./detailed/detailed.component";
 import { GlobalComponent } from "./global/global.component";
+import { HasPermissionDirective } from "@core/permissions/has-permission.directive";
+import { CompanyDetailedComponent } from "./detailed/company/detailed.component";
+import { MlaDetailedComponent } from "./detailed/mla/detailed.component";
+import { CompanyGlobalComponent } from "./global/company/global.component";
+import { MLAGlobalComponent } from "./global/mla/global.component";
 
 @NgModule({
     declarations: [
         DetailedComponent,
-        GlobalComponent
+        GlobalComponent,
+        CompanyDetailedComponent,
+        MlaDetailedComponent,
+        CompanyGlobalComponent,
+        MLAGlobalComponent
     ],
     imports: [
         RouterModule.forChild(routes),
@@ -41,6 +50,7 @@ import { GlobalComponent } from "./global/global.component";
         SharedModule,
         TableModule,
         MatProgressSpinnerModule,
+        HasPermissionDirective
     ],
     exports: [],
     providers: []

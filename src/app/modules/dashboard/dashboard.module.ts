@@ -16,10 +16,15 @@ import { MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TableModule } from "@lhacksrt/components/table/table.module";
 import { SharedModule } from "@shared/shared.module";
+import { CompanyBoardComponent } from './dashboard/company-board/company-board.component';
+import { MlaBoardComponent } from './dashboard/mla-board/mla-board.component';
+import { HasPermissionDirective } from "@core/permissions/has-permission.directive";
 
 @NgModule({
     declarations: [
-        DashboardComponent
+        DashboardComponent,
+        CompanyBoardComponent,
+        MlaBoardComponent,
     ],
     imports: [
         RouterModule.forChild(routes),
@@ -36,7 +41,8 @@ import { SharedModule } from "@shared/shared.module";
         MatInputModule,
         MatSelectModule,
         MatDividerModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HasPermissionDirective
     ],
     providers: [],
     exports: []
