@@ -66,6 +66,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
             .subscribe((data: Claim[]) => {
                 this.data = data;
                 this.dataSource.data = data;
+                this.filteredClaims = data;
             });
 
         this._companyService.myCompany$
@@ -91,6 +92,8 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 
 
     data: Claim[] = [];
+    filteredClaims: Claim[] = [];
+    searchTerm: string = '';
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -149,6 +152,9 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 
         // Construction des lignes d’en-tête
         this.buildHeaderRows();
+
+        // Initialiser filteredClaims
+        this.filteredClaims = this.data;
     }
 
     getBadgeClass(status: ClaimStatus): string {
@@ -191,6 +197,25 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
         this.visibleColumns.push('actions');
     }
 
+    // Ajout de la méthode de recherche/filtrage
+    onSearch(): void {
+        const term = this.searchTerm.trim().toLowerCase();
+        if (!term) {
+            this.filteredClaims = this.data;
+            return;
+        }
+        this.filteredClaims = this.data.filter(claim =>
+            (claim.claimNumber && claim.claimNumber.toLowerCase().includes(term)) ||
+            (claim.insuredName && claim.insuredName.toLowerCase().includes(term)) ||
+            (claim.declaringCompanyName && claim.declaringCompanyName.toLowerCase().includes(term)) ||
+            (claim.opponentClaimNumber && claim.opponentClaimNumber.toLowerCase().includes(term)) ||
+            (claim.opponentInsuredName && claim.opponentInsuredName.toLowerCase().includes(term)) ||
+            (claim.opponentCompanyName && claim.opponentCompanyName.toLowerCase().includes(term)) ||
+            (claim.amount && claim.amount.toString().toLowerCase().includes(term)) ||
+            (claim.insuredAmount && claim.insuredAmount.toString().toLowerCase().includes(term))
+        );
+    }
+
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
@@ -217,15 +242,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
 
 
     openNewClaimDialog(): void {
-        const dialogRef = this._dialog.open(ClaimNewComponent, {
-            width: '700px'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.loadClaims();
-            }
-        });
+        this._router.navigateByUrl("/claims/new");
     }
 
     onEdit(claim: Claim): void {
@@ -258,6 +275,8 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     loadClaims(): void {
         this._claimService.getAll().subscribe(claims => {
             this.dataSource.data = claims;
+            this.data = claims;
+            this.filteredClaims = claims;
         });
     }
 

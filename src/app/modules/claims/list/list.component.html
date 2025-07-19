@@ -1,178 +1,124 @@
-<div class="w-full p-4" *transloco="let t;" tabindex="0">
-    <!-- ----------------------------------------------------- -->
-    <!-- En-tête de la page                                     -->
-    <!-- ----------------------------------------------------- -->
-    <div class="flex flex-col mb-6">
-        <h1 class="text-2xl md:text-4xl font-bold py-4">
-            {{ t('entities.claim.table.title') }}
-        </h1>
-        <p class="text-sm md:text-base text-gray-600">
-            {{ t('entities.claim.table.description') }}
-        </p>
+<div class="min-h-screen w-full mt-8">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b border-gray-200 mx-4 sm:mx-6 lg:mx-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Liste des recours</h1>
+                    <p class="text-sm text-gray-600 mt-1">Gérez les recours de votre organisation</p>
+                </div>
+                <button (click)="openNewClaimDialog()"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Nouveau recours
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- ----------------------------------------------------- -->
-    <!-- Tableau                                               -->
-    <!-- ----------------------------------------------------- -->
-    <div class="overflow-y-hidden overflow-x-auto pb-4">
-        <table mat-table [dataSource]="dataSource" matSort class="w-full rounded-md bg-card">
+    <!-- Content -->
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Search and Filters -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <div class="p-6 flex flex-col md:flex-row gap-4">
+                <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Rechercher un recours..."
+                    class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                <!-- Ajoute d'autres filtres ici si besoin -->
+            </div>
+        </div>
 
-            <!-- ================================================= -->
-            <!-- Colonnes dynamiques                               -->
-            <!-- ================================================= -->
-            @let columns = tableOptions.columns;
+        <!-- Claims Table -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-medium text-gray-900">Liste des recours</h2>
+            </div>
 
-            <!-- Boucle générale -->
-            <ng-container *ngFor="let column of columns; trackBy: trackByProperty" [ngSwitch]="column.type">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Sinistre</th>
+                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Déclarant</th>
+                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Adversaire</th>
+                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P/C Compagnie</th>
+                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P/C Assuré</th>
+                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                            <th rowspan="2" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                        <tr>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Num Sinistre</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Assuré</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Compagnie</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Num Sinistre</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Assuré</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Compagnie</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr *ngFor="let claim of filteredClaims">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ claim.dateOfSinister | date }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.claimNumber }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.insuredName }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.declaringCompanyName }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.opponentClaimNumber }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.opponentInsuredName }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.opponentCompanyName }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ claim.amount }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ claim.insuredAmount }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="getBadgeClass(claim.status)">
+                                    {{ tableOptions.renderItem(claim, 'status') }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex justify-end space-x-2">
+                                    <button (click)="onView(claim)" [disabled]="!features.view"
+                                        class="text-blue-600 hover:text-blue-900 p-1" title="Voir">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
+                                    <button (click)="acceptClaim(claim)" [disabled]="claim.status === 'ACCEPTED' || claim.status === 'REFUSED' || !features.accept"
+                                        class="text-green-600 hover:text-green-900 p-1" title="Accepter">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </button>
+                                    <button (click)="rejectClaim(claim)" [disabled]="claim.status === 'ACCEPTED' || claim.status === 'REFUSED' || !features.reject"
+                                        class="text-orange-600 hover:text-orange-900 p-1" title="Rejeter">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
+                                        </svg>
+                                    </button>
+                                    <button (click)="onDelete(claim)" [disabled]="claim.status === 'ACCEPTED' || claim.status === 'REFUSED' || !features.delete"
+                                        class="text-red-600 hover:text-red-900 p-1" title="Supprimer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                <!-- ---------- Colonnes « simples » (texte, image…) -------- -->
-                <ng-container *ngSwitchCase="'text'" [matColumnDef]="column.property">
-                    <!-- En-tête : 2 lignes fusionnées verticalement -->
-                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header class="uppercase border-x">
-                        {{ t(column.label) }}
-                    </th>
+            <!-- Empty State -->
+            <div *ngIf="filteredClaims.length === 0" class="text-center py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun recours trouvé</h3>
+                <p class="mt-1 text-sm text-gray-500">Commencez par ajouter un nouveau recours.</p>
+            </div>
+        </div>
 
-                    <!-- Cellule de données -->
-                    <td mat-cell *matCellDef="let row" [ngClass]="column.cssClasses">
-                        {{ tableOptions.renderItem(row, column.property) }}
-                    </td>
-                </ng-container>
-
-                <!-- ---------- Colonnes « button » (boutons d’action) -------- -->
-                <ng-container *ngSwitchCase="'button'" [matColumnDef]="column.property">
-                    <!-- En-tête : 2 lignes fusionnées verticalement -->
-                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header
-                        class="uppercase text-center">
-                        {{ t(column.label) }}
-                    </th>
-
-                    <!-- Cellule de données -->
-                    <td mat-cell *matCellDef="let row" class="text-center">
-                        <button mat-button color="primary" (click)="onButtonClick(row, column.property)"
-                            class="w-full h-full">
-                            {{ tableOptions.renderItem(row, column.property) }}
-                        </button>
-                    </td>
-                </ng-container>
-
-                <!-- ---------- Colonnes « collapse » (colspan) ------------ -->
-                <ng-container *ngSwitchCase="'collapse'">
-
-                    <!-- Cellule PARENTE (ligne 1) -->
-                    <ng-container [matColumnDef]="column.property + '-parent'">
-                        <th mat-header-cell *matHeaderCellDef [attr.colspan]="column.collapseOptions?.length || 1"
-                            class="uppercase text-center border-x">
-                            {{ t(column.label) }}
-                        </th>
-                    </ng-container>
-
-                    <!-- Sous-colonnes (ligne 2 + données) -->
-                    <ng-container *ngFor="let child of column.collapseOptions" [matColumnDef]="child.property">
-
-                        <!-- En-tête (ligne 2) -->
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase border-x"> 
-                            {{ t(child.label) }}
-                        </th>
-
-                        <!-- Cellule de données -->
-                        <td mat-cell *matCellDef="let row" [ngClass]="child.cssClasses">
-                            {{ tableOptions.renderItem(row, child.property) }}
-                        </td>
-                    </ng-container>
-                </ng-container>
-
-                <!-- (Ajoute ici d’autres *ngSwitchCase* pour badge, image, etc.) -->
-
-                <!-- ---------- Colonnes « badge » (statut, etc.) -------- -->
-                <ng-container *ngSwitchCase="'badge'" [matColumnDef]="column.property">
-                    <!-- En-tête : 2 lignes fusionnées verticalement -->
-                    <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header
-                        class="uppercase text-center border-x">
-                        {{ t(column.label) }}
-                    </th>
-
-                    <!-- Cellule de données -->
-                    <td mat-cell *matCellDef="let row" class="text-center min-w-24">
-                        <span class="p-1 px-1.5 rounded-sm" [ngClass]="getBadgeClass(row[column.property])">
-                            {{ tableOptions.renderItem(row, column.property) }}
-                        </span>
-                    </td>
-                </ng-container>
-
-            </ng-container>
-
-            <!-- ================================================= -->
-            <!-- Colonne ACTIONS                                   -->
-            <!-- ================================================= -->
-            <ng-container matColumnDef="actions">
-                <!-- En-tête fusionné verticalement -->
-                <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" mat-sort-header
-                    class="uppercase text-center border-l">
-                    {{ 'Actions' }}
-                </th>
-
-                <!-- Cellule de données -->
-                <td mat-cell *matCellDef="let element" class="border-l">
-                    <div class="w-full h-full flex items-center justify-around gap-4">
-
-                        <button mat-icon-button color="accent" (click)="onView(element)" [disabled]="!features.view">
-                            <mat-icon>visibility</mat-icon>
-                        </button>
-
-                        <button mat-icon-button color="success" (click)="acceptClaim(element)"
-                            [matTooltip]="t('common.accept')" [matTooltipPosition]="'above'"
-                            [disabled]="element.status === 'ACCEPTED' || element.status === 'REJECTED' || !features.accept">
-                            <mat-icon>check_circle</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" (click)="rejectClaim(element)"
-                            [matTooltip]="t('common.reject')" [matTooltipPosition]="'above'"
-                            [disabled]="element.status === 'ACCEPTED' || element.status === 'REJECTED' || !features.reject">
-                            <mat-icon>cancel</mat-icon>
-                        </button>
-
-                        <!-- <button mat-icon-button color="secondary" (click)="openMessageDialog(element)">
-                            <mat-icon>chat</mat-icon>
-                        </button>
-                        <button mat-icon-button style="color: #ff9800;" (click)="openAttachmentsDialog(element)">
-                            <mat-icon>attach_file</mat-icon>
-                        </button> -->
-                        <button mat-icon-button color="warn" (click)="onDelete(element)"
-                            [matTooltip]="t('common.delete')" [matTooltipPosition]="'above'"
-                            [disabled]="element.status === 'ACCEPTED' || element.status === 'REJECTED' || !features.delete">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
-                </td>
-            </ng-container>
-
-            <!-- ================================================= -->
-            <!-- LIGNES D’EN-TÊTE                                  -->
-            <!-- ================================================= -->
-            <tr mat-header-row *matHeaderRowDef="groupHeader"></tr> <!-- ligne 1 -->
-            <tr mat-header-row *matHeaderRowDef="subHeader"></tr> <!-- ligne 2 -->
-
-            <!-- ================================================= -->
-            <!-- LIGNES DE DONNÉES                                 -->
-            <!-- ================================================= -->
-            <tr mat-row *matRowDef="let row; columns: visibleColumns;" @fadeInBottom
-                class="trans-ease-out cursor-pointer">
-            </tr>
-
-            <!-- Ligne « Aucune donnée » -->
-            @let count = visibleColumns.length;
-            <tr *matNoDataRow>
-                <td [attr.colspan]="count" class="text-center py-4">
-                    {{ t('common.no_data') }}
-                </td>
-            </tr>
-        </table>
+        <!-- Pagination -->
+        <mat-paginator class="rounded-b-md border-t mt-4" [pageSizeOptions]="tableOptions.pageSizeOptions" [pageSize]="tableOptions.pageSize">
+        </mat-paginator>
     </div>
-
-    <!-- ----------------------------------------------------- -->
-    <!-- Paginator                                             -->
-    <!-- ----------------------------------------------------- -->
-    @let pageSizeOptions = tableOptions.pageSizeOptions;
-    @let pageSize = tableOptions.pageSize;
-    <mat-paginator class="rounded-b-md border-t" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize">
-    </mat-paginator>
 </div>
