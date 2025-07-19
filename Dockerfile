@@ -1,14 +1,21 @@
-# Étape 1 : Utiliser Oracle JDK 21
-FROM container-registry.oracle.com/java/openjdk:21
+# Étape 1 : Build de l'application Angular
+FROM node:20 AS build
 
-# Étape 2 : Définir le répertoire de travail
 WORKDIR /app
 
-# Étape 3 : Copier le fichier JAR compilé dans le conteneur
-COPY target/*.jar app.jar
+COPY package*.json ./
+RUN npm install
 
-# Étape 4 : Exposer le port utilisé par Spring Boot
-EXPOSE 8080
+COPY . .
+RUN npm run build --prod
 
-# Étape 5 : Démarrer l’application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Étape 2 : Servir l'app avec Nginx
+FROM nginx:alpine
+
+# Copie du build Angular dans le dossier de Nginx
+COPY --from=build /app/dist/olive-recours-v2/ /usr/share/nginx/html
+
+# Exposer le port 80
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

@@ -117,7 +117,7 @@
     "submit": "Soumettre",
     "create": "Créer",
     "loadStatement": "charger les états",
-    "downloadPdf": "Télécharger PDF",
+    "downloadPdf": "état PDF",
     "upload-document": "Uploader un document",
     "download": "Télécharger"
   },
@@ -404,7 +404,7 @@
       }
     },
     "statement":{
-      "title":"état des comptes",
+      "title":"État des comptes",
       "month":"mois",
       "year":"année",
       "date": "Date",
@@ -413,10 +413,10 @@
       "label": "Libellé",
       "amount": "Montant",
       "balance": "Solde",
-      "globalTitle": "état des comptes globaux",
-      "accountTitle": "état des comptes de ",
+      "globalTitle": "État des comptes courants",
+      "accountTitle": "État des comptes de ",
       "table": {
-        "title": "état des comptes",
+        "title": "État des comptes",
         "description": "informations sur les états des comptes des compagnies"
       }
     }
