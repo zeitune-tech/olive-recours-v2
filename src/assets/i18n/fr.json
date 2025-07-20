@@ -423,7 +423,41 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "description": "Vue d'ensemble de votre compte"
+    "description": "Vue d'ensemble de votre compte",
+    "common": {
+      "total_debit": "Total débit",
+      "total_credit": "Total crédit",
+      "global_balance": "Solde global",
+      "average_balance": "Solde moyen",
+      "company_count": "Nombre de compagnies",
+      "participating_companies" : "Compagnies participantes",
+      "global_balance_evolution" : "Évolution du solde global",
+      "company": "Compagnie",
+      "debit": "Débit",
+      "credit": "Crédit",
+      "balance": "Solde",
+      "month": "Mois",
+      "year": "Année",
+      "federation": "Fédération",
+      "counterparty": "Compagnie contrepartie",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse",
+      "actions": "Actions",
+      "no_data": "Aucune donnée trouvée",
+      "no_data_description": "Aucune donnée trouvée pour le moment"
+    },
+    "company_board": {
+      "balance_evolution": "Évolution du solde",
+      "credit_count": "Nombre de crédits",
+      "debit_count": "Nombre de débits",
+      "avg_amount": "Montant moyen",
+      "statement_lines": "Lignes de relevé",
+      "label": "Libellé",
+      "date": "Date",
+      "amount": "Montant",
+      "type": "Type"
+    }
   },
   "classes": {
     "title": "Classes",

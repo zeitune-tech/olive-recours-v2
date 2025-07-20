@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { UntypedFormControl } from "@angular/forms";
@@ -41,6 +40,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
         accept: false,
         reject: false,
         delete: false,
+        create: false,
     };
 
     dataSource = new MatTableDataSource<Claim>([]); // Ajoute les données réelles ici
@@ -83,6 +83,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
                     accept: this.permissionsService.hasPermission(user, [PERMISSIONS.VALIDATE_CLAIMS, PERMISSIONS.ALL]),
                     reject: this.permissionsService.hasPermission(user, [PERMISSIONS.VALIDATE_CLAIMS, PERMISSIONS.ALL]),
                     delete: this.permissionsService.hasPermission(user, [PERMISSIONS.DELETE_CLAIM, PERMISSIONS.ALL]),
+                    create: this.permissionsService.hasPermission(user, [PERMISSIONS.CREATE_CLAIM, PERMISSIONS.ALL]),
                 }
             });
 
@@ -95,7 +96,6 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     filteredClaims: Claim[] = [];
     searchTerm: string = '';
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
     selection = new SelectionModel<Claim>(true, []);

@@ -14,13 +14,13 @@
                 {{ entity.name }}
             </h1>
             <p class="text-white text-md">
-                Email: {{ entity.email }}
+                {{ 'dashboard.common.email' | transloco }}: {{ entity.email }}
             </p>
             <p class="text-white text-md">
-                Téléphone: {{ entity.phone }}
+                {{ 'dashboard.common.phone' | transloco }}: {{ entity.phone }}
             </p>
             <p class="text-white text-md">
-                Adresse: {{ entity.address }}
+                {{ 'dashboard.common.address' | transloco }}: {{ entity.address }}
             </p>
 
         </div>
@@ -28,7 +28,7 @@
     </div>
 
 
-    <main>
+    <!-- <main>
         <ng-container *hasPermission="{
       has: [PERMISSIONS_DATA.ALL, PERMISSIONS_DATA.READ_MLA_DASHBOARD],
       mode: 'any',
@@ -44,5 +44,5 @@
     }">
             <app-company-board />
         </ng-container>
-    </main>
+    </main> -->
 </div>

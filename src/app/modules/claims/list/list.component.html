@@ -7,8 +7,8 @@
                     <h1 class="text-2xl font-bold text-gray-900">Liste des recours</h1>
                     <p class="text-sm text-gray-600 mt-1">Gérez les recours de votre organisation</p>
                 </div>
-                <button (click)="openNewClaimDialog()"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                <button (click)="openNewClaimDialog()" [disabled]="!features.create"
+                    class="inline-flex items-center px-4 py-2 border border-transparent disabled:opacity-50 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
@@ -25,7 +25,6 @@
             <div class="p-6 flex flex-col md:flex-row gap-4">
                 <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Rechercher un recours..."
                     class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm" />
-                <!-- Ajoute d'autres filtres ici si besoin -->
             </div>
         </div>
 
@@ -40,20 +39,20 @@
                     <thead>
                         <tr>
                             <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Sinistre</th>
-                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Déclarant</th>
-                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Adversaire</th>
-                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P/C Compagnie</th>
-                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P/C Assuré</th>
-                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-l border-b border-gray-200">Déclarant</th>
+                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-l border-b border-gray-200">Adversaire</th>
+                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">P/C Compagnie</th>
+                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">P/C Assuré</th>
+                            <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">Statut</th>
                             <th rowspan="2" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                         <tr>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-l border-gray-2000">Num Sinistre</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Assuré</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">Compagnie</th>
                             <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Num Sinistre</th>
                             <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Assuré</th>
-                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Compagnie</th>
-                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Num Sinistre</th>
-                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Assuré</th>
-                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Compagnie</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">Compagnie</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -117,8 +116,5 @@
             </div>
         </div>
 
-        <!-- Pagination -->
-        <mat-paginator class="rounded-b-md border-t mt-4" [pageSizeOptions]="tableOptions.pageSizeOptions" [pageSize]="tableOptions.pageSize">
-        </mat-paginator>
     </div>
 </div>

@@ -19,6 +19,7 @@ import { SharedModule } from "@shared/shared.module";
 import { CompanyBoardComponent } from './dashboard/company-board/company-board.component';
 import { MlaBoardComponent } from './dashboard/mla-board/mla-board.component';
 import { HasPermissionDirective } from "@core/permissions/has-permission.directive";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
     declarations: [
@@ -42,7 +43,8 @@ import { HasPermissionDirective } from "@core/permissions/has-permission.directi
         MatSelectModule,
         MatDividerModule,
         ReactiveFormsModule,
-        HasPermissionDirective
+        HasPermissionDirective,
+        NgxChartsModule
     ],
     providers: [],
     exports: []
