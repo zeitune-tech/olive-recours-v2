@@ -375,6 +375,7 @@
       },
       "details": {
         "chat": "Discussion",
+        "chat-new-message": "Nouveau message",
         "documents": "Documents",
         "no-documents": "Aucun document chargé",
         "title": "Détails du recours",

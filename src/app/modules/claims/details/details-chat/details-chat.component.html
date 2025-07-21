@@ -10,13 +10,13 @@
 
 	<form [formGroup]="formGroup" class="flex flex-col gap-4">
 		<mat-form-field appearance="outline">
-			<mat-label>Nouveau message</mat-label>
+			<mat-label>{{ t('entities.claim.details.chat-new-message') }}</mat-label>
 			<textarea matInput formControlName="content" rows="3"></textarea>
 		</mat-form-field>
 
 		<div class="flex justify-end gap-2">
 			<button mat-raised-button color="primary" [disabled]="formGroup.invalid"
-				(click)="onSubmit()">Envoyer</button>
+				(click)="onSubmit()">{{ t('buttons.submit') }}</button>
 		</div>
 	</form>
 
