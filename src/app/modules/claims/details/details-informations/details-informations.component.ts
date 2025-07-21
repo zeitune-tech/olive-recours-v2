@@ -27,9 +27,11 @@ export class DetailsInformationsComponent implements OnInit {
     }
 
     saveClaim() {
-        // TODO: call service to update
-        console.log('Claim updated', this.claim);
-        this.editMode = false;
+        this._claimService.update(this.claim.id, this.claim).subscribe((claim: Claim) => {
+            this.claim = claim;
+            this.editMode = false;
+            // TODO: add toast message
+        });
     }
 
 }

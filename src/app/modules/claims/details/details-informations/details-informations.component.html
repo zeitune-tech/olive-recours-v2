@@ -16,7 +16,7 @@
         <div class="flex flex-col gap-6 w-full">
             <mat-form-field appearance="outline">
                 <mat-label>{{ t('entities.claim.table.date') }}</mat-label>
-                <input matInput [value]="claim.dateOfSinister | date" readonly>
+                <input matInput [value]="claim.dateOfSinister | date" [readonly]="true" [disabled]="editMode">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -36,7 +36,7 @@
                     <mat-form-field appearance="outline">
                         <mat-label>{{ t('entities.claim.table.declaringCompanyName') }}</mat-label>
                         <input matInput [(ngModel)]="claim.declaringCompanyName" name="declaringCompanyName"
-                            [readonly]="!editMode">
+                            [readonly]="true" [disabled]="editMode">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
@@ -52,12 +52,12 @@
                     <mat-form-field appearance="outline">
                         <mat-label>{{ t('entities.claim.table.insuredAmount') }}</mat-label>
                         <input matInput type="number" [(ngModel)]="claim.insuredAmount" name="insuredAmount"
-                            [readonly]="!editMode">
+                            [readonly]="true" [disabled]="editMode">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
                         <mat-label>{{ t('entities.claim.table.amount') }}</mat-label>
-                        <input matInput type="number" [(ngModel)]="claim.amount" name="amount" [readonly]="!editMode">
+                        <input matInput type="number" [(ngModel)]="claim.amount" name="amount" [readonly]="true" [disabled]="editMode">
                     </mat-form-field>
                 </div>
             </div>
@@ -75,9 +75,9 @@
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                     <mat-form-field appearance="outline">
-                        <mat-label>{{ t('entities.claim.table.opponentCompanyName') }}</mat-label>
+                        <mat-label>{{ t('entities.claim.table.opponentCompanyName2') }}</mat-label>
                         <input matInput [(ngModel)]="claim.opponentCompanyName" name="opponentCompanyName"
-                            [readonly]="!editMode">
+                            [readonly]="true" [disabled]="editMode">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">

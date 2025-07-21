@@ -355,14 +355,15 @@
         },
         "empty_state": "Aucun recours trouvé",
         "dateOfSinister": "Date du sinistre",
-        "claimNumber": "Numéro de recours",
-        "insuredName": "Nom de l'assuré",
-        "opponentCompanyName": "compagnie de l'adversaire",
-        "opponentClaimNumber": "Numéro de recours de l'adversaire",
-        "opponentInsuredName": "Nom de l'assuré de l'adversaire",
+        "claimNumber": "Numéro sinistre",
+        "insuredName": "Assuré",
+        "opponentCompanyName": "compagnie",
+        "opponentCompanyName2": "compagnie adverse",
+        "opponentClaimNumber": "Numéro sinistre",
+        "opponentInsuredName": "Assuré",
         "declaringCompanyName": "compagnie déclarante",
-        "amount": "Montant du recours",
-        "insuredAmount": "Montant de l'assuré",
+        "amount": "P/C Compagnie",
+        "insuredAmount": "P/C Assuré",
         "comment": "Commentaire",
         "comments": "Commentaires",
         "date": "Date"
@@ -377,9 +378,9 @@
           "claim_status": "Statut du recours",
           "stock": "Stock du produit"
         },
-        "step1": "étape 1",
-        "step2": "étape 2",
-        "step3": "étape 3"
+        "step1": "Assuré et sinistre",
+        "step2": "Adversaire",
+        "step3": "Déclaration"
       },
       "details": {
         "chat": "Discussion",
