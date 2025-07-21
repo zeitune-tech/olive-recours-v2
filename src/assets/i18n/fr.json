@@ -72,29 +72,23 @@
   },
   "sidebar": {
     "dashboard": "Tableau de bord",
-
     "claims": "Recours",
     "claims-list": "Liste des recours",
     "claims-new": "Créer un recours",
     "claims-documents": "Documents",
     "claims-messages": "Messages",
-
     "statements": "États",
     "statements-detailed": "Comptes Courants A/B",
     "statements-global": "Comptes Courants A/FSSA",
     "statements-archives": "Situation Financière",
-
     "companies": "Compagnies",
     "employees": "Employés",
     "companies-list": "Liste des compagnies",
     "companies-logos": "Logos des compagnies",
-
     "notifications": "Notifications",
-
     "account": "Mon compte",
     "profile": "Profil",
     "change-password": "Changer mot de passe",
-
     "admin": "Administration",
     "users": "Utilisateurs",
     "roles": "Rôles"
@@ -203,13 +197,10 @@
       "form": {
         "title": "Créer une compagnie",
         "description": "Veuillez remplir les informations nécessaires pour enregistrer une nouvelle compagnie.",
-
         "step_one_title": "Étape 1 : Informations générales",
         "step_one_description": "Ajoutez les informations de base de la compagnie.",
-
         "step_two_title": "Étape 2 : Création du compte Administrateur",
         "step_two_description": "Renseignez les informations du compte administrateur de la compagnie.",
-
         "step_three_title": "Résumé",
         "step_three_description": "Vérifiez les informations avant de finaliser.",
         "step_three_summary": "Récapitulatif des informations",
@@ -237,13 +228,10 @@
       "form": {
         "title": "Créer une organisation de niveau marché",
         "description": "Veuillez remplir les étapes suivantes pour enregistrer une nouvelle organisation de niveau marché.",
-
         "step_one_title": "Étape 1 : Informations générales",
         "step_one_description": "Fournissez les informations de base de l'organisation.",
-
         "step_two_title": "Étape 2 : Création du compte Administrateur",
         "step_two_description": "Renseignez les informations du compte administrateur de l'organisation.",
-
         "step_three_title": "Étape 3 : Résumé et confirmation",
         "step_three_description": "Vérifiez les informations avant la soumission.",
         "step_three_summary": "Résumé des informations fournies",
@@ -295,7 +283,10 @@
             "label": "Prénom",
             "placeholder": "Saisir le prénom"
           },
-          "last_name": { "label": "Nom", "placeholder": "Saisir le nom" },
+          "last_name": {
+            "label": "Nom",
+            "placeholder": "Saisir le nom"
+          },
           "email": {
             "label": "E-mail",
             "placeholder": "Saisir l'adresse e-mail"
@@ -388,7 +379,13 @@
         "no-documents": "Aucun document chargé",
         "title": "Détails du recours",
         "subtitle": "Informations sur le recours",
-        "description": "Informations sur le recours"
+        "description": "Informations sur le recours",
+        "upload": {
+          "upload-document": "Charger un document",
+          "document-name": "Nom du document",
+          "description": "Description",
+          "select-file": "Sélectionner un fichier"
+        }
       }
     },
     "product": {
@@ -404,10 +401,10 @@
         }
       }
     },
-    "statement":{
-      "title":"État des comptes",
-      "month":"mois",
-      "year":"année",
+    "statement": {
+      "title": "État des comptes",
+      "month": "mois",
+      "year": "année",
       "date": "Date",
       "debit": "Débit",
       "credit": "Crédit",
@@ -431,8 +428,8 @@
       "global_balance": "Solde global",
       "average_balance": "Solde moyen",
       "company_count": "Nombre de compagnies",
-      "participating_companies" : "Compagnies participantes",
-      "global_balance_evolution" : "Évolution du solde global",
+      "participating_companies": "Compagnies participantes",
+      "global_balance_evolution": "Évolution du solde global",
       "company": "Compagnie",
       "debit": "Débit",
       "credit": "Crédit",
