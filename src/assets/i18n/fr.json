@@ -1112,5 +1112,35 @@
       "closures": "Clôtures",
       "profile": "Profil"
     }
+  },
+  "permissions": {
+    "read-dashboard": "Voir le tableau de bord",
+    "read-claims": "Voir les recours",
+    "validate-claims": "Valider les recours",
+    "read-claim": "Voir un recours",
+    "create-claim": "Créer un recours",
+    "update-claim": "Modifier un recours",
+    "delete-claim": "Supprimer un recours",
+    "read-employees": "Voir les employés",
+    "read-employee": "Voir un employé",
+    "create-employee": "Créer un employé",
+    "update-employee": "Modifier un employé",
+    "delete-employee": "Supprimer un employé",
+    "read-companies": "Voir les compagnies",
+    "read-company": "Voir une compagnie",
+    "create-company": "Créer une compagnie",
+    "update-company": "Modifier une compagnie",
+    "delete-company": "Supprimer une compagnie",
+    "read-profiles": "Voir les profils",
+    "read-profile": "Voir un profil",
+    "create-profile": "Créer un profil",
+    "update-profile": "Modifier un profil",
+    "delete-profile": "Supprimer un profil",
+    "grant-profile": "Attribuer un profil",
+    "revoke-profile": "Révoquer un profil",
+    "read-specific-statements": "Voir les relevés spécifiques",
+    "read-global-statements": "Voir les relevés globaux",
+    "manage-closure": "Gérer les clôtures",
+    "all": "Tous les droits"
   }
 }
