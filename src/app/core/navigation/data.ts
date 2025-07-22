@@ -284,7 +284,15 @@ export const defaultNavigation: NavigationItem[] = [
                 icon: 'mat_outline:security',
                 link: '/admin/roles',
                 permission: [PERMISSIONS.READ_PROFILES, PERMISSIONS.ALL]
-            }
+            },
+            {
+                id: 'admin-closures',
+                title: 'sidebar.closures',
+                type: 'basic',
+                icon: 'mat_outline:lock',
+                link: '/admin/closures',
+                permission: [PERMISSIONS.ALL]
+            },
         ]
     }
 ];

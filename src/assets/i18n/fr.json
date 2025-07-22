@@ -91,7 +91,8 @@
     "change-password": "Changer mot de passe",
     "admin": "Administration",
     "users": "Utilisateurs",
-    "roles": "Rôles"
+    "roles": "Rôles",
+    "closures": "Clôtures"
   },
   "buttons": {
     "save": "Enregistrer",
@@ -360,8 +361,8 @@
         "date": "Date"
       },
       "create": {
-        "title": "suivez les étapes suivantes pour créer un recours",
-        "description": "remplissez les champs suivants pour créer un recours",
+        "title": "suivez les étapes suivantes pour soumettre un recours",
+        "description": "remplissez les champs suivants pour soumettre un recours",
         "fields": {
           "claim_number": "Numéro de recours",
           "claim_date": "Date de recours",
@@ -369,8 +370,8 @@
           "claim_status": "Statut du recours",
           "stock": "Stock du produit"
         },
-        "step1": "Assuré et sinistre",
-        "step2": "Adversaire",
+        "step1": "Compagnie",
+        "step2": "Compagnie adverse",
         "step3": "Déclaration"
       },
       "details": {
@@ -392,7 +393,7 @@
     "product": {
       "form": {
         "title": "Création d'un recours",
-        "description": "remplissez les champs suivants pour créer un recours",
+        "description": "remplissez les champs suivants pour soumettre un recours",
         "fields": {
           "claim_number": "Numéro de recours",
           "claim_date": "Date de recours",

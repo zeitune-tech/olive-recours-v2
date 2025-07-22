@@ -8,5 +8,6 @@ export class Company extends ManagementEntity {
     constructor(entity: any) {
         super(entity);
         this.linked = entity?.linked || false;
+        // dateOfCreation is now handled by ManagementEntity
     }
 }

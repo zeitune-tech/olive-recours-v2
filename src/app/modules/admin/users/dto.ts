@@ -6,6 +6,7 @@ export interface CompanyRequest {
   fax?: string;
   gsm?: string;
   acronym?: string;
+  dateOfCreation?: string | Date;
 }
 
 export enum ManagementEntityType {
@@ -20,6 +21,7 @@ export interface UpdateCompanyRequest {
   address: string;
   fax?: string;
   gsm?: string;
+  dateOfCreation?: string | Date;
 }
 
 export interface MarketLevelOrganisationRequest {
@@ -51,6 +53,7 @@ export interface CompanyResponse {
   gsm?: string;
   acronym?: string;
   logo?: string;
+  dateOfCreation?: string | Date;
 }
 
 export interface ManagementEntityResponse {

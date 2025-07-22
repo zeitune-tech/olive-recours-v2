@@ -21,6 +21,7 @@ export class ManagementEntity {
     registrationNumber: string;
     logo: string;
     level: "ENTITY_SUPERIOR" | "COMPANY" | "POINT_OF_SALE";
+    dateOfCreation?: string | Date;
 
     constructor(entity: any) {
         this.id = entity?.id || '';
@@ -36,6 +37,7 @@ export class ManagementEntity {
         this.email = entity?.email || '';
         this.phone = entity?.phone || '';
         this.address = entity?.address || '';
+        this.dateOfCreation = entity?.dateOfCreation;
     }
 
 }

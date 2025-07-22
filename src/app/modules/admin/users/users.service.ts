@@ -114,6 +114,13 @@ export class UsersService {
     );
   }
 
+  uploadCompanyLogo(companyId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('uuid', companyId);
+    return this.http.post(`${this.request_url}/companies/logo`, formData);
+  }
+
   // Employee operations
   getAllUsers(): Observable<Employee[]> {
     return this.http.get<Employee[]>(`${this.request_url}/employees`).pipe(

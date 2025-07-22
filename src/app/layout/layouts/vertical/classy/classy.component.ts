@@ -17,7 +17,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
     
     isScreenSmall!: boolean;
     navigation!: Navigation;
-    user!: User;
+    user: User | null = null;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(

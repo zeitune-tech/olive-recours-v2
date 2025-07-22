@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -34,7 +34,8 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     address: '',
     fax: '',
     gsm: '',
-    acronym: ''
+    acronym: '',
+    dateOfCreation: ''
   };
 
   features = {
@@ -43,10 +44,16 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     delete: false,
   }
 
+  selectedLogo: string | null = null;
+  selectedLogoFile: File | null = null;
+  loadingLogo: boolean = false;
+  logoUploadError: string = '';
+
   constructor(private usersService: UsersService,
     private _layoutService: LayoutService,
     private _userService: UserService,
-    private _permissionService: PermissionsService) { }
+    private _permissionService: PermissionsService,
+    private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.loadCompanies();
@@ -117,8 +124,12 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       address: company.address,
       fax: company.fax || '',
       gsm: company.gsm || '',
-      acronym: company.acronym || ''
+      acronym: company.acronym || '',
+      dateOfCreation: company.dateOfCreation || ''
     };
+    this.selectedLogo = company.logo || null;
+    this.selectedLogoFile = null;
+    this.logoUploadError = '';
     this.showModal = true;
   }
 
@@ -184,7 +195,8 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       address: '',
       fax: '',
       gsm: '',
-      acronym: ''
+      acronym: '',
+      dateOfCreation: ''
     };
   }
 
@@ -195,4 +207,45 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   trackByCompany(index: number, company: Company): string {
     return company.id;
   }
+
+  onLogoSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      this.selectedLogoFile = input.files[0];
+      reader.onload = (e) => {
+        this.selectedLogo = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedLogoFile);
+    }
+  }
+
+  validateLogo() {
+    if (this.selectedCompany && this.selectedLogoFile) {
+      this.loadingLogo = true;
+      this.logoUploadError = '';
+      this.usersService.uploadCompanyLogo(this.selectedCompany.id, this.selectedLogoFile).subscribe({
+        next: () => {
+          // this.loadCompanies();
+          this._changeDetectorRef.markForCheck();
+          this.selectedLogoFile = null;
+          this.logoUploadError = '';
+        },
+        error: (err) => {
+          this.logoUploadError = err.error?.message || 'Erreur lors de l\'upload du logo.';
+        },
+        complete: () => {
+          this.loadingLogo = false;
+        }
+      });
+    }
+  }
+
+  rejectLogo() {
+    this.selectedLogo = this.selectedCompany?.logo || null;
+    this.selectedLogoFile = null;
+    this.logoUploadError = '';
+    this._changeDetectorRef.markForCheck();
+  }
+
 }
