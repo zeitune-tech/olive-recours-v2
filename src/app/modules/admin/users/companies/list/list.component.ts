@@ -9,11 +9,12 @@ import { PermissionsService } from '@core/permissions/permissions.service';
 import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { PERMISSIONS } from '@core/permissions/permissions.data';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-companies-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoPipe],
   templateUrl: './list.component.html',
 })
 export class CompaniesListComponent implements OnInit, OnDestroy {

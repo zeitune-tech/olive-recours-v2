@@ -11,11 +11,12 @@ import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { UserService } from '@core/services/user/user.service';
 import { PermissionsService } from '@core/permissions/permissions.service';
 import { PERMISSIONS } from '@core/permissions/permissions.data';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-roles-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatSelectModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatSelectModule, TranslocoPipe],
   templateUrl: './list.component.html',
 })
 export class RolesListComponent implements OnInit, OnDestroy {
@@ -41,6 +42,8 @@ export class RolesListComponent implements OnInit, OnDestroy {
     update: false,
     delete: false,
   }
+
+
 
   private destroy$ = new Subject<void>();
 
@@ -70,6 +73,17 @@ export class RolesListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  LevelEnumToText(enumValue: string): string {
+    switch (enumValue) {
+      case ManagementEntityType.COMPANY:
+        return 'roles.level.company';
+      case ManagementEntityType.MARKET_LEVEL_ORGANIZATION:
+        return 'roles.level.market_level_organization';
+      default:
+        return enumValue;
+    }
   }
 
   private setupSubscriptions(): void {

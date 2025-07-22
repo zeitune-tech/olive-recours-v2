@@ -935,6 +935,142 @@
       "decembre": "Décembre"
     }
   },
+  "roles": {
+    "title": "Gestion des rôles",
+    "subtitle": "Gérer les rôles et les permissions des utilisateurs",
+    "create": "Créer un rôle",
+    "stats": {
+      "total": "Nombre total de rôles",
+      "active": "Rôles actifs",
+      "permissions": "Permissions"
+    },
+    "table": {
+      "title": "Rôles",
+      "name": "Nom du rôle",
+      "description": "Description",
+      "permissions": "Permissions",
+      "level": "Niveau",
+      "actions": "Actions"
+    },
+    "no_description": "Aucune description",
+    "more": "de plus",
+    "search_placeholder": "Rechercher un rôle...",
+    "empty": {
+      "title": "Aucun rôle trouvé",
+      "create_first": "Commencez en créant votre premier rôle.",
+      "adjust_search": "Essayez d'ajuster vos critères de recherche."
+    },
+    "modal": {
+      "create": "Créer un nouveau rôle",
+      "edit": "Modifier le rôle",
+      "name": "Nom du rôle",
+      "level": "Niveau",
+      "description": "Description",
+      "permissions": "Permissions",
+      "cancel": "Annuler",
+      "submit_create": "Créer le rôle",
+      "submit_edit": "Mettre à jour le rôle"
+    },
+    "level": {
+      "company": "Compagnie",
+      "market_level_organization": "Organisation de niveau marché"
+    }
+  },
+  "employees": {
+    "title": "Employés",
+    "subtitle": "Gérez les employés de votre organisation",
+    "add": "Ajouter un employé",
+    "search_placeholder": "Rechercher un employé...",
+    "all_status": "Tous les statuts",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "reset": "Réinitialiser",
+    "table": {
+      "title": "Liste des employés",
+      "employee": "Employé",
+      "status": "Statut",
+      "profiles": "Profils",
+      "management_entity": "Entité de gestion",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "Aucun employé trouvé",
+      "description": "Commencez par ajouter un nouvel employé."
+    },
+    "modal": {
+      "view": "Voir l'employé",
+      "edit": "Modifier l'employé",
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "email": "Email",
+      "password": "Mot de passe",
+      "access_level": "Niveau d'accès",
+      "management_entity": "Entité de gestion",
+      "profiles": "Profils",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "create": "Créer",
+      "update": "Mettre à jour"
+    }
+  },
+  "companies": {
+    "title": "Compagnies",
+    "subtitle": "Gérez les compagnies de votre organisation",
+    "add": "Ajouter une compagnie",
+    "search_placeholder": "Rechercher des compagnies...",
+    "reset": "Réinitialiser",
+    "list_title": "Liste des compagnies",
+    "table": {
+      "company": "Compagnie",
+      "contact": "Contact",
+      "address": "Adresse",
+      "acronym": "Acronyme",
+      "date_created": "Date de création",
+      "actions": "Actions"
+    },
+    "na": "N/A",
+    "tooltips": {
+        "edit": "Modifier",
+        "delete": "Supprimer"
+    },
+    "empty": {
+      "title": "Aucune compagnie trouvée",
+      "description": "Commencez par créer une nouvelle compagnie."
+    },
+    "modal": {
+      "edit_title": "Modifier la compagnie",
+      "create_title": "Créer une nouvelle compagnie",
+      "logo_section": {
+          "title": "Gestion du logo (édition uniquement)",
+          "no_logo": "Pas de logo",
+          "change_button": "Changer le logo",
+          "validate_button": "Valider",
+          "cancel_button": "Annuler",
+          "loading": "Envoi en cours..."
+      },
+      "form": {
+        "name": "Nom de la compagnie *",
+        "name_placeholder": "Entrez le nom de la compagnie",
+        "acronym": "Acronyme",
+        "acronym_placeholder": "Entrez l'acronyme",
+        "email": "Email *",
+        "email_placeholder": "Entrez l'adresse email",
+        "phone": "Téléphone *",
+        "phone_placeholder": "Entrez le numéro de téléphone",
+        "fax": "Fax",
+        "fax_placeholder": "Entrez le numéro de fax",
+        "gsm": "GSM",
+        "gsm_placeholder": "Entrez le numéro de GSM",
+        "address": "Adresse *",
+        "address_placeholder": "Entrez l'adresse de la compagnie",
+        "date_of_creation": "Date de création *",
+        "date_of_creation_edit": "Date de création"
+      },
+      "cancel": "Annuler",
+      "update": "Mettre à jour",
+      "create": "Créer"
+    }
+  },
   "errors": {
     "generic": "Une erreur est survenue",
     "closure": {

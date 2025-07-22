@@ -9,6 +9,7 @@ import { PERMISSIONS } from '@core/permissions/permissions.data';
 import { PermissionsService } from '@core/permissions/permissions.service';
 import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 // Management Entity interface
 interface ManagementEntity {
@@ -19,7 +20,7 @@ interface ManagementEntity {
 @Component({
   selector: 'app-employees-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoPipe],
   templateUrl: "./list.component.html"
 })
 export class UsersListComponent implements OnInit, OnDestroy {
@@ -61,9 +62,9 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   // Modal mode enum for better type safety
   get modalTitle(): string {
-    if (this.isViewMode) return 'View Employee';
-    if (this.isEditMode) return 'Edit Employee';
-    return 'Create New Employee';
+    if (this.isViewMode) return 'employees.modal.view';
+    if (this.isEditMode) return 'employees.modal.edit';
+    return 'employees.modal.create';
   }
 
   constructor(private usersService: UsersService,

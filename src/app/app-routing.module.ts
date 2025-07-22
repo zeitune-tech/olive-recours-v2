@@ -64,18 +64,6 @@ const routes: Routes = [
                 loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
             },
             {
-                path: 'companies',
-                canActivate: [],
-                canActivateChild: [],
-                data: {
-                    permission: null
-                },
-                resolve: {
-                    // CompaniesResolver
-                },
-                loadChildren: () => import('./modules/companies/companies.module').then(m => m.CompaniesModule)
-            },
-            {
                 path: 'claims',
                 canActivate: [],
                 canActivateChild: [],
