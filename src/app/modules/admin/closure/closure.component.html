@@ -23,7 +23,11 @@
             <select id="month" formControlName="month" required
               class="w-full bg-white px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
               <option value="" disabled>{{ 'closure.form.select_month' | transloco }}</option>
-              <option *ngFor="let m of months" [value]="m.value">{{ m.label | transloco }}</option>
+              <option *ngFor="let m of months"
+                [value]="m.value"
+                [ngClass]="isPastMonth(m.value, closureForm.value.exercise) ? 'text-gray-400 bg-gray-100' : ''">
+                {{ m.label | transloco }}
+              </option>
             </select>
             <p class="text-xs text-gray-400 mt-1">{{ 'closure.form.month_helper' | transloco }}</p>
           </div>
@@ -45,7 +49,7 @@
         <div class="mt-4 text-blue-600 flex items-center gap-2"><span class="loader"></span> {{ 'closure.loading' | transloco }}</div>
       }
       @if (error) {
-        <div class="mt-4 text-red-600">{{ 'closure.error' | transloco }}</div>
+        <div class="mt-4 text-red-600">{{ error }}</div>
       }
       @if (closure) {
         <div class="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200 flex items-center gap-6 shadow">

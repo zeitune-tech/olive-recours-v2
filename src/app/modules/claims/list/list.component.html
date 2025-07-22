@@ -39,31 +39,31 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'entities.claim.table.dateOfSinister' | transloco }}</th>
-                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-l border-b border-gray-200">{{ 'entities.claim.table.insuredName' | transloco }}</th>
-                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-l border-b border-gray-200">{{ 'entities.claim.table.opponentInsuredName' | transloco }}</th>
+                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-l border-b border-gray-200">{{ 'entities.claim.table.insured' | transloco }}</th>
+                            <th colspan="3" class="text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-l border-b border-gray-200">{{ 'entities.claim.table.opponent' | transloco }}</th>
                             <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">{{ 'entities.claim.table.amount' | transloco }}</th>
                             <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">{{ 'entities.claim.table.insuredAmount' | transloco }}</th>
                             <th rowspan="2" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">{{ 'entities.claim.table.columns.claim_status' | transloco }}</th>
                             <th rowspan="2" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'entities.claim.table.columns.actions' | transloco }}</th>
                         </tr>
                         <tr>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">{{ 'entities.claim.table.declaringCompanyName' | transloco }}</th>
                             <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-l border-gray-2000">{{ 'entities.claim.table.claimNumber' | transloco }}</th>
                             <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'entities.claim.table.insuredName' | transloco }}</th>
-                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">{{ 'entities.claim.table.declaringCompanyName' | transloco }}</th>
+                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">{{ 'entities.claim.table.opponentCompanyName' | transloco }}</th>
                             <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'entities.claim.table.opponentClaimNumber' | transloco }}</th>
                             <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ 'entities.claim.table.opponentInsuredName' | transloco }}</th>
-                            <th class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200">{{ 'entities.claim.table.opponentCompanyName' | transloco }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr *ngFor="let claim of filteredClaims">
                             <td class="px-6 py-4 whitespace-nowrap">{{ claim.dateOfSinister | date }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.declaringCompanyName }}</td>
                             <td class="px-4 py-4 whitespace-nowrap">{{ claim.claimNumber }}</td>
                             <td class="px-4 py-4 whitespace-nowrap">{{ claim.insuredName }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.declaringCompanyName }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.opponentCompanyName }}</td>
                             <td class="px-4 py-4 whitespace-nowrap">{{ claim.opponentClaimNumber }}</td>
                             <td class="px-4 py-4 whitespace-nowrap">{{ claim.opponentInsuredName }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap">{{ claim.opponentCompanyName }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ claim.amount }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ claim.insuredAmount }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">

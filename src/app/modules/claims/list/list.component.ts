@@ -19,6 +19,9 @@ import { PermissionsService } from "@core/permissions/permissions.service";
 import { User } from "@core/services/user/user.interface";
 import { UserService } from "@core/services/user/user.service";
 import { PERMISSIONS } from "@core/permissions/permissions.data";
+import { ConfirmDialogComponent } from "@shared/components/confirm-dialog/confirm-dialog.component";
+import { ToastService } from "src/app/components/toast/toast.service";
+import { TranslocoService } from "@jsverse/transloco";
 
 @Component({
     selector: "app-claims-list",
@@ -54,6 +57,8 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
         private _dialog: MatDialog,
         private permissionsService: PermissionsService,
         private _userService: UserService,
+        private _toastService: ToastService,
+        private _translocoService: TranslocoService,
     ) {
 
         this._layoutService.setPageTitle('Liste des recours');
@@ -224,19 +229,53 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     }
 
     acceptClaim(claim: Claim): void {
-        if (confirm("Confirmer l'acceptation de ce recours ?")) {
-            this._claimService.updateStatus(claim.id!, ClaimStatus.ACCEPTED).subscribe(() => {
-                this.loadClaims();
-            });
-        }
+        const dialogRef = this._dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Confirmation',
+                description: 'Validation du recours',
+                message: "Confirmer l'acceptation de ce recours ?",
+                showDateInput: true
+            }
+        });
+        dialogRef.afterClosed().subscribe((result: { date?: string } | undefined) => {
+            if (result) {
+                const payload = result.date ? { status: ClaimStatus.ACCEPTED, date: result.date } : ClaimStatus.ACCEPTED;
+                this._claimService.updateStatus(claim.id!, payload)
+                    .subscribe({
+                        next: () => {
+                            this.loadClaims();
+                            this._toastService.success(
+                                this._translocoService.translate('messages.claim.accepted_success')
+                            );
+                        },
+                        error: (err) => {
+                            const errorKey = 'errors.closure.accept-claim';
+                            this._toastService.error(
+                                this._translocoService.translate(errorKey)
+                            );
+                        }
+                    });
+            }
+        });
     }
 
     rejectClaim(claim: Claim) {
-        if (confirm("Confirmer le rejet de ce recours ?")) {
-            this._claimService.updateStatus(claim.id!, ClaimStatus.REFUSED).subscribe(() => {
-                this.loadClaims();
-            });
-        }
+        const dialogRef = this._dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Confirmation',
+                description: 'Rejet du recours',
+                message: "Confirmer le rejet de ce recours ?",
+                showDateInput: false
+            }
+        });
+        dialogRef.afterClosed().subscribe((result: any) => {
+            if (result !== undefined) {
+                this._claimService.updateStatus(claim.id!, ClaimStatus.REFUSED)
+                    .subscribe(() => {
+                        this.loadClaims();
+                    });
+            }
+        });
     }
 
 
@@ -251,12 +290,22 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     }
 
     onDelete(claim: Claim): void {
-        if (confirm("Confirmer la suppression de ce recours ?")) {
-            this._claimService.delete(claim.id!)
-                .subscribe(() => {
-                    this.loadClaims();
-                });
-        }
+        const dialogRef = this._dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Confirmation',
+                description: 'Suppression du recours',
+                message: "Confirmer la suppression de ce recours ?",
+                showDateInput: false
+            }
+        });
+        dialogRef.afterClosed().subscribe((result: any) => {
+            if (result !== undefined) {
+                this._claimService.delete(claim.id!)
+                    .subscribe(() => {
+                        this.loadClaims();
+                    });
+            }
+        });
     }
 
     onView(claim: Claim): void {

@@ -13,28 +13,27 @@ import { LayoutModule } from './layout/layout.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServicesModule } from './core/services/services.module';
+import { ToastModule } from "./components/toast/toast.module";
 
 @NgModule({
 	declarations: [
 		AppComponent,
 	],
 	imports: [
-		BrowserModule,
-		BrowserAnimationsModule,
-		AppRoutingModule,
-		TemplateModule,
-        TemplateConfigModule.forRoot(appConfig),
-
-        // Core module of your application
-        CoreModule,
-
-        // Layout module of your application
-        LayoutModule,
-        // 3rd party modules that require global configuration via forRoot
-        MarkdownModule.forRoot({}),
-		
-		ServicesModule
-	],
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    TemplateModule,
+    TemplateConfigModule.forRoot(appConfig),
+    // Core module of your application
+    CoreModule,
+    // Layout module of your application
+    LayoutModule,
+    // 3rd party modules that require global configuration via forRoot
+    MarkdownModule.forRoot({}),
+    ServicesModule,
+    ToastModule
+],
 	providers: [
         provideHttpClient(withInterceptorsFromDi()),
 	],

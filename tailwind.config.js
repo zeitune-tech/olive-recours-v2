@@ -93,8 +93,21 @@ const config = {
             xl: '1440px'
         },
         extend  : {
-            animation               : {
-                'spin-slow': 'spin 3s linear infinite'
+            animation: {
+                'spin-slow': 'spin 3s linear infinite',
+                'fade-in-up': 'fade-in-up 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) both',
+            },
+            keyframes: {
+                'fade-in-up': {
+                    '0%': {
+                        opacity: '0',
+                        transform: 'translateY(16px)'
+                    },
+                    '100%': {
+                        opacity: '1',
+                        transform: 'translateY(0)'
+                    }
+                }
             },
             colors                  : {
                 gray: colors.slate

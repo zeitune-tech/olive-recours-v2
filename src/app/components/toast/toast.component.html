@@ -1,0 +1,10 @@
+<div class="flex items-start shadow-lg rounded-lg px-4 py-3 min-w-0 animate-fade-in-up transition-all duration-300 group" [ngClass]="typeClass">
+  <div class="flex-1 min-w-0">
+    <div *ngIf="toast.title" class="font-semibold leading-tight">{{ toast.title }}</div>
+    <div class="text-sm leading-snug" [class.mt-0.5]="toast.title">{{ toast.message }}</div>
+  </div>
+  <button type="button" (click)="dismiss.emit()" class="ml-3 opacity-70 hover:opacity-100 focus:outline-none">
+    <span class="sr-only">Fermer</span>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+  </button>
+</div> 

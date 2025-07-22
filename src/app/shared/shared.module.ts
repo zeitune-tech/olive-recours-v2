@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NewDemandComponent } from './components/new-demand/new-demand.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
+import { ToastModule } from '../components/toast/toast.module';
 
 @NgModule({
     declarations: [
@@ -22,13 +23,15 @@ import { MatDividerModule } from '@angular/material/divider';
         MatDialogModule,
         MatButtonModule,
         MatProgressSpinnerModule,
-        MatDividerModule
+        MatDividerModule,
+        ToastModule
     ],
     exports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        TranslocoModule
+        TranslocoModule,
+        ToastModule
     ]
 })
 export class SharedModule

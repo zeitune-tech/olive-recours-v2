@@ -55,8 +55,19 @@ export class ClaimService {
         return this._httpClient.delete<void>(`${this.baseUrl}/${uuid}`);
     }
 
-    updateStatus(uuid: string, status: ClaimStatus): Observable<Claim> {
-        return this._httpClient.patch<Claim>(`${this.baseUrl}/${uuid}/status`, { status });
+    /**
+     * Met à jour le statut d'un recours, et peut envoyer une date si précisée.
+     * @param uuid
+     * @param statusOrPayload soit le statut (string), soit un objet { status, date? }
+     */
+    updateStatus(uuid: string, statusOrPayload: ClaimStatus | { status: ClaimStatus, date?: string }): Observable<Claim> {
+        let payload: any;
+        if (typeof statusOrPayload === 'object') {
+            payload = statusOrPayload;
+        } else {
+            payload = { status: statusOrPayload };
+        }
+        return this._httpClient.patch<Claim>(`${this.baseUrl}/${uuid}/status`, payload);
     }
 
     uploadAttachment(payload: FormData): Observable<any> {

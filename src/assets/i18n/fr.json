@@ -349,11 +349,13 @@
         "dateOfSinister": "Date du sinistre",
         "claimNumber": "Numéro sinistre",
         "insuredName": "Assuré",
+        "insured": "Compagnie",
+        "opponent": "Compagnie adverse",
         "opponentCompanyName": "compagnie",
         "opponentCompanyName2": "compagnie adverse",
         "opponentClaimNumber": "Numéro sinistre",
         "opponentInsuredName": "Assuré",
-        "declaringCompanyName": "compagnie déclarante",
+        "declaringCompanyName": "compagnie",
         "amount": "P/C Compagnie",
         "insuredAmount": "P/C Assuré",
         "comment": "Commentaire",
@@ -908,7 +910,16 @@
     "locked_info": "Durant cette période, toutes les opérations antérieures ou du mois de {{month}} {{year}} sont verrouillées.",
     "no_closure": "Aucune clôture en cours. Toutes les opérations sont libres.",
     "loading": "Chargement...",
-    "error": "Une erreur est survenue lors de l'opération.",
+    "error": {
+      "same_date": "Impossible de remettre exactement la même date de clôture.",
+      "save": "Erreur lors de la sauvegarde."
+    },
+    "confirmation": {
+      "title": "Attention",
+      "message": "Vous êtes sur le point de ré-autoriser des périodes déjà clôturées. Voulez-vous continuer ?",
+      "confirm": "Oui, continuer",
+      "cancel": "Annuler"
+    },
     "months": {
       "janvier": "Janvier",
       "février": "Février",
@@ -922,6 +933,12 @@
       "octobre": "Octobre",
       "novembre": "Novembre",
       "decembre": "Décembre"
+    }
+  },
+  "errors": {
+    "generic": "Une erreur est survenue",
+    "closure": {
+      "accept-claim": "Impossible d'accepter la réclamation pendant la période de clôture !"
     }
   }
 }
