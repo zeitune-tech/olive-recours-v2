@@ -889,5 +889,39 @@
       "next": "Suivant",
       "previous": "Précédent"
     }
+  },
+  "closure": {
+    "title": "Paramètre de clôture",
+    "subtitle": "Définissez la période de clôture pour restreindre ou libérer les opérations.",
+    "form": {
+      "exercise": "Exercice (année)",
+      "exercise_placeholder": "Ex: 2024",
+      "exercise_helper": "L'année fiscale concernée par la clôture.",
+      "month": "Mois",
+      "select_month": "Sélectionner un mois",
+      "month_helper": "Le mois de clôture (1 = Janvier, 12 = Décembre).",
+      "create": "Créer la clôture",
+      "update": "Mettre à jour la clôture",
+      "delete": "Supprimer la clôture"
+    },
+    "active": "Clôture active",
+    "locked_info": "Durant cette période, toutes les opérations antérieures ou du mois de {{month}} {{year}} sont verrouillées.",
+    "no_closure": "Aucune clôture en cours. Toutes les opérations sont libres.",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue lors de l'opération.",
+    "months": {
+      "janvier": "Janvier",
+      "février": "Février",
+      "mars": "Mars",
+      "avril": "Avril",
+      "mai": "Mai",
+      "juin": "Juin",
+      "juillet": "Juillet",
+      "aout": "Août",
+      "septembre": "Septembre",
+      "octobre": "Octobre",
+      "novembre": "Novembre",
+      "decembre": "Décembre"
+    }
   }
 }
