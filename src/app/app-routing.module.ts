@@ -98,18 +98,6 @@ const routes: Routes = [
                 },
                 loadChildren: () => import('./modules/statements/statements.module').then(m => m.StatementsModule)
             },
-            {
-                path: 'employees',
-                canActivate: [],
-                canActivateChild: [],
-                data: {
-                    permission: null
-                },
-                resolve: {
-                    // data: EmployeesResolver
-                },
-                loadChildren: () => import('./modules/employees/employees.module').then(m => m.EmployeesModule)
-            },
             {path: 'profile', loadChildren: () => import('./modules/profiles/profiles.module').then(m => m.ProfilesModule)},
 
             // 404 & Catch all

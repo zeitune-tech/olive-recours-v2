@@ -1030,8 +1030,8 @@
     },
     "na": "N/A",
     "tooltips": {
-        "edit": "Modifier",
-        "delete": "Supprimer"
+      "edit": "Modifier",
+      "delete": "Supprimer"
     },
     "empty": {
       "title": "Aucune compagnie trouvée",
@@ -1041,12 +1041,12 @@
       "edit_title": "Modifier la compagnie",
       "create_title": "Créer une nouvelle compagnie",
       "logo_section": {
-          "title": "Gestion du logo (édition uniquement)",
-          "no_logo": "Pas de logo",
-          "change_button": "Changer le logo",
-          "validate_button": "Valider",
-          "cancel_button": "Annuler",
-          "loading": "Envoi en cours..."
+        "title": "Gestion du logo (édition uniquement)",
+        "no_logo": "Pas de logo",
+        "change_button": "Changer le logo",
+        "validate_button": "Valider",
+        "cancel_button": "Annuler",
+        "loading": "Envoi en cours..."
       },
       "form": {
         "name": "Nom de la compagnie *",
@@ -1074,7 +1074,43 @@
   "errors": {
     "generic": "Une erreur est survenue",
     "closure": {
-      "accept-claim": "Impossible d'accepter la réclamation pendant la période de clôture !"
+      "accept-claim": "Impossible d'accepter un recours sur une période déjà clôturée !"
+    }
+  },
+  "layout": {
+    "titles": {
+      "dashboard": "Tableau de bord",
+      "claims": "Recours",
+      "claims-list": "Liste des recours",
+      "claims-new": "Nouveau recours",
+      "claims-details": "Détails",
+      "statements": "Relevés",
+      "statements-detailed": "Relevé détaillé",
+      "statements-global": "Relevé global",
+      "admin": "Administration",
+      "users": "Utilisateurs",
+      "companies": "Compagnies",
+      "employees": "Employés",
+      "roles": "Rôles",
+      "closures": "Clôtures",
+      "profile": "Profil"
+    },
+    "crumbs": {
+      "dashboard": "Tableau de bord",
+      "claims": "Recours",
+      "claims-list": "Liste des recours",
+      "claims-new": "Nouveau recours",
+      "claims-details": "Détails du recours",
+      "statements": "Relevés",
+      "statements-detailed": "Relevé détaillé",
+      "statements-global": "Relevé global",
+      "admin": "Administration",
+      "users": "Utilisateurs",
+      "companies": "Compagnies",
+      "employees": "Employés",
+      "roles": "Rôles",
+      "closures": "Clôtures",
+      "profile": "Profil"
     }
   }
 }

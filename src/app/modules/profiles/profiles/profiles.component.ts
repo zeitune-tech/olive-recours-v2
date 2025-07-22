@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ManagementEntity } from '@core/services/management-entity/management-entity.interface';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-profiles',
@@ -108,16 +109,17 @@ export class ProfilesComponent implements OnInit {
     private userService: UserService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _layoutService: LayoutService,
+    private transloco: TranslocoService
   ) {
-    this._layoutService.setPageTitle('Profil');
-    this._layoutService.setCrumbs([
-        { title: 'Profil', link: '/profiles', active: true }
-    ]);
     // Initialisation des formulaires
     this.initForms();
   }
 
   ngOnInit(): void {
+    this._layoutService.setPageTitle(this.transloco.translate('layout.titles.profile'));
+    this._layoutService.setCrumbs([
+        { title: this.transloco.translate('layout.crumbs.profile'), link: '/profile', active: true },
+    ]);
     // Récupérer les données de l'utilisateur connecté
     this.userService.get().subscribe((user: User) => {
       // Patch du formulaire personnel

@@ -6,6 +6,7 @@ import { ClaimMessage } from '@core/services/claim-message/claim-message.interfa
 import { ClaimMessageService } from '@core/services/claim-message/claim-message.service';
 import { Claim } from '@core/services/claim/claim.interface';
 import { ClaimService } from '@core/services/claim/claim.service';
+import { TranslocoService } from '@jsverse/transloco';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 
 @Component({
@@ -21,14 +22,15 @@ export class ClaimDetailsComponent implements OnInit {
     constructor(
         private _route: ActivatedRoute,
         private _layoutService: LayoutService,
+        private transloco: TranslocoService,
         private _claimService: ClaimService,
         private _attachmentService: AttachmentService,
         private _claimMessageService: ClaimMessageService
-    ) { 
-        this._layoutService.setPageTitle('Détails du recours');
+    ) {
+        this._layoutService.setPageTitle(this.transloco.translate('layout.titles.claims'));
         this._layoutService.setCrumbs([
-            { title: 'Liste des recours', link: '/claims/list', active: true },
-            { title: 'Détails du recours', link: '', active: false }
+            { title: this.transloco.translate('layout.crumbs.claims'), link: '/claims', active: true },
+            { title: this.transloco.translate('layout.crumbs.claims-details'), link: '#', active: false }
         ]);
     }
 

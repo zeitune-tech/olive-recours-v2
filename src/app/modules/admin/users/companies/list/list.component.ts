@@ -9,7 +9,7 @@ import { PermissionsService } from '@core/permissions/permissions.service';
 import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { PERMISSIONS } from '@core/permissions/permissions.data';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-companies-list',
@@ -52,11 +52,18 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
 
   constructor(private usersService: UsersService,
     private _layoutService: LayoutService,
+    private transloco: TranslocoService,
     private _userService: UserService,
     private _permissionService: PermissionsService,
     private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+
+    this._layoutService.setPageTitle(this.transloco.translate('layout.titles.companies'));
+    this._layoutService.setCrumbs([
+      { title: this.transloco.translate('layout.crumbs.companies'), link: '/admin/users/companies', active: true }
+    ]);
+
     this.loadCompanies();
 
     this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({

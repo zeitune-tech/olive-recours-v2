@@ -9,10 +9,13 @@ import { NewDemandComponent } from './components/new-demand/new-demand.component
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { ToastModule } from '../components/toast/toast.module';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     declarations: [
         NewDemandComponent,
+        ConfirmDialogComponent,
     ],
     imports: [
         CommonModule,
@@ -31,8 +34,10 @@ import { ToastModule } from '../components/toast/toast.module';
         FormsModule,
         ReactiveFormsModule,
         TranslocoModule,
-        ToastModule
-    ]
+        ToastModule,
+        ConfirmDialogComponent
+    ],
+    providers: [DatePipe]
 })
 export class SharedModule
 {

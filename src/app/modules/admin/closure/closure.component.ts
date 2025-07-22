@@ -8,6 +8,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { ConfirmationService } from '../../../../@lhacksrt/services/confirmation/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslocoService } from '@jsverse/transloco';
+import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 
 @Component({
   selector: 'app-closure',
@@ -35,7 +36,7 @@ export class ClosureComponent implements OnInit {
     { value: 12, label: 'closure.months.decembre' },
   ];
 
-  constructor(private fb: FormBuilder, private closureService: ClosureService, private confirmationService: ConfirmationService, private transloco: TranslocoService) {
+  constructor(private fb: FormBuilder, private closureService: ClosureService, private confirmationService: ConfirmationService, private transloco: TranslocoService, private _layoutService: LayoutService) {
     this.closureForm = this.fb.group({
       exercise: [null, [Validators.required, Validators.min(2000)]],
       month: [null, [Validators.required, Validators.min(1), Validators.max(12)]]
@@ -43,6 +44,11 @@ export class ClosureComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._layoutService.setPageTitle(this.transloco.translate('layout.titles.closures'));
+    this._layoutService.setCrumbs([
+      { title: this.transloco.translate('layout.crumbs.closures'), link: '/admin/closures', active: true }
+    ]);
+
     this.closureService.closure$.subscribe((closure) => {
       this.closure = closure;
       if (closure) {

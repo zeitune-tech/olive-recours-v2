@@ -6,6 +6,7 @@ import { Company } from '@core/services/company/company.interface';
 import { CompanyService } from '@core/services/company/company.service';
 import { ManagementEntity } from '@core/services/management-entity/management-entity.interface';
 import { UserService } from '@core/services/user/user.service';
+import { TranslocoService } from '@jsverse/transloco';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class ClaimNewComponent implements OnInit {
 		private _claimService: ClaimService,
 		private _companyService: CompanyService,
 		private _layoutService: LayoutService,
+		private transloco: TranslocoService,
 		private _userService: UserService,
 		private _router: Router
 	) {
@@ -60,11 +62,11 @@ export class ClaimNewComponent implements OnInit {
 	}
 	ngOnInit(): void {
 
-		this._layoutService.setPageTitle('Création d\'un recours');
-		this._layoutService.setCrumbs([
-			{ title: 'Liste des recours', link: '/claims/list', active: true },
-			{ title: 'Création d\'un recours', link: '/claims/new', active: true }
-		]);
+		this._layoutService.setPageTitle(this.transloco.translate('layout.titles.claims'));
+    this._layoutService.setCrumbs([
+      { title: this.transloco.translate('layout.crumbs.claims'), link: '/claims', active: true },
+      { title: this.transloco.translate('layout.crumbs.claims-new'), link: '/claims/new', active: true },
+    ]);
 
 		this._userService.managementEntity$.subscribe({
 			next: (managementEntity) => {

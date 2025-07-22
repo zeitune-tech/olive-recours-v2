@@ -61,10 +61,11 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
         private _translocoService: TranslocoService,
     ) {
 
-        this._layoutService.setPageTitle('Liste des recours');
-        this._layoutService.setCrumbs([
-            { title: 'Liste des recours', link: '/claims/list', active: true }
-        ]);
+        this._layoutService.setPageTitle(this._translocoService.translate('layout.titles.claims'));
+    this._layoutService.setCrumbs([
+      { title: this._translocoService.translate('layout.crumbs.claims'), link: '/claims', active: false },
+      { title: this._translocoService.translate('layout.crumbs.claims-list'), link: '/claims', active: true }
+    ]);
 
         this._claimService.claims$
             .pipe(takeUntil(this._unsubscribeAll))

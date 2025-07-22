@@ -11,7 +11,7 @@ import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { UserService } from '@core/services/user/user.service';
 import { PermissionsService } from '@core/permissions/permissions.service';
 import { PERMISSIONS } from '@core/permissions/permissions.data';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-roles-list',
@@ -49,6 +49,7 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   constructor(private rolesService: RolesService,
     private _layoutService: LayoutService,
+    private transloco: TranslocoService,
     private _userService: UserService,
     private _permissionService: PermissionsService) { }
 
@@ -64,6 +65,10 @@ export class RolesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this._layoutService.setPageTitle(this.transloco.translate('layout.titles.roles'));
+    this._layoutService.setCrumbs([
+      { title: this.transloco.translate('layout.crumbs.roles'), link: '/admin/roles', active: true }
+    ]);
     this.loadData();
     this.setupSubscriptions();
 

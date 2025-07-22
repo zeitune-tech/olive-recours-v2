@@ -9,7 +9,7 @@ import { PERMISSIONS } from '@core/permissions/permissions.data';
 import { PermissionsService } from '@core/permissions/permissions.service';
 import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 // Management Entity interface
 interface ManagementEntity {
@@ -69,10 +69,15 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   constructor(private usersService: UsersService,
     private _layoutService: LayoutService,
+    private transloco: TranslocoService,
     private _userService: UserService,
     private _permissionService: PermissionsService) { }
 
   ngOnInit() {
+    this._layoutService.setPageTitle(this.transloco.translate('layout.titles.employees'));
+    this._layoutService.setCrumbs([
+      { title: this.transloco.translate('layout.crumbs.employees'), link: '/admin/users/employees', active: true }
+    ]);
     this.loadEmployees();
     this.loadProfiles();
     this.loadManagementEntities();

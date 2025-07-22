@@ -3,6 +3,7 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 import { ManagementEntity } from "@core/services/management-entity/management-entity.interface";
 import { User } from "@core/services/user/user.interface";
 import { UserService } from "@core/services/user/user.service";
+import { TranslocoService } from "@jsverse/transloco";
 import { LayoutService } from "@lhacksrt/services/layout/layout.service";
 
 @Component({
@@ -18,14 +19,18 @@ export class DashboardComponent implements OnInit {
     constructor(
         private _userService: UserService,
         private _layoutService: LayoutService,
-    ) { 
-        this._layoutService.setPageTitle("Dashboard");
-        this._layoutService.setCrumbs([
-            { title: "Dashboard", link: "/dashboard", active: true }
-        ])
+        private transloco: TranslocoService
+    ) {
+        
     }
 
     ngOnInit(): void {
+
+        this._layoutService.setPageTitle(this.transloco.translate('layout.titles.dashboard'));
+        this._layoutService.setCrumbs([
+            { title: this.transloco.translate('layout.crumbs.dashboard'), link: '/dashboard', active: true }
+        ]);
+        
         this._userService.user$.subscribe((user: User) => {
             this.user = user;
         });
