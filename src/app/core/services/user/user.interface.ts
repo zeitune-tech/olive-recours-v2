@@ -1,3 +1,4 @@
+import { ManagementEntityType } from "src/app/modules/admin/users/dto";
 import { ManagementEntity } from "../management-entity/management-entity.interface";
 
 export class User {
@@ -12,6 +13,7 @@ export class User {
     managementEntity: ManagementEntity;
     permissions: string[];
     accountNonLocked?: boolean;
+    profileType: ManagementEntityType | null;
     
 
     constructor(user: any) {
@@ -25,5 +27,7 @@ export class User {
         this.permissions = user?.permissions || [];
         this.managementEntity = user?.managementEntity || null;
         this.accountNonLocked = user?.accountNonLocked || true;
+        this.profileType = user?.profileType || null;
+
     }
 }

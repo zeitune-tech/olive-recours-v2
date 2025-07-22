@@ -1,16 +1,16 @@
 <main class="w-full">
     <ng-container *hasPermission="{
-      has: [PERMISSIONS_DATA.ALL,PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS],
+      has: [PERMISSIONS_DATA.ALL,PERMISSIONS_DATA.READ_GLOBAL_STATEMENTS],
       mode: 'any',
-      not: PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN
+      profile:MANAGEMENT_ENTITY_TYPES[1]
     }">
             <app-mla-global />
         </ng-container>
 
         <ng-container *hasPermission="{
-      has: [PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN],
+      has: [PERMISSIONS_DATA.ALL,PERMISSIONS_DATA.READ_GLOBAL_STATEMENTS],
       mode: 'any',
-      not: PERMISSIONS_DATA.READ_GLOBAL_ACCOUNT_STATUS
+      profile:MANAGEMENT_ENTITY_TYPES[0]
     }">
             <app-company-global />
         </ng-container>

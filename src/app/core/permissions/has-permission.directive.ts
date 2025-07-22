@@ -1,11 +1,12 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from '@core/services/user/user.service';
+import { ManagementEntityType } from 'src/app/modules/admin/users/dto';
 
 type PermissionConfig = {
   has: string | string[];
   mode?: 'all' | 'any';
-  not?: string | string[];
+  profile?: ManagementEntityType | null;
 };
 
 @Directive({
@@ -16,9 +17,9 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
   private config: PermissionConfig = {
     has: [],
     mode: 'all',
-    not: []
+    profile: null // Changed default to null (no profile requirement)
   };
-  
+ 
   @Input() set hasPermission(config: PermissionConfig | string | string[]) {
     if (Array.isArray(config) || typeof config === 'string') {
       // Backward compatibility with direct array/string input
@@ -36,6 +37,7 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
   }
 
   private currentPermissions: string[] = [];
+  private currentLevel: ManagementEntityType | null = null;
   private subscription: Subscription | null = null;
 
   constructor(
@@ -45,9 +47,13 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscription = this.userService.permissions$.subscribe(permissions => {
-      this.currentPermissions = permissions || [];
-      this.evaluatePermissions();
+    this.subscription = this.userService.level$.subscribe(level => {
+      this.currentLevel = level;
+      // Subscribe to permissions changes as well
+      this.userService.permissions$.subscribe(permissions => {
+        this.currentPermissions = permissions || [];
+        this.evaluatePermissions();
+      });
     });
   }
 
@@ -57,26 +63,46 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
       return;
     }
 
-    const requiredPermissions = Array.isArray(this.config.has) 
-      ? this.config.has 
+    // Check profile requirement first
+    if (!this.checkProfileRequirement()) {
+      this.viewContainer.clear();
+      return;
+    }
+
+    const requiredPermissions = Array.isArray(this.config.has)
+      ? this.config.has
       : [this.config.has];
-      
-    const forbiddenPermissions = this.config.not
-      ? (Array.isArray(this.config.not) ? this.config.not : [this.config.not])
-      : [];
 
     const mode = this.config.mode || 'all';
-    
+   
     const hasRequiredAccess = mode === 'all'
       ? requiredPermissions.every(perm => this.currentPermissions.includes(perm))
       : requiredPermissions.some(perm => this.currentPermissions.includes(perm));
 
-    const hasForbiddenAccess = forbiddenPermissions.some(perm => this.currentPermissions.includes(perm));
-
     this.viewContainer.clear();
-    if (hasRequiredAccess && !hasForbiddenAccess) {
+    if (hasRequiredAccess) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     }
+  }
+
+  private checkProfileRequirement(): boolean {
+    // If no profile requirement is specified, allow any profile
+    if (this.config.profile === null || this.config.profile === undefined) {
+      return true;
+    }
+
+    // If MarketLevelOrganization is required, user must have MarketLevelOrganization
+    if (this.config.profile === ManagementEntityType.MARKET_LEVEL_ORGANIZATION) {
+      return this.currentLevel === ManagementEntityType.MARKET_LEVEL_ORGANIZATION;
+    }
+
+    // If Company is required, user must have Company
+    if (this.config.profile === ManagementEntityType.COMPANY) {
+      return this.currentLevel === ManagementEntityType.COMPANY;
+    }
+
+    // For any other specific profile requirement, check exact match
+    return this.currentLevel === this.config.profile;
   }
 
   ngOnDestroy() {

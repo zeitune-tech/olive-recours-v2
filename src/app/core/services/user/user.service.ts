@@ -4,6 +4,7 @@ import { BehaviorSubject, catchError, map, Observable, of, ReplaySubject, tap } 
 import { User } from './user.interface';
 import { environment } from '@env/environment';
 import { ManagementEntity } from '../management-entity/management-entity.interface';
+import { ManagementEntityType } from 'src/app/modules/admin/users/dto';
 
 @Injectable()
 export class UserService{
@@ -14,6 +15,7 @@ export class UserService{
     private _managementEntity: ReplaySubject<ManagementEntity> = new ReplaySubject<ManagementEntity>(1);
     private _hasEntity: boolean = false;
     private _permissions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+    private _level: BehaviorSubject<ManagementEntityType | null> = new BehaviorSubject<ManagementEntityType | null>(null);
 
     /**
      * Constructor
@@ -60,6 +62,15 @@ export class UserService{
         this._permissions.next(value);
     }
 
+    get level$(): Observable<ManagementEntityType | null> {
+        return this._level.asObservable();
+    }
+
+    set level(value: ManagementEntityType | null) {
+        // Store the value
+        this._level.next(value);
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -77,6 +88,9 @@ export class UserService{
                     this._hasEntity = true;
                 if(user.permissions)
                     this.permissions = user.permissions;
+                if(user.profileType){
+                    this.level = user.profileType;
+                }
             }),
             catchError(() => of({} as User))
         );

@@ -5,6 +5,7 @@ import { User } from "@core/services/user/user.interface";
 import { UserService } from "@core/services/user/user.service";
 import { TranslocoService } from "@jsverse/transloco";
 import { LayoutService } from "@lhacksrt/services/layout/layout.service";
+import { ManagementEntityType } from "../../admin/users/dto";
 
 @Component({
     selector: "app-dashboard",
@@ -15,6 +16,9 @@ export class DashboardComponent implements OnInit {
     entity: ManagementEntity = {} as ManagementEntity;
     user: User = {} as User;
     PERMISSIONS_DATA = PERMISSIONS;
+
+    MANAGEMENT_ENTITY_TYPES = Object.values(ManagementEntityType);
+
 
     constructor(
         private _userService: UserService,

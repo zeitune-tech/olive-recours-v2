@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { PERMISSIONS } from "@core/permissions/permissions.data";
+import { UserService } from "@core/services/user/user.service";
 import { TranslocoService } from "@jsverse/transloco";
 import { LayoutService } from "@lhacksrt/services/layout/layout.service";
+import { ManagementEntityType } from "../../admin/users/dto";
 
 @Component({
     selector: "app-statements-global",
@@ -11,11 +13,13 @@ import { LayoutService } from "@lhacksrt/services/layout/layout.service";
 export class GlobalComponent implements OnInit {
 
   PERMISSIONS_DATA = PERMISSIONS;
+  MANAGEMENT_ENTITY_TYPES = Object.values(ManagementEntityType);
 
 
     constructor(
         private _layoutService: LayoutService,
-        private transloco : TranslocoService
+        private transloco : TranslocoService,
+        private userService: UserService
     ) {
     }
 

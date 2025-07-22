@@ -30,17 +30,17 @@
 
     <main>
         <ng-container *hasPermission="{
-      has: [PERMISSIONS_DATA.ALL, PERMISSIONS_DATA.READ_MLA_DASHBOARD],
+      has: [PERMISSIONS_DATA.ALL, PERMISSIONS_DATA.READ_DASHBOARD],
       mode: 'any',
-      not: PERMISSIONS_DATA.READ_COMPANY_DASHBOARD
+      profile: MANAGEMENT_ENTITY_TYPES[1]
     }">
             <app-mla-board />
         </ng-container>
 
         <ng-container *hasPermission="{
-      has: PERMISSIONS_DATA.READ_COMPANY_DASHBOARD,
+      has: [PERMISSIONS_DATA.ALL,PERMISSIONS_DATA.READ_DASHBOARD],
       mode: 'any',
-      not: PERMISSIONS_DATA.READ_MLA_DASHBOARD
+      profile: MANAGEMENT_ENTITY_TYPES[0]
     }">
             <app-company-board />
         </ng-container>

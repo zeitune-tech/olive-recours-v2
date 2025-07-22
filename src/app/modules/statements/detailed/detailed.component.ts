@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { PERMISSIONS } from "@core/permissions/permissions.data";
 import { TranslocoService } from "@jsverse/transloco";
 import { LayoutService } from "@lhacksrt/services/layout/layout.service";
+import { ManagementEntityType } from "../../admin/users/dto";
 
 @Component({
     selector: "app-statements-detailed",
@@ -11,6 +12,8 @@ import { LayoutService } from "@lhacksrt/services/layout/layout.service";
 export class DetailedComponent implements OnInit {
 
   PERMISSIONS_DATA = PERMISSIONS;
+  MANAGEMENT_ENTITY_TYPES = Object.values(ManagementEntityType);
+
 
 
   constructor(

@@ -10,7 +10,7 @@ export const defaultNavigation: NavigationItem[] = [
         type: 'basic',
         icon: 'mat_outline:dashboard',
         link: '/dashboard',
-        permission: [PERMISSIONS.READ_COMPANY_DASHBOARD, PERMISSIONS.READ_MLA_DASHBOARD, PERMISSIONS.ALL]
+        permission: [PERMISSIONS.READ_DASHBOARD, PERMISSIONS.ALL]
     },
     {
         id: 'claims',
@@ -42,7 +42,7 @@ export const defaultNavigation: NavigationItem[] = [
         title: 'sidebar.statements',
         type: 'group',
         icon: 'mat_outline:bar_chart',
-        permission: [PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS, PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN, PERMISSIONS.ALL],
+        permission: [PERMISSIONS.READ_GLOBAL_STATEMENTS, PERMISSIONS.READ_GLOBAL_STATEMENTS, PERMISSIONS.ALL],
         children: [
             {
                 id: 'statements-detailed',
@@ -50,7 +50,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:table_chart',
                 link: '/statements/detailed',
-                permission: [PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS, PERMISSIONS.ALL]
+                permission: [PERMISSIONS.READ_GLOBAL_STATEMENTS, PERMISSIONS.ALL]
             },
             {
                 id: 'statements-global',
@@ -58,7 +58,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:leaderboard',
                 link: '/statements/global',
-                permission: [PERMISSIONS.READ_GLOBAL_ACCOUNT_STATUS_BETWEEN, PERMISSIONS.ALL]
+                permission: [PERMISSIONS.READ_GLOBAL_STATEMENTS, PERMISSIONS.ALL]
             },
             // {
             //     id: 'statements-archives',
