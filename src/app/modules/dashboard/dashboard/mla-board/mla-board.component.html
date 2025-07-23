@@ -1,73 +1,50 @@
-<div *ngIf="dashboardData" class="flex flex-col gap-6 w-full">
-  <!-- Graph Section -->
-  <div class="bg-white rounded-lg shadow p-4">
-    <h2 class="text-lg font-semibold mb-4">{{ 'dashboard.common.global_balance_evolution' | transloco }}</h2>
-    <ngx-charts-line-chart
-      [view]="[600, 250]"
-      [scheme]="'vivid'"
-      [results]="chartData"
-      [legend]="false"
-      [xAxis]="true"
-      [yAxis]="true"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
-      [xAxisLabel]="('dashboard.common.month' | transloco)"
-      [yAxisLabel]="('dashboard.common.balance' | transloco) + ' (FCFA)'"
-      [autoScale]="true">
-    </ngx-charts-line-chart>
-  </div>
-
-  <!-- Summary Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.total_debit' | transloco }}</span>
-      <span class="text-2xl font-bold text-red-600">{{ dashboardData.totalDebit | number:'1.0-0' }} FCFA</span>
-    </div>
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.total_credit' | transloco }}</span>
-      <span class="text-2xl font-bold text-green-600">{{ dashboardData.totalCredit | number:'1.0-0' }} FCFA</span>
-    </div>
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.global_balance' | transloco }}</span>
-      <span class="text-2xl font-bold text-blue-600">{{ dashboardData.globalBalance | number:'1.0-0' }} FCFA</span>
+<div class="flex flex-col gap-10 w-full">
+  <!-- Actions Rapides -->
+  <div>
+    <h2 class="text-xl font-bold mb-4">Actions Rapides</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <a [routerLink]="['/claims/list']" class="bg-pink-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">list_alt</span>
+        <span class="font-semibold text-xl mb-2">Lister les recours</span>
+        <span class="text-base opacity-80">Voir tous les recours</span>
+      </a>
+      <a [routerLink]="['/statements/detailed']" class="bg-blue-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">assessment</span>
+        <span class="font-semibold text-xl mb-2">États A/B</span>
+        <span class="text-base opacity-80">Consulter les états financiers A/B</span>
+      </a>
+      <a [routerLink]="['/statements/global']" class="bg-amber-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">assessment</span>
+        <span class="font-semibold text-xl mb-2">États A/FSSA</span>
+        <span class="text-base opacity-80">Consulter les états financiers A/FSSA</span>
+      </a>
     </div>
   </div>
 
-  <!-- Key Stats -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.company_count' | transloco }}</span>
-      <span class="text-2xl font-bold">{{ dashboardData.counterparties.length }}</span>
+  <!-- Administration -->
+  <div>
+    <h2 class="text-xl font-bold mb-4">Administration</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <a [routerLink]="['/admin/users/companies']" class="bg-green-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">business</span>
+        <span class="font-semibold text-xl mb-2">Admin. compagnies</span>
+        <span class="text-base opacity-80">Gérer les compagnies</span>
+      </a>
+      <a [routerLink]="['/admin/users/employees']" class="bg-amber-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">group</span>
+        <span class="font-semibold text-xl mb-2">Admin. employés</span>
+        <span class="text-base opacity-80">Gérer les employés</span>
+      </a>
+      <a [routerLink]="['/admin/roles']" class="bg-purple-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">admin_panel_settings</span>
+        <span class="font-semibold text-xl mb-2">Gestion des rôles</span>
+        <span class="text-base opacity-80">Attribuer ou modifier les rôles</span>
+      </a>
+      <a [routerLink]="['/admin/closures']" class="bg-red-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">lock</span>
+        <span class="font-semibold text-xl mb-2">Clôture technique</span>
+        <span class="text-base opacity-80">Effectuer la clôture technique</span>
+      </a>
     </div>
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.average_balance' | transloco }}</span>
-      <span class="text-2xl font-bold">{{ (dashboardData.globalBalance / dashboardData.counterparties.length) | number:'1.0-0' }} FCFA</span>
-    </div>
-  </div>
-
-  <!-- Counterparties Table -->
-  <div class="bg-white rounded-lg shadow p-4">
-    <h2 class="text-lg font-semibold mb-4">{{ 'dashboard.common.participating_companies' | transloco }}</h2>
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead>
-        <tr>
-          <th class="px-4 py-2 text-left">{{ 'dashboard.common.company' | transloco }}</th>
-          <th class="px-4 py-2 text-right">{{ 'dashboard.common.debit' | transloco }}</th>
-          <th class="px-4 py-2 text-right">{{ 'dashboard.common.credit' | transloco }}</th>
-          <th class="px-4 py-2 text-right">{{ 'dashboard.common.balance' | transloco }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of dashboardData.counterparties">
-          <td class="px-4 py-2 flex items-center gap-2">
-            <img *ngIf="c.counterpartyLogo" [src]="c.counterpartyLogo" class="w-6 h-6 rounded-full" />
-            <span>{{ c.counterpartyCompany }}</span>
-          </td>
-          <td class="px-4 py-2 text-right text-red-600">{{ c.totalDebit | number:'1.0-0' }}</td>
-          <td class="px-4 py-2 text-right text-green-600">{{ c.totalCredit | number:'1.0-0' }}</td>
-          <td class="px-4 py-2 text-right text-blue-600">{{ c.balance | number:'1.0-0' }}</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </div>

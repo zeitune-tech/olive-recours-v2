@@ -86,12 +86,12 @@
 
 					<mat-form-field appearance="outline" class="w-full">
 						<mat-label>{{ t('entities.claim.table.amount') }}</mat-label>
-						<input matInput type="number" formControlName="amount" required>
+						<input matInput type="text" formControlName="amount" required (input)="formatAmountInput('amount', step3Group, $event)" [value]="displayAmount" autocomplete="off">
 					</mat-form-field>
 
 					<mat-form-field appearance="outline" class="w-full">
 						<mat-label>{{ t('entities.claim.table.insuredAmount') }}</mat-label>
-						<input matInput type="number" formControlName="insuredAmount" required>
+						<input matInput type="text" formControlName="insuredAmount" required (input)="formatAmountInput('insuredAmount', step3Group, $event)" [value]="displayInsuredAmount" autocomplete="off">
 					</mat-form-field>
 
 					<mat-form-field appearance="outline" class="w-full">

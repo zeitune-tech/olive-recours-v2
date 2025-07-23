@@ -1,83 +1,35 @@
-<div *ngIf="dashboardData" class="flex flex-col gap-6 w-full">
-  <!-- Graph Section -->
-  <div class="bg-white rounded-lg shadow p-4">
-    <h2 class="text-lg font-semibold mb-4">{{ 'dashboard.company_board.balance_evolution' | transloco }}</h2>
-    <ngx-charts-line-chart
-      [view]="[600, 250]"
-      [scheme]="'vivid'"
-      [results]="chartData"
-      [legend]="false"
-      [xAxis]="true"
-      [yAxis]="true"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
-      class="w-full"
-      [xAxisLabel]="('dashboard.common.month' | transloco)"
-      [yAxisLabel]="('dashboard.common.balance' | transloco) + ' (FCFA)'"
-      [autoScale]="true">
-    </ngx-charts-line-chart>
-  </div>
-
-  <!-- Summary Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.total_debit' | transloco }}</span>
-      <span class="text-2xl font-bold text-red-600">{{ dashboardData.totalDebit | number:'1.0-0' }} FCFA</span>
-    </div>
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.total_credit' | transloco }}</span>
-      <span class="text-2xl font-bold text-green-600">{{ dashboardData.totalCredit | number:'1.0-0' }} FCFA</span>
-    </div>
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.common.balance' | transloco }}</span>
-      <span class="text-2xl font-bold text-blue-600">{{ dashboardData.balance | number:'1.0-0' }} FCFA</span>
+<div class="flex flex-col gap-10 w-full">
+  <!-- Actions sur les états -->
+  <div>
+    <h2 class="text-xl font-bold mb-4">États</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <a [routerLink]="['/statements/detailed']" class="bg-sky-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">assessment</span>
+        <span class="font-semibold text-xl mb-2">État A/b</span>
+        <span class="text-base opacity-80">Consulter l'état financier A/b</span>
+      </a>
+      <a [routerLink]="['/statements/global']" class="bg-sky-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">assessment</span>
+        <span class="font-semibold text-xl mb-2">État A/fsaa</span>
+        <span class="text-base opacity-80">Consulter l'état financier A/fsaa</span>
+      </a>
     </div>
   </div>
 
-  <!-- Key Stats -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.company_board.credit_count' | transloco }}</span>
-      <span class="text-2xl font-bold text-green-600">{{ creditCount }}</span>
+  <!-- Actions sur les recours -->
+  <div>
+    <h2 class="text-xl font-bold mb-4">Recours</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <a [routerLink]="['/claims/new']" class="bg-indigo-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">add_circle</span>
+        <span class="font-semibold text-xl mb-2">Créer un recours</span>
+        <span class="text-base opacity-80">Initier une nouvelle demande</span>
+      </a>
+      <a [routerLink]="['/claims/list']" class="bg-teal-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+        <span class="material-icons text-5xl mb-3">list</span>
+        <span class="font-semibold text-xl mb-2">Lister les recours</span>
+        <span class="text-base opacity-80">Voir tous les recours</span>
+      </a>
     </div>
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.company_board.debit_count' | transloco }}</span>
-      <span class="text-2xl font-bold text-red-600">{{ debitCount }}</span>
-    </div>
-    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-      <span class="text-gray-500">{{ 'dashboard.company_board.avg_amount' | transloco }}</span>
-      <span class="text-2xl font-bold">{{ avgTransaction | number:'1.0-0' }} FCFA</span>
-    </div>
-  </div>
-
-  <!-- Statement Lines Table -->
-  <div class="bg-white rounded-lg shadow p-4">
-    <h2 class="text-lg font-semibold mb-4">{{ 'dashboard.company_board.statement_lines' | transloco }}</h2>
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead>
-        <tr>
-          <th class="px-4 py-2 text-left">{{ 'dashboard.company_board.label' | transloco }}</th>
-          <th class="px-4 py-2 text-left">{{ 'dashboard.common.counterparty' | transloco }}</th>
-          <th class="px-4 py-2 text-left">{{ 'dashboard.company_board.date' | transloco }}</th>
-          <th class="px-4 py-2 text-right">{{ 'dashboard.company_board.amount' | transloco }}</th>
-          <th class="px-4 py-2 text-center">{{ 'dashboard.company_board.type' | transloco }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let line of dashboardData.lines">
-          <td class="px-4 py-2">{{ line.label }}</td>
-          <td class="px-4 py-2">{{ line.oppositeLabel }}</td>
-          <td class="px-4 py-2">{{ line.date | date:'dd/MM/yyyy' }}</td>
-          <td class="px-4 py-2 text-right" [ngClass]="{'text-red-600': line.type === 'DEBIT', 'text-green-600': line.type === 'CREDIT'}">
-            {{ line.amount | number:'1.0-0' }} FCFA
-          </td>
-          <td class="px-4 py-2 text-center">
-            <span [ngClass]="{'text-red-600': line.type === 'DEBIT', 'text-green-600': line.type === 'CREDIT'}">
-              {{ line.type }}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </div>

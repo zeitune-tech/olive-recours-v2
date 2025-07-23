@@ -23,6 +23,8 @@ export class ClaimNewComponent implements OnInit {
 	isSubmitting = false;
 	companies: Company[] = [];
 	managementEntity: ManagementEntity = {} as ManagementEntity;
+	displayAmount = '';
+	displayInsuredAmount = '';
 
 	constructor(
 		private _fb: FormBuilder,
@@ -88,6 +90,10 @@ export class ClaimNewComponent implements OnInit {
 				console.error('Erreur lors du chargement des entreprises', error);
 			}
 		});
+
+		// Initialize display values if needed (for edit mode or default)
+		this.displayAmount = this.formatNumberWithSpaces(this.step3Group.value.amount?.toString() || '');
+		this.displayInsuredAmount = this.formatNumberWithSpaces(this.step3Group.value.insuredAmount?.toString() || '');
 	}
 
 	createClaim(): void {
@@ -123,6 +129,33 @@ export class ClaimNewComponent implements OnInit {
 				console.error('Erreur lors de la création du recours');
 			}
 		});
+	}
+
+	// Ajoute cette méthode pour formater l'entrée utilisateur
+	formatAmountInput(controlName: 'amount' | 'insuredAmount', group: FormGroup, event: any): void {
+		let value = event.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+		if (value) {
+			value = parseInt(value, 10).toString();
+			const formatted = this.formatNumberWithSpaces(value);
+			event.target.value = formatted;
+			group.get(controlName)?.setValue(Number(value), { emitEvent: false });
+			if (controlName === 'amount') {
+				this.displayAmount = formatted;
+			} else {
+				this.displayInsuredAmount = formatted;
+			}
+		} else {
+			group.get(controlName)?.setValue(0, { emitEvent: false });
+			if (controlName === 'amount') {
+				this.displayAmount = '';
+			} else {
+				this.displayInsuredAmount = '';
+			}
+		}
+	}
+
+	formatNumberWithSpaces(value: string): string {
+		return value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 	}
 }
 
