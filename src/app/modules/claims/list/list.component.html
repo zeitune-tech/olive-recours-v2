@@ -80,13 +80,13 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                     </button>
-                                    <button (click)="acceptClaim(claim)" [disabled]="claim.status === 'ACCEPTED' || claim.status === 'REFUSED' || !features.accept"
+                                    <button (click)="acceptClaim(claim)" [disabled]="claim.status === 'ACCEPTED' || claim.status === 'REFUSED' || !features.accept || company.uuid === claim.declaringCompanyId"
                                         class="text-green-600 hover:text-green-900 p-1" title="{{ 'buttons.validate' | transloco }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </button>
-                                    <button (click)="rejectClaim(claim)" [disabled]="claim.status === 'ACCEPTED' || claim.status === 'REFUSED' || !features.reject"
+                                    <button (click)="rejectClaim(claim)" [disabled]="claim.status === 'ACCEPTED' || claim.status === 'REFUSED' || !features.reject || company.uuid === claim.declaringCompanyId"
                                         class="text-orange-600 hover:text-orange-900 p-1" title="{{ 'buttons.reject' | transloco }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />

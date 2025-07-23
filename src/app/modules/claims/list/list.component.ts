@@ -230,6 +230,13 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     }
 
     acceptClaim(claim: Claim): void {
+        if(this.company.uuid === claim.declaringCompanyId){
+            this._toastService.error(
+                //TODO : traduire
+                "Vous ne pouvez pas accepter votre propre recours"
+            );
+            return;
+        }
         const dialogRef = this._dialog.open(ConfirmDialogComponent, {
             data: {
                 title: 'Confirmation',
@@ -261,6 +268,13 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     }
 
     rejectClaim(claim: Claim) {
+        if(this.company.uuid === claim.declaringCompanyId){
+            this._toastService.error(
+                //TODO : traduire
+                "Vous ne pouvez pas rejeter votre propre recours"
+            );
+            return;
+        }
         const dialogRef = this._dialog.open(ConfirmDialogComponent, {
             data: {
                 title: 'Confirmation',
@@ -278,8 +292,6 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
             }
         });
     }
-
-
 
     openNewClaimDialog(): void {
         this._router.navigateByUrl("/claims/new");
