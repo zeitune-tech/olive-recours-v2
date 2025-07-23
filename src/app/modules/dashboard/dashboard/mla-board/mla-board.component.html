@@ -1,49 +1,49 @@
 <div class="flex flex-col gap-10 w-full">
   <!-- Actions Rapides -->
   <div>
-    <h2 class="text-xl font-bold mb-4">Actions Rapides</h2>
+    <h2 class="text-xl font-bold mb-4">{{ 'dashboard.mla_board.quick_actions' | transloco }}</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-      <a [routerLink]="['/claims/list']" class="bg-pink-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+      <a [routerLink]="['/claims/list']" class="bg-pink-800 text-white rounded-2xl shadow-lg py-8 px-4 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
         <span class="material-icons text-5xl mb-3">list_alt</span>
-        <span class="font-semibold text-xl mb-2">Lister les recours</span>
-        <span class="text-base opacity-80">Voir tous les recours</span>
+        <span class="font-semibold text-xl mb-2 text-center">{{ 'dashboard.mla_board.list_claims' | transloco }}</span>
+        <span class="text-base opacity-80 text-center">{{ 'dashboard.mla_board.list_claims_desc' | transloco }}</span>
       </a>
-      <a [routerLink]="['/statements/detailed']" class="bg-blue-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+      <a [routerLink]="['/statements/detailed']" class="bg-blue-800 text-white rounded-2xl shadow-lg py-8 px-4 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
         <span class="material-icons text-5xl mb-3">assessment</span>
-        <span class="font-semibold text-xl mb-2">États A/B</span>
-        <span class="text-base opacity-80">Consulter les états financiers A/B</span>
+        <span class="font-semibold text-xl mb-2 text-center">{{ 'dashboard.mla_board.statements_ab' | transloco }}</span>
+        <span class="text-base opacity-80 text-center">{{ 'dashboard.mla_board.statements_ab_desc' | transloco }}</span>
       </a>
-      <a [routerLink]="['/statements/global']" class="bg-amber-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+      <a [routerLink]="['/statements/global']" class="bg-amber-800 text-white rounded-2xl shadow-lg py-8 px-4 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
         <span class="material-icons text-5xl mb-3">assessment</span>
-        <span class="font-semibold text-xl mb-2">États A/FSSA</span>
-        <span class="text-base opacity-80">Consulter les états financiers A/FSSA</span>
+        <span class="font-semibold text-xl mb-2 text-center">{{ 'dashboard.mla_board.statements_afssa' | transloco }}</span>
+        <span class="text-base opacity-80 text-center">{{ 'dashboard.mla_board.statements_afssa_desc' | transloco }}</span>
       </a>
     </div>
   </div>
 
   <!-- Administration -->
   <div>
-    <h2 class="text-xl font-bold mb-4">Administration</h2>
+    <h2 class="text-xl font-bold mb-4">{{ 'dashboard.mla_board.administration' | transloco }}</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-      <a [routerLink]="['/admin/users/companies']" class="bg-green-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+      <a [routerLink]="['/admin/users/companies']" class="bg-green-800 text-white rounded-2xl shadow-lg py-8 px-4 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
         <span class="material-icons text-5xl mb-3">business</span>
-        <span class="font-semibold text-xl mb-2">Admin. compagnies</span>
-        <span class="text-base opacity-80">Gérer les compagnies</span>
+        <span class="font-semibold text-xl mb-2 text-center">{{ 'dashboard.mla_board.manage_companies' | transloco }}</span>
+        <span class="text-base opacity-80 text-center">{{ 'dashboard.mla_board.manage_companies_desc' | transloco }}</span>
       </a>
-      <a [routerLink]="['/admin/users/employees']" class="bg-amber-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+      <a [routerLink]="['/admin/users/employees']" class="bg-amber-800 text-white rounded-2xl shadow-lg py-8 px-4 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
         <span class="material-icons text-5xl mb-3">group</span>
-        <span class="font-semibold text-xl mb-2">Admin. employés</span>
-        <span class="text-base opacity-80">Gérer les employés</span>
+        <span class="font-semibold text-xl mb-2 text-center">{{ 'dashboard.mla_board.manage_employees' | transloco }}</span>
+        <span class="text-base opacity-80 text-center">{{ 'dashboard.mla_board.manage_employees_desc' | transloco }}</span>
       </a>
-      <a [routerLink]="['/admin/roles']" class="bg-purple-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+      <a [routerLink]="['/admin/roles']" class="bg-purple-800 text-white rounded-2xl shadow-lg py-8 px-4 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
         <span class="material-icons text-5xl mb-3">admin_panel_settings</span>
-        <span class="font-semibold text-xl mb-2">Gestion des rôles</span>
-        <span class="text-base opacity-80">Attribuer ou modifier les rôles</span>
+        <span class="font-semibold text-xl mb-2 text-center">{{ 'dashboard.mla_board.role_management' | transloco }}</span>
+        <span class="text-base opacity-80 text-center">{{ 'dashboard.mla_board.role_management_desc' | transloco }}</span>
       </a>
-      <a [routerLink]="['/admin/closures']" class="bg-red-800 text-white rounded-2xl shadow-lg p-8 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
+      <a [routerLink]="['/admin/closures']" class="bg-red-800 text-white rounded-2xl shadow-lg py-8 px-4 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform min-h-[180px] min-w-[180px] no-underline">
         <span class="material-icons text-5xl mb-3">lock</span>
-        <span class="font-semibold text-xl mb-2">Clôture technique</span>
-        <span class="text-base opacity-80">Effectuer la clôture technique</span>
+        <span class="font-semibold text-xl mb-2 text-center">{{ 'dashboard.mla_board.technical_closure' | transloco }}</span>
+        <span class="text-base opacity-80 text-center">{{ 'dashboard.mla_board.technical_closure_desc' | transloco }}</span>
       </a>
     </div>
   </div>

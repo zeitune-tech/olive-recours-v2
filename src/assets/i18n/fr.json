@@ -451,16 +451,35 @@
       "no_data": "Aucune donnée trouvée",
       "no_data_description": "Aucune donnée trouvée pour le moment"
     },
+    "mla_board": {
+      "quick_actions": "Actions Rapides",
+      "list_claims": "Lister les recours",
+      "list_claims_desc": "Voir tous les recours",
+      "statements_ab": "États A/B",
+      "statements_ab_desc": "Consulter les états financiers A/B",
+      "statements_afssa": "États A/FSSA",
+      "statements_afssa_desc": "Consulter les états financiers A/FSSA",
+      "administration": "Administration",
+      "manage_companies": "Admin. compagnies",
+      "manage_companies_desc": "Gérer les compagnies",
+      "manage_employees": "Admin. employés",
+      "manage_employees_desc": "Gérer les employés",
+      "role_management": "Gestion des rôles",
+      "role_management_desc": "Attribuer ou modifier les rôles",
+      "technical_closure": "Clôture technique",
+      "technical_closure_desc": "Effectuer la clôture technique"
+    },
     "company_board": {
-      "balance_evolution": "Évolution du solde",
-      "credit_count": "Nombre de crédits",
-      "debit_count": "Nombre de débits",
-      "avg_amount": "Montant moyen",
-      "statement_lines": "Lignes de relevé",
-      "label": "Libellé",
-      "date": "Date",
-      "amount": "Montant",
-      "type": "Type"
+      "statements": "États",
+      "statements_ab": "État A/B",
+      "statements_ab_desc": "Consulter l'état financier A/B",
+      "statements_afssa": "État A/FSSA",
+      "statements_afssa_desc": "Consulter l'état financier A/FSSA",
+      "claims": "Recours",
+      "create_claim": "Soumettre un recours",
+      "create_claim_desc": "Initier une nouvelle demande",
+      "list_claims": "Lister les recours",
+      "list_claims_desc": "Voir tous les recours"
     }
   },
   "classes": {
