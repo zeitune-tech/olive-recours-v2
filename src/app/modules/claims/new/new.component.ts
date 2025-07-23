@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClaimService } from '@core/services/claim/claim.service';
 import { Company } from '@core/services/company/company.interface';
@@ -8,6 +8,7 @@ import { ManagementEntity } from '@core/services/management-entity/management-en
 import { UserService } from '@core/services/user/user.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
+import { ToastService } from 'src/app/components/toast/toast.service';
 
 @Component({
 	selector: 'app-claim-new-dialog',
@@ -30,7 +31,8 @@ export class ClaimNewComponent implements OnInit {
 		private _layoutService: LayoutService,
 		private transloco: TranslocoService,
 		private _userService: UserService,
-		private _router: Router
+		private _router: Router,
+		private _toastService: ToastService
 	) {
 		// Step 1
 		this.step1Group = this._fb.group({
@@ -48,10 +50,10 @@ export class ClaimNewComponent implements OnInit {
 
 		// Step 3
 		this.step3Group = this._fb.group({
-			amount: [0, [Validators.required, Validators.min(1)]],
-			insuredAmount: [0, [Validators.required, Validators.min(1)]],
+			amount: [0],
+			insuredAmount: [0],
 			comment: ['']
-		});
+		}, { validators: atLeastOneAmountValidator });
 
 		// Form global
 		this.claimForm = this._fb.group({
@@ -112,13 +114,26 @@ export class ClaimNewComponent implements OnInit {
 			next: () => {
 				this.isSubmitting = false;
 				// Redirection vers la liste après succès
-				this._router.navigate(['/claims/list']);
+				this._router.navigate(['/claims']);
+				this._toastService.success(this.transloco.translate('claims.new.success'));
 			},
 			error: () => {
 				this.isSubmitting = false;
-				// TODO: afficher un snackbar ou message d'erreur
+				this._toastService.error(this.transloco.translate('claims.new.error'));
 				console.error('Erreur lors de la création du recours');
 			}
 		});
 	}
+}
+
+// Validateur personnalisé : au moins un des deux montants doit être renseigné (>0)
+function atLeastOneAmountValidator(group: AbstractControl): ValidationErrors | null {
+  const amount = group.get('amount')?.value;
+  const insuredAmount = group.get('insuredAmount')?.value;
+  const isAmountValid = amount != null && amount > 0;
+  const isInsuredAmountValid = insuredAmount != null && insuredAmount > 0;
+  if (!isAmountValid && !isInsuredAmountValid) {
+    return { atLeastOneAmount: true };
+  }
+  return null;
 }
