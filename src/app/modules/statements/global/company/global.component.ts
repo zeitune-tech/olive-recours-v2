@@ -73,4 +73,18 @@ export class CompanyGlobalComponent implements OnInit {
             });
     }
 
+    downloadPdf(): void {
+        if (!this.myCompany) return;
+    
+        this._statementService.downloadGlobalStatementPdf(this.selectedMonth, this.selectedYear)
+            .subscribe(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `statement_${this.selectedMonth}_${this.selectedYear}.pdf`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+    }
+
 }
