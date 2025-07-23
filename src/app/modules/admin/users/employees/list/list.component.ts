@@ -380,4 +380,17 @@ export class UsersListComponent implements OnInit, OnDestroy {
   trackByEmployee(index: number, employee: Employee): string {
     return employee.id;
   }
+
+  get filteredManagementEntities(): Company[] {
+    if (!this.employeeData.accessLevel) {
+      return [];
+    }
+    return this.availableManagementEntities.filter(
+      entity => entity.type === this.employeeData.accessLevel
+    );
+  }
+
+  onAccessLevelChange() {
+    this.employeeData.managementEntity = '';
+  }
 }

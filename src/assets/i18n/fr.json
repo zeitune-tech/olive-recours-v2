@@ -1010,7 +1010,9 @@
       "cancel": "Annuler",
       "close": "Fermer",
       "create": "Créer",
-      "update": "Mettre à jour"
+      "update": "Mettre à jour",
+      "select_management_entity": "Sélectionner une entité de gestion",
+      "select_access_level": "Sélectionner un niveau d'accès"
     }
   },
   "companies": {
