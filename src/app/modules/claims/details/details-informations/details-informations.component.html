@@ -23,6 +23,30 @@
                 <mat-label>{{ t('entities.claim.table.comments') }}</mat-label>
                 <textarea matInput [(ngModel)]="claim.comment" name="comment" [readonly]="!editMode"></textarea>
             </mat-form-field>
+
+            <!-- Nature du sinistre -->
+            <mat-form-field appearance="outline">
+                <mat-label>{{ t('entities.claim.table.natureOfSinister') }}</mat-label>
+                <mat-select [(ngModel)]="claim.natureOfSinister" name="natureOfSinister" [disabled]="!editMode">
+                    <mat-option [value]="'materiel'">{{ t('entities.claim.nature.materiel') }}</mat-option>
+                    <mat-option [value]="'corporel'">{{ t('entities.claim.nature.corporel') }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Garanties mises en oeuvre -->
+            <mat-form-field appearance="outline">
+                <mat-label>{{ t('entities.claim.table.garantiMiseEnOeuvre') }}</mat-label>
+                <mat-select [(ngModel)]="claim.garantiMiseEnOeuvre" name="garantiMiseEnOeuvre" [disabled]="!editMode" multiple>
+                    <mat-option [value]="'tierce_complete'">{{ t('entities.claim.garanti.tierce_complete') }}</mat-option>
+                    <mat-option [value]="'tierce_collision'">{{ t('entities.claim.garanti.tierce_collision') }}</mat-option>
+                    <mat-option [value]="'tierce_plafonnee'">{{ t('entities.claim.garanti.tierce_plafonnee') }}</mat-option>
+                    <mat-option [value]="'avance_recours'">{{ t('entities.claim.garanti.avance_recours') }}</mat-option>
+                    <mat-option [value]="'bris_de_glace'">{{ t('entities.claim.garanti.bris_de_glace') }}</mat-option>
+                    <mat-option [value]="'incendie'">{{ t('entities.claim.garanti.incendie') }}</mat-option>
+                    <mat-option [value]="'rc_corporelle'">{{ t('entities.claim.garanti.rc_corporelle') }}</mat-option>
+                    <mat-option [value]="'autres'">{{ t('entities.claim.garanti.autres') }}</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
 
         <div class="flex flex-col lg:flex-row justify-between gap-6">
@@ -47,6 +71,12 @@
                     <mat-form-field appearance="outline">
                         <mat-label>{{ t('entities.claim.table.insuredName') }}</mat-label>
                         <input matInput [(ngModel)]="claim.insuredName" name="insuredName" [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <!-- Immatriculation déclarant -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.immatriculationDeclarant') || 'Immatriculation' }}</mat-label>
+                        <input matInput [(ngModel)]="claim.immatriculationDeclarant" name="immatriculationDeclarant" [readonly]="!editMode">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
@@ -84,6 +114,12 @@
                         <mat-label>{{ t('entities.claim.table.opponentInsuredName') }}</mat-label>
                         <input matInput [(ngModel)]="claim.opponentInsuredName" name="opponentInsuredName"
                             [readonly]="!editMode">
+                    </mat-form-field>
+
+                    <!-- Immatriculation subissant -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ t('entities.claim.table.immatriculationSubissant') || 'Immatriculation' }}</mat-label>
+                        <input matInput [(ngModel)]="claim.immatriculationSubissant" name="immatriculationSubissant" [readonly]="!editMode">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">

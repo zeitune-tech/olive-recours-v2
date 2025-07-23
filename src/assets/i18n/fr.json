@@ -336,6 +336,10 @@
     },
     "claim": {
       "table": {
+        "natureOfSinister": "Nature du sinistre",
+        "immatriculationDeclarant": "Immatriculation déclarant",
+        "immatriculationSubissant": "Immatriculation subissant",
+        "garantiMiseEnOeuvre": "Garanties mises en œuvre",
         "title": "Liste des recours",
         "subtitle": "Gestion des recours",
         "description": "Liste des recours enregistrés dans le système.",
@@ -363,6 +367,20 @@
         "comment": "Commentaire",
         "comments": "Commentaires",
         "date": "Date"
+      },
+      "nature": {
+        "materiel": "Matériel",
+        "corporel": "Corporel"
+      },
+      "garanti": {
+        "tierce_complete": "Tierce complète",
+        "tierce_collision": "Tierce collision",
+        "tierce_plafonnee": "Tierce plafonnée",
+        "avance_recours": "Avance sur recours ou Substitution de débiteur",
+        "bris_de_glace": "Bris de glace",
+        "incendie": "Incendie",
+        "rc_corporelle": "Rc Corporelle",
+        "autres": "Autres"
       },
       "create": {
         "title": "suivez les étapes suivantes pour soumettre un recours",

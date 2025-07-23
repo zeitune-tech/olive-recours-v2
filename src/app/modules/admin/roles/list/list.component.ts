@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -129,18 +129,18 @@ export class RolesListComponent implements OnInit, OnDestroy {
         }
       });
 
-      this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({
-        next: (user) => {
-          this.features = {
-            create: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.CREATE_PROFILE]),
-            update: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.UPDATE_PROFILE]),
-            delete: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.DELETE_PROFILE])
-          }
-        },
-        error: (error) => {
-          console.error('Error loading permissions:', error);
+    this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (user) => {
+        this.features = {
+          create: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.CREATE_PROFILE]),
+          update: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.UPDATE_PROFILE]),
+          delete: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.DELETE_PROFILE])
         }
-      });
+      },
+      error: (error) => {
+        console.error('Error loading permissions:', error);
+      }
+    });
   }
 
   filterRoles(): void {
@@ -262,5 +262,20 @@ export class RolesListComponent implements OnInit, OnDestroy {
 
   trackByPermissionId(index: number, permission: PermissionResponse): string {
     return permission.id;
+  }
+
+  onPermissionToggle(permissionId: string, checked: boolean): void {
+    if (checked) {
+      if (!this.roleData.permissions.includes(permissionId)) {
+        this.roleData.permissions.push(permissionId);
+      }
+    } else {
+      this.roleData.permissions = this.roleData.permissions.filter(id => id !== permissionId);
+    }
+  }
+
+  onPermissionCheckboxChange(event: Event, permissionId: string): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.onPermissionToggle(permissionId, checked);
   }
 }

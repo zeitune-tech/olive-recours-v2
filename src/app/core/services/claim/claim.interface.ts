@@ -22,8 +22,11 @@ export interface Claim {
     opponentCompanyUuid: string;
     opponentCompanyLogo?: string;
 
-
-
+    // Champs ajoutés pour cohérence avec le backend
+    immatriculationDeclarant?: string;
+    immatriculationSubissant?: string;
+    natureOfSinister?: string; // Utilise l'enum NatureSinistre côté front
+    garantiMiseEnOeuvre?: string[]; // Utilise l'enum GarantiMiseEnOeuvre côté front
 
     status: ClaimStatus;
     submissionDate?: string;

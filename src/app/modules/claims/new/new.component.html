@@ -38,6 +38,28 @@
 						<input matInput formControlName="insuredName" required>
 					</mat-form-field>
 
+					<mat-form-field appearance="outline" class="w-full">
+						<mat-label>{{ t('entities.claim.table.natureOfSinister') }}</mat-label>
+						<mat-select formControlName="natureOfSinister" required>
+							<mat-option value="materiel">{{ t('entities.claim.nature.materiel') }}</mat-option>
+							<mat-option value="corporel">{{ t('entities.claim.nature.corporel') }}</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" class="w-full">
+						<mat-label>{{ t('entities.claim.table.immatriculationDeclarant') }}</mat-label>
+						<input matInput formControlName="immatriculationDeclarant" required>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" class="w-full">
+						<mat-label>{{ t('entities.claim.table.garantiMiseEnOeuvre') }}</mat-label>
+						<mat-select formControlName="garantiMiseEnOeuvre" multiple required>
+							<mat-option *ngFor="let option of getGarantiOptions()" [value]="option">
+								{{ t(getGarantiLabel(option)) }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
 					<div class="flex justify-end">
 						<button mat-button matStepperNext color="primary" [disabled]="!step1Group.valid">
 							{{ t('buttons.next') }}
@@ -68,6 +90,11 @@
 					<mat-form-field appearance="outline" class="w-full">
 						<mat-label>{{ t('entities.claim.table.opponentInsuredName') }}</mat-label>
 						<input matInput formControlName="opponentInsuredName" required>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline" class="w-full">
+						<mat-label>{{ t('entities.claim.table.immatriculationSubissant') }}</mat-label>
+						<input matInput formControlName="immatriculationSubissant" required>
 					</mat-form-field>
 
 					<div class="flex justify-between">

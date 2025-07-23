@@ -9,6 +9,7 @@ import { UserService } from '@core/services/user/user.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { ToastService } from 'src/app/components/toast/toast.service';
+import { GarantiMiseEnOeuvre } from '../claim.dto';
 
 @Component({
 	selector: 'app-claim-new-dialog',
@@ -26,6 +27,35 @@ export class ClaimNewComponent implements OnInit {
 	displayAmount = '';
 	displayInsuredAmount = '';
 
+	GarantiMiseEnOeuvre = GarantiMiseEnOeuvre;
+
+	getGarantiOptions(): string[] {
+		return Object.values(GarantiMiseEnOeuvre);
+	}
+
+	getGarantiLabel(value: string): string {
+		switch (value) {
+			case GarantiMiseEnOeuvre.TierceComplete:
+				return 'entities.claim.garanti.tierce_complete';
+			case GarantiMiseEnOeuvre.TierceCollision:
+				return 'entities.claim.garanti.tierce_collision';
+			case GarantiMiseEnOeuvre.TiercePlafonnee:
+				return 'entities.claim.garanti.tierce_plafonnee';
+			case GarantiMiseEnOeuvre.AvanceRecours:
+				return 'entities.claim.garanti.avance_recours';
+			case GarantiMiseEnOeuvre.BrisDeGlace:
+				return 'entities.claim.garanti.bris_de_glace';
+			case GarantiMiseEnOeuvre.Incendie:
+				return 'entities.claim.garanti.incendie';
+			case GarantiMiseEnOeuvre.RcCorporelle:
+				return 'entities.claim.garanti.rc_corporelle';
+			case GarantiMiseEnOeuvre.Autres:
+				return 'entities.claim.garanti.autres';
+			default:
+				return value;
+		}
+	}
+
 	constructor(
 		private _fb: FormBuilder,
 		private _claimService: ClaimService,
@@ -40,14 +70,18 @@ export class ClaimNewComponent implements OnInit {
 		this.step1Group = this._fb.group({
 			dateOfSinister: ['', Validators.required],
 			claimNumber: ['', Validators.required],
-			insuredName: ['', Validators.required]
+			insuredName: ['', Validators.required],
+			natureOfSinister: ['', Validators.required],
+			immatriculationDeclarant: ['', Validators.required],
+			garantiMiseEnOeuvre: [[], Validators.required]
 		});
 
 		// Step 2
 		this.step2Group = this._fb.group({
 			opponentCompanyId: ['', Validators.required],
 			opponentClaimNumber: ['', Validators.required],
-			opponentInsuredName: ['', Validators.required]
+			opponentInsuredName: ['', Validators.required],
+			immatriculationSubissant: ['', Validators.required]
 		});
 
 		// Step 3
@@ -67,10 +101,10 @@ export class ClaimNewComponent implements OnInit {
 	ngOnInit(): void {
 
 		this._layoutService.setPageTitle(this.transloco.translate('layout.titles.claims'));
-    this._layoutService.setCrumbs([
-      { title: this.transloco.translate('layout.crumbs.claims'), link: '/claims', active: true },
-      { title: this.transloco.translate('layout.crumbs.claims-new'), link: '/claims/new', active: true },
-    ]);
+		this._layoutService.setCrumbs([
+			{ title: this.transloco.translate('layout.crumbs.claims'), link: '/claims', active: true },
+			{ title: this.transloco.translate('layout.crumbs.claims-new'), link: '/claims/new', active: true },
+		]);
 
 		this._userService.managementEntity$.subscribe({
 			next: (managementEntity) => {
@@ -80,7 +114,7 @@ export class ClaimNewComponent implements OnInit {
 				console.error('Erreur lors du chargement de l\'entité de gestion', error);
 			}
 		});
-		
+
 		// Load companies for step 2
 		this._companyService.companies$.subscribe({
 			next: (companies) => {
@@ -99,22 +133,26 @@ export class ClaimNewComponent implements OnInit {
 	createClaim(): void {
 		console.log("submitting");
 		if (this.isSubmitting) return;
-		
+
 		// Construction payload final
 		const payload = {
 			dateOfSinister: this.step1Group.value.dateOfSinister,
 			claimNumber: this.step1Group.value.claimNumber,
 			insuredName: this.step1Group.value.insuredName,
+			natureOfSinister: this.step1Group.value.natureOfSinister,
+			immatriculationDeclarant: this.step1Group.value.immatriculationDeclarant,
+			garantiMiseEnOeuvre: this.step1Group.value.garantiMiseEnOeuvre,
 			opponentCompanyId: this.step2Group.value.opponentCompanyId,
 			opponentClaimNumber: this.step2Group.value.opponentClaimNumber,
 			opponentInsuredName: this.step2Group.value.opponentInsuredName,
+			immatriculationSubissant: this.step2Group.value.immatriculationSubissant,
 			amount: this.step3Group.value.amount,
 			insuredAmount: this.step3Group.value.insuredAmount,
 			comment: this.step3Group.value.comment
 		};
-		
+
 		console.log(payload);
-		
+
 		this.isSubmitting = true;
 		this._claimService.create(payload).subscribe({
 			next: () => {
@@ -161,12 +199,12 @@ export class ClaimNewComponent implements OnInit {
 
 // Validateur personnalisé : au moins un des deux montants doit être renseigné (>0)
 function atLeastOneAmountValidator(group: AbstractControl): ValidationErrors | null {
-  const amount = group.get('amount')?.value;
-  const insuredAmount = group.get('insuredAmount')?.value;
-  const isAmountValid = amount != null && amount > 0;
-  const isInsuredAmountValid = insuredAmount != null && insuredAmount > 0;
-  if (!isAmountValid && !isInsuredAmountValid) {
-    return { atLeastOneAmount: true };
-  }
-  return null;
+	const amount = group.get('amount')?.value;
+	const insuredAmount = group.get('insuredAmount')?.value;
+	const isAmountValid = amount != null && amount > 0;
+	const isInsuredAmountValid = insuredAmount != null && insuredAmount > 0;
+	if (!isAmountValid && !isInsuredAmountValid) {
+		return { atLeastOneAmount: true };
+	}
+	return null;
 }
