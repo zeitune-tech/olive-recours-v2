@@ -22,6 +22,14 @@ import { PERMISSIONS } from "@core/permissions/permissions.data";
 import { ConfirmDialogComponent } from "@shared/components/confirm-dialog/confirm-dialog.component";
 import { ToastService } from "src/app/components/toast/toast.service";
 import { TranslocoService } from "@jsverse/transloco";
+import { ManagementEntity } from "@core/services/management-entity/management-entity.interface";
+
+// Enum pour les types de recours
+export enum ClaimTypeFilter {
+    ALL = 'ALL',
+    ISSUED = 'ISSUED',    // Recours émis (par ma compagnie)
+    RECEIVED = 'RECEIVED' // Recours subis (contre ma compagnie)
+}
 
 @Component({
     selector: "app-claims-list",
@@ -49,6 +57,28 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     dataSource = new MatTableDataSource<Claim>([]); // Ajoute les données réelles ici
     company: Company = {} as Company;
 
+    // Nouvelles propriétés pour les filtres
+    data: Claim[] = [];
+    filteredClaims: Claim[] = [];
+    searchTerm: string = '';
+    
+    // Filtres de date
+    startDate: string = '';
+    endDate: string = '';
+    
+    // Filtre type de recours
+    claimTypeFilter: ClaimTypeFilter = ClaimTypeFilter.ALL;
+    claimTypeFilterOptions = [
+        { value: ClaimTypeFilter.ALL, label: 'filter.claim_type.all' },
+        { value: ClaimTypeFilter.ISSUED, label: 'filter.claim_type.issued' },
+        { value: ClaimTypeFilter.RECEIVED, label: 'filter.claim_type.received' }
+    ];
+
+    @ViewChild(MatSort) sort!: MatSort;
+
+    selection = new SelectionModel<Claim>(true, []);
+    searchInputControl: UntypedFormControl = new UntypedFormControl();
+
     constructor(
         private _claimService: ClaimService,
         private _companyService: CompanyService,
@@ -62,23 +92,23 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     ) {
 
         this._layoutService.setPageTitle(this._translocoService.translate('layout.titles.claims'));
-    this._layoutService.setCrumbs([
-      { title: this._translocoService.translate('layout.crumbs.claims'), link: '/claims', active: false },
-      { title: this._translocoService.translate('layout.crumbs.claims-list'), link: '/claims', active: true }
-    ]);
+        this._layoutService.setCrumbs([
+            { title: this._translocoService.translate('layout.crumbs.claims'), link: '/claims', active: false },
+            { title: this._translocoService.translate('layout.crumbs.claims-list'), link: '/claims', active: true }
+        ]);
 
         this._claimService.claims$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((data: Claim[]) => {
                 this.data = data;
                 this.dataSource.data = data;
-                this.filteredClaims = data;
+                this.applyFilters();
             });
 
-        this._companyService.myCompany$
+        this._userService.managementEntity$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((company: Company) => {
-                this.company = company;
+            .subscribe((entity) => {
+                this.company = entity as Company;
             });
 
         this._userService.user$
@@ -92,22 +122,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
                     create: this.permissionsService.hasPermission(user, [PERMISSIONS.CREATE_CLAIM, PERMISSIONS.ALL]),
                 }
             });
-
-        
-
     }
-
-
-    data: Claim[] = [];
-    filteredClaims: Claim[] = [];
-    searchTerm: string = '';
-
-    @ViewChild(MatSort) sort!: MatSort;
-
-    selection = new SelectionModel<Claim>(true, []);
-    searchInputControl: UntypedFormControl = new UntypedFormControl();
-
-
 
     ngOnInit(): void {
         // Initialisation de la configuration de la table
@@ -156,7 +171,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
             },
         };
 
-        // Construction des lignes d’en-tête
+        // Construction des lignes d'en-tête
         this.buildHeaderRows();
 
         // Initialiser filteredClaims
@@ -198,30 +213,87 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
             }
         });
 
-        // Ajout de la colonne d’actions si nécessaire
+        // Ajout de la colonne d'actions si nécessaire
         this.groupHeader.push('actions');
         this.visibleColumns.push('actions');
     }
 
-    // Ajout de la méthode de recherche/filtrage
-    onSearch(): void {
-        const term = this.searchTerm.trim().toLowerCase();
-        if (!term) {
-            this.filteredClaims = this.data;
-            return;
+    // Méthode principale pour appliquer tous les filtres
+    applyFilters(): void {
+        let filtered = [...this.data];
+
+        // Filtre par terme de recherche
+        if (this.searchTerm.trim()) {
+            const term = this.searchTerm.trim().toLowerCase();
+            filtered = filtered.filter(claim =>
+                (claim.claimNumber && claim.claimNumber.toLowerCase().includes(term)) ||
+                (claim.insuredName && claim.insuredName.toLowerCase().includes(term)) ||
+                (claim.declaringCompanyName && claim.declaringCompanyName.toLowerCase().includes(term)) ||
+                (claim.opponentClaimNumber && claim.opponentClaimNumber.toLowerCase().includes(term)) ||
+                (claim.opponentInsuredName && claim.opponentInsuredName.toLowerCase().includes(term)) ||
+                (claim.opponentCompanyName && claim.opponentCompanyName.toLowerCase().includes(term)) ||
+                (claim.amount && claim.amount.toString().toLowerCase().includes(term)) ||
+                (claim.insuredAmount && claim.insuredAmount.toString().toLowerCase().includes(term))
+            );
         }
-        this.filteredClaims = this.data.filter(claim =>
-            (claim.claimNumber && claim.claimNumber.toLowerCase().includes(term)) ||
-            (claim.insuredName && claim.insuredName.toLowerCase().includes(term)) ||
-            (claim.declaringCompanyName && claim.declaringCompanyName.toLowerCase().includes(term)) ||
-            (claim.opponentClaimNumber && claim.opponentClaimNumber.toLowerCase().includes(term)) ||
-            (claim.opponentInsuredName && claim.opponentInsuredName.toLowerCase().includes(term)) ||
-            (claim.opponentCompanyName && claim.opponentCompanyName.toLowerCase().includes(term)) ||
-            (claim.amount && claim.amount.toString().toLowerCase().includes(term)) ||
-            (claim.insuredAmount && claim.insuredAmount.toString().toLowerCase().includes(term))
-        );
+
+        // Filtre par intervalle de dates
+        if (this.startDate || this.endDate) {
+            filtered = filtered.filter(claim => {
+                if (!claim.dateOfSinister) return false;
+                
+                const claimDate = new Date(claim.dateOfSinister);
+                const start = this.startDate ? new Date(this.startDate) : null;
+                const end = this.endDate ? new Date(this.endDate) : null;
+
+                if (start && claimDate < start) return false;
+                if (end && claimDate > end) return false;
+                
+                return true;
+            });
+        }
+
+        // Filtre par type de recours (émis/subis)
+        if (this.claimTypeFilter !== ClaimTypeFilter.ALL && this.company.id) {
+            filtered = filtered.filter((claim: Claim) => {
+                switch (this.claimTypeFilter) {
+                    case ClaimTypeFilter.ISSUED:
+                        // Recours émis : ma compagnie est le déclarant
+                        return claim.declaringCompanyUuid === this.company.id;
+                    case ClaimTypeFilter.RECEIVED:
+                        // Recours subis : ma compagnie est l'adversaire
+                        return claim.opponentCompanyUuid === this.company.id;
+                    default:
+                        return true;
+                }
+            });
+        }
+
+        this.filteredClaims = filtered;
     }
 
+    // Méthodes pour déclencher les filtres
+    onSearch(): void {
+        this.applyFilters();
+    }
+
+    onDateFilterChange(): void {
+        this.applyFilters();
+    }
+
+    onClaimTypeFilterChange(): void {
+        console.log(this.claimTypeFilter);
+        this.applyFilters();
+    }
+
+    // Méthode pour réinitialiser tous les filtres
+    resetFilters(): void {
+        this.searchTerm = '';
+        this.startDate = '';
+        this.endDate = '';
+        this.claimTypeFilter = ClaimTypeFilter.ALL;
+        this.applyFilters();
+    }
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
@@ -230,13 +302,12 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     }
 
     acceptClaim(claim: Claim): void {
-        // if(this.company.uuid === claim.declaringCompanyId){
-        //     this._toastService.error(
-        //         //TODO : traduire
-        //         "Vous ne pouvez pas accepter votre propre recours"
-        //     );
-        //     return;
-        // }
+        if(this.company.id === claim.declaringCompanyUuid){
+            this._toastService.error(
+                this._translocoService.translate('messages.claim.accept-own-claim')
+            );
+            return;
+        }
         const dialogRef = this._dialog.open(ConfirmDialogComponent, {
             data: {
                 title: 'Confirmation',
@@ -268,10 +339,9 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     }
 
     rejectClaim(claim: Claim) {
-        if(this.company.uuid === claim.declaringCompanyId){
+        if(this.company.id === claim.declaringCompanyUuid){
             this._toastService.error(
-                //TODO : traduire
-                "Vous ne pouvez pas rejeter votre propre recours"
+                this._translocoService.translate('messages.claim.reject-own-claim')
             );
             return;
         }
@@ -333,15 +403,13 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
         }
     }
 
-
     loadClaims(): void {
         this._claimService.getAll().subscribe(claims => {
             this.dataSource.data = claims;
             this.data = claims;
-            this.filteredClaims = claims;
+            this.applyFilters();
         });
     }
-
 
     trackByProperty(index: number, column: TableColumn<Claim>) {
         return column.property;

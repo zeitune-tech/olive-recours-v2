@@ -114,7 +114,9 @@
     "loadStatement": "charger les états",
     "downloadPdf": "état PDF",
     "upload-document": "Uploader un document",
-    "download": "Télécharger"
+    "download": "Télécharger",
+    "reset_filters": "Réinitialiser les filtres",
+    "view": "Voir"
   },
   "forms": {
     "search": "Rechercher...",
@@ -1144,5 +1146,26 @@
     "read-global-statements": "Voir les relevés globaux",
     "manage-closure": "Gérer les clôtures",
     "all": "Tous les droits"
+  },
+  "filter": {
+    "claim_type": {
+      "label": "Type de recours",
+      "all": "Tous les recours",
+      "issued": "Recours émis",
+      "received": "Recours subis"
+    },
+    "date": {
+      "start": "Date de début",
+      "end": "Date de fin"
+    },
+    "results_count": "{{count}} résultat(s) sur {{total}}",
+    "no_results": "Aucun résultat trouvé",
+    "try_different_filters": "Essayez de modifier vos critères de recherche ou réinitialisez les filtres."
+  },
+  "messages": {
+    "claim": {
+      "accept-own-claim": "Vous ne pouvez pas accepter votre propre recours",
+      "reject-own-claim": "Vous ne pouvez pas rejeter votre propre recours"
+    }
   }
 }

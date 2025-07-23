@@ -16,10 +16,10 @@ export interface Claim {
     insuredAmount: number;
     comment?: string;
 
-    declaringCompanyId: string;
+    declaringCompanyUuid: string;
     declaringCompanyLogo?: string;
     declaringCompanyName?: string;
-    opponentCompanyId: string;
+    opponentCompanyUuid: string;
     opponentCompanyLogo?: string;
 
 
