@@ -230,13 +230,13 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     }
 
     acceptClaim(claim: Claim): void {
-        if(this.company.uuid === claim.declaringCompanyId){
-            this._toastService.error(
-                //TODO : traduire
-                "Vous ne pouvez pas accepter votre propre recours"
-            );
-            return;
-        }
+        // if(this.company.uuid === claim.declaringCompanyId){
+        //     this._toastService.error(
+        //         //TODO : traduire
+        //         "Vous ne pouvez pas accepter votre propre recours"
+        //     );
+        //     return;
+        // }
         const dialogRef = this._dialog.open(ConfirmDialogComponent, {
             data: {
                 title: 'Confirmation',
