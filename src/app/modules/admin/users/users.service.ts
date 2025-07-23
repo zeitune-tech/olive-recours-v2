@@ -74,6 +74,15 @@ export class UsersService {
     );
   }
 
+  getAllManagementEntities(): Observable<Company[]> {
+    return this.http.get<Company[]>(`${this.request_url}/companies/global`).pipe(
+      tap((response) => {
+        this.setCompanies(response);
+        return response;
+      })
+    );
+  }
+
   getCompanyById(id: string): Observable<Company> {
     return this.http.get<Company>(`${this.request_url}/companies/${id}`).pipe(
       tap((response) => {

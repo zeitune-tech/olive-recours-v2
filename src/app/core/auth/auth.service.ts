@@ -91,6 +91,7 @@ export class AuthService {
                 this.accessToken = response.accessToken;
                 this.refreshToken = response.refreshToken;
                 this._userService.permissions = response.permissions;
+                this._userService.level = response.level || null;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
@@ -116,6 +117,7 @@ export class AuthService {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
                 this.refreshToken = response.refreshToken;
+                this._userService.level = response.level;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
@@ -186,6 +188,8 @@ export class AuthService {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
                 this.refreshToken = response.refreshToken;
+                this._userService.permissions = response.permissions;
+                this._userService.level = response.level || null;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;

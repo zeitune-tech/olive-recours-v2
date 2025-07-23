@@ -1,3 +1,4 @@
+import { ManagementEntityType } from "src/app/modules/admin/users/dto";
 
 
 export const ManagementEntityTypes = {
@@ -20,7 +21,8 @@ export class ManagementEntity {
     legalStatus: string;
     registrationNumber: string;
     logo: string;
-    level: "ENTITY_SUPERIOR" | "COMPANY" | "POINT_OF_SALE";
+    level: ManagementEntityType;
+    type: ManagementEntityType;
     dateOfCreation?: string | Date;
 
     constructor(entity: any) {
@@ -38,6 +40,7 @@ export class ManagementEntity {
         this.phone = entity?.phone || '';
         this.address = entity?.address || '';
         this.dateOfCreation = entity?.dateOfCreation;
+        this.type = entity?.type || ManagementEntityType.COMPANY;
     }
 
 }

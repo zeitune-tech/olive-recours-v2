@@ -10,12 +10,10 @@ import { PermissionsService } from '@core/permissions/permissions.service';
 import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { Company } from '@core/services/company/company.interface';
 
 // Management Entity interface
-interface ManagementEntity {
-  id: string;
-  name: string;
-}
+
 
 @Component({
   selector: 'app-employees-list',
@@ -29,7 +27,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   availableProfiles: ProfileResponse[] = [];
-  availableManagementEntities: ManagementEntity[] = [];
+  availableManagementEntities: Company[] = [];
   
   searchTerm: string = '';
   statusFilter: string = '';
@@ -146,11 +144,16 @@ export class UsersListComponent implements OnInit, OnDestroy {
   loadManagementEntities() {
     // Assuming you have a method to get management entities
     // If not, you can mock this or create the method in your service
-    this.usersService.getAllCompanies()
+    this.usersService.getAllManagementEntities()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (companies) => {
-          this.availableManagementEntities = companies;
+          this.availableManagementEntities = companies.map((company: Company) => {
+            if(company.type === ManagementEntityType.COMPANY){
+              return company
+            }
+            return company
+          });
         },
         error: (error) => {
           console.error('Error loading management entities:', error);
