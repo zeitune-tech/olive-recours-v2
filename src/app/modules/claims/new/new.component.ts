@@ -73,7 +73,7 @@ export class ClaimNewComponent implements OnInit {
 			insuredName: ['', Validators.required],
 			natureOfSinister: ['', Validators.required],
 			immatriculationDeclarant: ['', Validators.required],
-			garantiMiseEnOeuvre: [[], Validators.required]
+			garantiMiseEnOeuvre: ['', Validators.required]
 		});
 
 		// Step 2
@@ -135,13 +135,23 @@ export class ClaimNewComponent implements OnInit {
 		if (this.isSubmitting) return;
 
 		// Construction payload final
+		let garantiValue = this.step1Group.value.garantiMiseEnOeuvre;
+		let garantiArray: string[];
+		if (Array.isArray(garantiValue)) {
+			garantiArray = garantiValue;
+		} else if (garantiValue === '' || garantiValue == null) {
+			garantiArray = [];
+		} else {
+			garantiArray = [garantiValue];
+		}
+
 		const payload = {
 			dateOfSinister: this.step1Group.value.dateOfSinister,
 			claimNumber: this.step1Group.value.claimNumber,
 			insuredName: this.step1Group.value.insuredName,
 			natureOfSinister: this.step1Group.value.natureOfSinister,
 			immatriculationDeclarant: this.step1Group.value.immatriculationDeclarant,
-			garantiMiseEnOeuvre: this.step1Group.value.garantiMiseEnOeuvre,
+			garantiMiseEnOeuvre: garantiArray,
 			opponentCompanyId: this.step2Group.value.opponentCompanyId,
 			opponentClaimNumber: this.step2Group.value.opponentClaimNumber,
 			opponentInsuredName: this.step2Group.value.opponentInsuredName,
@@ -159,11 +169,11 @@ export class ClaimNewComponent implements OnInit {
 				this.isSubmitting = false;
 				// Redirection vers la liste après succès
 				this._router.navigate(['/claims']);
-				this._toastService.success(this.transloco.translate('claims.new.success'));
+				this._toastService.success(this.transloco.translate('messages.claim.create-success'));
 			},
 			error: () => {
 				this.isSubmitting = false;
-				this._toastService.error(this.transloco.translate('claims.new.error'));
+				this._toastService.error(this.transloco.translate('messages.claim.update-success'));
 				console.error('Erreur lors de la création du recours');
 			}
 		});

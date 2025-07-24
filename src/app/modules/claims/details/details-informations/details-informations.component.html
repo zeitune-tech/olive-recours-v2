@@ -36,7 +36,7 @@
             <!-- Garanties mises en oeuvre -->
             <mat-form-field appearance="outline">
                 <mat-label>{{ t('entities.claim.table.garantiMiseEnOeuvre') }}</mat-label>
-                <mat-select [(ngModel)]="claim.garantiMiseEnOeuvre" name="garantiMiseEnOeuvre" [disabled]="!editMode" multiple>
+                <mat-select [(ngModel)]="claim.garantiMiseEnOeuvre" name="garantiMiseEnOeuvre" [disabled]="!editMode">
                     <mat-option [value]="'tierce_complete'">{{ t('entities.claim.garanti.tierce_complete') }}</mat-option>
                     <mat-option [value]="'tierce_collision'">{{ t('entities.claim.garanti.tierce_collision') }}</mat-option>
                     <mat-option [value]="'tierce_plafonnee'">{{ t('entities.claim.garanti.tierce_plafonnee') }}</mat-option>

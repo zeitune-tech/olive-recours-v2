@@ -26,7 +26,7 @@ export interface Claim {
     immatriculationDeclarant?: string;
     immatriculationSubissant?: string;
     natureOfSinister?: string; // Utilise l'enum NatureSinistre côté front
-    garantiMiseEnOeuvre?: string[]; // Utilise l'enum GarantiMiseEnOeuvre côté front
+    garantiMiseEnOeuvre?: string | string[]; // Utilise l'enum GarantiMiseEnOeuvre côté front
 
     status: ClaimStatus;
     submissionDate?: string;

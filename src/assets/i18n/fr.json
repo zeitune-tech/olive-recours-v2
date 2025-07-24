@@ -343,6 +343,7 @@
         "title": "Liste des recours",
         "subtitle": "Gestion des recours",
         "description": "Liste des recours enregistrés dans le système.",
+        "no-garantee": "Aucune garantie",
         "columns": {
           "id": "ID",
           "claim_number": "Numéro de recours",
@@ -1202,7 +1203,11 @@
   "messages": {
     "claim": {
       "accept-own-claim": "Vous ne pouvez pas accepter votre propre recours",
-      "reject-own-claim": "Vous ne pouvez pas rejeter votre propre recours"
+      "reject-own-claim": "Vous ne pouvez pas rejeter votre propre recours",
+      "create-success": "Le recours a été créé soumis succès",
+      "create-error": "Une erreur s'est produite lors de la soumission du recours",
+      "update-success": "Le recours a été mis à jour avec succès",
+      "update-error": "Une erreur s'est produite lors de la mise à jour du recours"
     }
   }
 }

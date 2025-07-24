@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Claim } from "@core/services/claim/claim.interface";
 import { ClaimService } from "@core/services/claim/claim.service";
+import { TranslocoService } from "@jsverse/transloco";
+import { ToastService } from "src/app/components/toast/toast.service";
 
 @Component({
     selector: "app-claim-details-informations",
@@ -14,11 +16,20 @@ export class DetailsInformationsComponent implements OnInit {
 
 
     constructor(
-        private _claimService: ClaimService
+        private _claimService: ClaimService,
+        private transloco: TranslocoService,
+        private _toastService: ToastService
     ) {
-        // Initialization logic can go here if needed
+        // Adaptation de la garantie à une seule valeur pour l'affichage
         this._claimService.claim$.subscribe((claim: Claim) => {
-            this.claim = claim;
+            let garanti = '';
+            if (Array.isArray(claim.garantiMiseEnOeuvre) && claim.garantiMiseEnOeuvre.length === 1) {
+                garanti = claim.garantiMiseEnOeuvre[0];
+            }
+            this.claim = {
+                ...claim,
+                garantiMiseEnOeuvre: garanti
+            };
         });
     }
 
@@ -27,10 +38,22 @@ export class DetailsInformationsComponent implements OnInit {
     }
 
     saveClaim() {
-        this._claimService.update(this.claim.id, this.claim).subscribe((claim: Claim) => {
-            this.claim = claim;
+        // On prépare la donnée à envoyer
+        const toSave = {
+            ...this.claim,
+            garantiMiseEnOeuvre: Array.isArray(this.claim.garantiMiseEnOeuvre) ? this.claim.garantiMiseEnOeuvre : this.claim.garantiMiseEnOeuvre ? this.claim.garantiMiseEnOeuvre : []
+        };
+        this._claimService.update(this.claim.id, toSave).subscribe((claim: Claim) => {
+            let garanti = '';
+            if (Array.isArray(claim.garantiMiseEnOeuvre) && claim.garantiMiseEnOeuvre.length === 1) {
+                garanti = claim.garantiMiseEnOeuvre[0];
+            }
+            this.claim = {
+                ...claim,
+                garantiMiseEnOeuvre: garanti
+            };
             this.editMode = false;
-            // TODO: add toast message
+            this._toastService.success(this.transloco.translate('messages.claim.update-success'));
         });
     }
 
