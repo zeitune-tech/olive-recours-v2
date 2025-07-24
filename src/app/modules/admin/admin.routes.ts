@@ -6,6 +6,7 @@ import { Routes } from "@angular/router";
 import { UsersListComponent } from "./users/employees/list/list.component";
 import { ClosureComponent } from "./closure/closure.component";
 import { closureResolver } from "./closure/closure.resolver";
+import { OrganizationComponent } from "./users/organization/organization.component";
 
 export const adminRoutes: Routes = [
     {
@@ -23,6 +24,13 @@ export const adminRoutes: Routes = [
     {
         path: "users/companies",
         component: CompaniesListComponent,
+        resolve: {
+            companies: usersResolver
+        }
+    },
+    {
+        path: "users/organization",
+        component: OrganizationComponent,
         resolve: {
             companies: usersResolver
         }

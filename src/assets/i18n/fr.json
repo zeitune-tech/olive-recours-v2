@@ -80,9 +80,10 @@
     "statements": "États",
     "statements-detailed": "Comptes Courants A/B",
     "statements-global": "Comptes Courants A/FSSA",
-    "statements-archives": "Situation Financière",
+    "statements-annexes": "Etats annexes",
     "companies": "Compagnies",
-    "employees": "Employés",
+    "mlo": "Organisation niveau marché",
+    "employees": "utilisateurs",
     "companies-list": "Liste des compagnies",
     "companies-logos": "Logos des compagnies",
     "notifications": "Notifications",
@@ -90,7 +91,7 @@
     "profile": "Profil",
     "change-password": "Changer mot de passe",
     "admin": "Administration",
-    "users": "Utilisateurs",
+    "users": "Entités",
     "roles": "Rôles",
     "closures": "Clôtures"
   },
@@ -113,6 +114,8 @@
     "create": "Créer",
     "loadStatement": "charger les états",
     "downloadPdf": "état PDF",
+    "loadAnnexe": "charger les annexes",
+    "downloadAnnexePdf": "annexe PDF",
     "upload-document": "Uploader un document",
     "download": "Télécharger",
     "reset_filters": "Réinitialiser les filtres",
@@ -122,7 +125,9 @@
     "search": "Rechercher...",
     "select-month": "Sélectionner un mois",
     "select-year": "Sélectionner une année",
-    "select-company": "Sélectionner une compagnie"
+    "select-company": "Sélectionner une compagnie",
+    "select-annexe-type": "Sélectionner un type d'annexe",
+    "select-date-range": "Sélectionner une plage de dates"
   },
   "notifications": {
     "new-message": "Nouveau message reçu",
@@ -337,8 +342,8 @@
     "claim": {
       "table": {
         "natureOfSinister": "Nature du sinistre",
-        "immatriculationDeclarant": "Immatriculation déclarant",
-        "immatriculationSubissant": "Immatriculation subissant",
+        "immatriculationDeclarant": "Immatriculation",
+        "immatriculationSubissant": "Immatriculation Tiers",
         "garantiMiseEnOeuvre": "Garanties mises en œuvre",
         "title": "Liste des recours",
         "subtitle": "Gestion des recours",
@@ -353,7 +358,7 @@
           "actions": "Actions"
         },
         "empty_state": "Aucun recours trouvé",
-        "dateOfSinister": "Date du sinistre",
+        "dateOfSinister": "Date survenance",
         "claimNumber": "Numéro sinistre",
         "insuredName": "Assuré",
         "insured": "Compagnie",
@@ -361,7 +366,7 @@
         "opponentCompanyName": "compagnie",
         "opponentCompanyName2": "compagnie adverse",
         "opponentClaimNumber": "Numéro sinistre",
-        "opponentInsuredName": "Assuré",
+        "opponentInsuredName": "Tiers",
         "declaringCompanyName": "compagnie",
         "amount": "P/C Compagnie",
         "insuredAmount": "P/C Assuré",
@@ -441,6 +446,32 @@
       "table": {
         "title": "État des comptes",
         "description": "informations sur les états des comptes des compagnies"
+      },
+      "annexe": {
+        "title": "États annexes",
+        "type": "Type d'annexe",
+        "subtitle": "Filtres",
+        "types":{
+          "all": "Tous",
+          "to_pay": "À régler",
+          "to_receive": "À encaisser"
+        },
+        "all": "Tous",
+        "payables": "À payer",
+        "receivables": "À recevoir",
+        "date_range": "Plage de dates",
+        "start_date": "Date de début",
+        "end_date": "Date de fin",
+        "load": "Charger les annexes",
+        "description": "informations sur les états annexes des comptes",
+        "download": "Télécharger PDF",
+        "no_data": "Aucune donnée disponible",
+        "no_data_description": "Veuillez sélectionner un type d'annexe, une plage de dates et une compagnie pour afficher les données",
+        "reference": "Référence",
+        "company": "Compagnie",
+        "status": "Statut",
+        "due_date": "Date d'échéance",
+        "total": "Total"
       }
     }
   },
@@ -1129,6 +1160,7 @@
       "statements": "Relevés",
       "statements-detailed": "Relevé détaillé",
       "statements-global": "Relevé global",
+      "statements-annexes": "États annexes",
       "admin": "Administration",
       "users": "Utilisateurs",
       "companies": "Compagnies",
@@ -1146,6 +1178,7 @@
       "statements": "Relevés",
       "statements-detailed": "Relevé détaillé",
       "statements-global": "Relevé global",
+      "statements-annexes": "États annexes",
       "admin": "Administration",
       "users": "Utilisateurs",
       "companies": "Compagnies",

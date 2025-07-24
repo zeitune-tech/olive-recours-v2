@@ -110,4 +110,16 @@ export class StatementService {
       responseType: 'blob'
     });
   }
+  
+  downloadAnnexePdf(companyUuid: string,type: string, startDate: Date, endDate: Date): Observable<Blob> {
+    const path = type == "TO_PAY" ? "/claims-to-pay/pdf" : type == "TO_RECEIVE" ? "/claims-to-collect/pdf" : "/claims-all/pdf";
+    return this.http.get(`${this.baseUrl}${path}`, {
+      params: {
+        companyUuid,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString()
+      },
+      responseType: 'blob'
+    });
+  }
 }

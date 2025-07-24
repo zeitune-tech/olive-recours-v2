@@ -60,14 +60,14 @@ export const defaultNavigation: NavigationItem[] = [
                 link: '/statements/global',
                 permission: [PERMISSIONS.READ_GLOBAL_STATEMENTS, PERMISSIONS.ALL]
             },
-            // {
-            //     id: 'statements-archives',
-            //     title: 'sidebar.statements-archives',
-            //     type: 'basic',
-            //     icon: 'mat_outline:archive',
-            //     link: '/statements/archives',
-            //     permission: PERMISSIONS.ALL
-            // }
+            {
+                id: 'statements-annexes',
+                title: 'sidebar.statements-annexes',
+                type: 'basic',
+                icon: 'mat_outline:description', // Changed to a more document/annexes-coherent icon
+                link: '/statements/annexe',
+                permission: [PERMISSIONS.ALL]
+            }
         ]
     },
     {
@@ -84,6 +84,14 @@ export const defaultNavigation: NavigationItem[] = [
                 icon: 'mat_outline:groups',
                 permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.READ_COMPANIES, PERMISSIONS.ALL],
                 children: [
+                    {
+                        id: 'admin-mlo',
+                        title: 'sidebar.mlo',
+                        type: 'basic',
+                        icon: 'mat_outline:account_tree', // Changed to account_tree for organization coherence
+                        link: '/admin/users/organization',
+                        permission: [PERMISSIONS.ALL]
+                    },
                     {
                         id: 'admin-users-companies',
                         title: 'sidebar.companies',
