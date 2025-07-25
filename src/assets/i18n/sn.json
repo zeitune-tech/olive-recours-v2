@@ -18,5 +18,79 @@
             }
         },
         "complaint-registration": {}
+    },
+    "closure": {
+        "title": "Paramètre de clôture",
+        "subtitle": "Définissez la période de clôture pour restreindre ou libérer les opérations.",
+        "form": {
+            "exercise": "Exercice (année)",
+            "exercise_placeholder": "Ex: 2024",
+            "exercise_helper": "L'année fiscale concernée par la clôture.",
+            "month": "Mois",
+            "select_month": "Sélectionner un mois",
+            "month_helper": "Le mois de clôture (1 = Janvier, 12 = Décembre).",
+            "create": "Créer la clôture",
+            "delete": "Supprimer la clôture"
+        },
+        "active": "Clôture active",
+        "locked_info": "Durant cette période, toutes les opérations antérieures ou du mois de {{month}} {{year}} sont verrouillées.",
+        "no_closure": "Aucune clôture en cours. Toutes les opérations sont libres.",
+        "loading": "Chargement...",
+        "error": {
+            "same_date": "Impossible de remettre exactement la même date de clôture.",
+            "save": "Erreur lors de la sauvegarde.",
+            "load": "Erreur lors du chargement des données de clôture."
+        },
+        "confirmation": {
+            "title": "Attention",
+            "message": "Vous êtes sur le point de ré-autoriser des périodes déjà clôturées. Voulez-vous continuer ?",
+            "confirm": "Oui, continuer",
+            "cancel": "Annuler"
+        },
+        "months": {
+            "janvier": "Janvier",
+            "février": "Février",
+            "mars": "Mars",
+            "avril": "Avril",
+            "mai": "Mai",
+            "juin": "Juin",
+            "juillet": "Juillet",
+            "aout": "Août",
+            "septembre": "Septembre",
+            "octobre": "Octobre",
+            "novembre": "Novembre",
+            "decembre": "Décembre"
+        }
+    },
+    "fees": {
+        "title": "Frais de gestion",
+        "subtitle": "Définissez les frais de gestion appliqués aux opérations.",
+        "form": {
+            "rate": "Taux (%)",
+            "rate_placeholder": "Ex: 5",
+            "rate_helper": "Le pourcentage des frais de gestion.",
+            "start_date": "Date de début",
+            "start_date_placeholder": "Sélectionner une date",
+            "start_date_helper": "La date à partir de laquelle les frais seront appliqués.",
+            "create": "Créer les frais",
+            "update": "Mettre à jour les frais"
+        },
+        "active": "Frais actifs",
+        "active_info": "Taux actuel : {{rate}}% (depuis le {{date}})",
+        "no_fee": "Aucun frais de gestion défini.",
+        "history": "Historique",
+        "history_table": {
+            "rate": "Taux (%)",
+            "start_date": "Date de début",
+            "end_date": "Date de fin",
+            "current": "Actuel"
+        },
+        "loading": "Chargement...",
+        "error": {
+            "same_fee": "Impossible de remettre exactement le même taux de frais.",
+            "save": "Erreur lors de la sauvegarde.",
+            "load": "Erreur lors du chargement des données de frais.",
+            "load_history": "Erreur lors du chargement de l'historique des frais."
+        }
     }
 }

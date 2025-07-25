@@ -4,8 +4,6 @@ import { RouterModule } from '@angular/router';
 import { adminRoutes } from './admin.routes';
 import { OrganizationComponent } from './users/organization/organization.component';
 
-
-
 @NgModule({
   declarations: [
   

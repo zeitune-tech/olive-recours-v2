@@ -93,7 +93,8 @@
     "admin": "Administration",
     "users": "Entités",
     "roles": "Rôles",
-    "closures": "Clôtures"
+    "closures": "Clôtures",
+    "params": "Paramètres"
   },
   "buttons": {
     "save": "Enregistrer",
@@ -983,7 +984,8 @@
     "loading": "Chargement...",
     "error": {
       "same_date": "Impossible de remettre exactement la même date de clôture.",
-      "save": "Erreur lors de la sauvegarde."
+      "save": "Erreur lors de la sauvegarde.",
+      "load": "Erreur lors du chargement des données de clôture."
     },
     "confirmation": {
       "title": "Attention",
@@ -1004,6 +1006,50 @@
       "octobre": "Octobre",
       "novembre": "Novembre",
       "decembre": "Décembre"
+    }
+  },
+  "fees": {
+    "title": "Frais de gestion",
+    "subtitle": "Définissez les frais de gestion appliqués aux opérations.",
+    "form": {
+      "rate": "Taux (%)",
+      "rate_placeholder": "Ex: 5",
+      "rate_helper": "Le pourcentage des frais de gestion.",
+      "start_date": "Date d'effet",
+      "start_date_placeholder": "Sélectionner une date",
+      "start_date_helper": "Date à partir de laquelle ce taux sera appliqué.",
+      "end_date": "Date de fin",
+      "create": "Créer les frais",
+      "update": "Mettre à jour les frais"
+    },
+    "active": "Frais actifs",
+    "active_info": "Taux actuel de {{rate}}% en vigueur depuis le {{date}}.",
+    "no_fee": "Aucun frais de gestion défini.",
+    "loading": "Chargement...",
+    "error": {
+      "same_fee": "Impossible d'appliquer exactement le même taux à la même date.",
+      "save": "Erreur lors de la sauvegarde des frais.",
+      "load": "Erreur lors du chargement des frais actuels.",
+      "load_history": "Erreur lors du chargement de l'historique des frais."
+    },
+    "history": {
+      "title": "Historique des frais",
+      "empty": "Aucun historique disponible.",
+      "id": "ID",
+      "rate": "Taux (%)",
+      "start_date": "Date d'effet",
+      "end_date": "Date de fin",
+      "status": "Statut",
+      "active": "Actif",
+      "inactive": "Inactif"
+    },
+    "table": {
+      "rate": "Taux (%)",
+      "startDate": "Date d'effet",
+      "endDate": "Date de fin",
+      "status": "Statut",
+      "current": "Actuel",
+      "expired": "Expiré"
     }
   },
   "roles": {
@@ -1148,6 +1194,38 @@
     "generic": "Une erreur est survenue",
     "closure": {
       "accept-claim": "Impossible d'accepter un recours sur une période déjà clôturée !"
+    }
+  },
+  "params": {
+    "title": "Paramètres du système",
+    "system": {
+      "title": "Paramètres système",
+      "subtitle": "Configuration des paramètres techniques du système",
+      "description": "Configurez les paramètres techniques qui affectent le fonctionnement global du système.",
+      "placeholder": {
+        "title": "Configuration système",
+        "description": "Paramètres techniques à venir",
+        "button": "Configurer"
+      }
+    },
+    "notifications": {
+      "title": "Paramètres de notification",
+      "subtitle": "Configuration des notifications système",
+      "description": "Configurez comment et quand les notifications sont envoyées aux utilisateurs.",
+      "configure": "Configurer",
+      "email": {
+        "title": "Notifications par email",
+        "description": "Configurez les paramètres des notifications par email"
+      },
+      "sms": {
+        "title": "Notifications par SMS",
+        "description": "Configurez les paramètres des notifications par SMS"
+      }
+    },
+    "future": {
+      "title": "Paramètres additionnels",
+      "subtitle": "Espace réservé pour les futurs paramètres",
+      "description": "Cette section est réservée pour les futurs paramètres qui seront ajoutés au système."
     }
   },
   "layout": {

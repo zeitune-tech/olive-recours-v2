@@ -119,11 +119,11 @@ export const defaultNavigation: NavigationItem[] = [
                 permission: [PERMISSIONS.READ_PROFILES, PERMISSIONS.ALL]
             },
             {
-                id: 'admin-closures',
-                title: 'sidebar.closures',
+                id: 'admin-params',
+                title: 'sidebar.params',
                 type: 'basic',
-                icon: 'mat_outline:lock',
-                link: '/admin/closures',
+                icon: 'mat_outline:settings',
+                link: '/admin/params',
                 permission: [PERMISSIONS.ALL]
             },
         ]

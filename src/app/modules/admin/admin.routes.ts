@@ -4,8 +4,8 @@ import { usersResolver } from "./users/users.resolver";
 import { rolesResolver } from "./roles/roles.resolver";
 import { Routes } from "@angular/router";
 import { UsersListComponent } from "./users/employees/list/list.component";
-import { ClosureComponent } from "./closure/closure.component";
-import { closureResolver } from "./closure/closure.resolver";
+import { ParamsComponent } from "./params/params.component";
+import { ParamsResolver } from "./params/params.resolver";
 import { OrganizationComponent } from "./users/organization/organization.component";
 
 export const adminRoutes: Routes = [
@@ -43,10 +43,10 @@ export const adminRoutes: Routes = [
         }
     },
     {
-        path: "closures",
-        component: ClosureComponent,
+        path: "params",
+        component: ParamsComponent,
         resolve: {
-            closure: closureResolver
+            closure: ParamsResolver
         }
     }
 ]

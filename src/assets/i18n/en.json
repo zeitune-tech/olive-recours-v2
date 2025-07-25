@@ -633,5 +633,79 @@
         "next": "Next",
         "previous": "Previous"
       }
+    },
+    "closure": {
+      "title": "Closure Parameter",
+      "subtitle": "Define the closure period to restrict or release operations.",
+      "form": {
+        "exercise": "Exercise (year)",
+        "exercise_placeholder": "Ex: 2024",
+        "exercise_helper": "The fiscal year concerned by the closure.",
+        "month": "Month",
+        "select_month": "Select a month",
+        "month_helper": "The closure month (1 = January, 12 = December).",
+        "create": "Create closure",
+        "delete": "Delete closure"
+      },
+      "active": "Active closure",
+      "locked_info": "During this period, all operations prior to or from the month of {{month}} {{year}} are locked.",
+      "no_closure": "No closure in progress. All operations are free.",
+      "loading": "Loading...",
+      "error": {
+        "same_date": "Cannot set exactly the same closure date.",
+        "save": "Error while saving.",
+        "load": "Error while loading closure data."
+      },
+      "confirmation": {
+        "title": "Warning",
+        "message": "You are about to re-authorize periods that have already been closed. Do you want to continue?",
+        "confirm": "Yes, continue",
+        "cancel": "Cancel"
+      },
+      "months": {
+        "janvier": "January",
+        "février": "February",
+        "mars": "March",
+        "avril": "April",
+        "mai": "May",
+        "juin": "June",
+        "juillet": "July",
+        "aout": "August",
+        "septembre": "September",
+        "octobre": "October",
+        "novembre": "November",
+        "decembre": "December"
+      }
+    },
+    "fees": {
+      "title": "Management Fees",
+      "subtitle": "Define the management fees applied to operations.",
+      "form": {
+        "rate": "Rate (%)",
+        "rate_placeholder": "Ex: 5",
+        "rate_helper": "The percentage of management fees.",
+        "start_date": "Start date",
+        "start_date_placeholder": "Select a date",
+        "start_date_helper": "The date from which the fees will be applied.",
+        "create": "Create fee",
+        "update": "Update fee"
+      },
+      "active": "Active fee",
+      "active_info": "Current rate: {{rate}}% (since {{date}})",
+      "no_fee": "No management fee defined.",
+      "history": "History",
+      "history_table": {
+        "rate": "Rate (%)",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "current": "Current"
+      },
+      "loading": "Loading...",
+      "error": {
+        "same_fee": "Cannot set exactly the same fee rate.",
+        "save": "Error while saving.",
+        "load": "Error while loading fee data.",
+        "load_history": "Error while loading fee history."
+      }
     }
   }
