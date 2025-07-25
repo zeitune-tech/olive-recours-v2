@@ -2,6 +2,19 @@
     "welcome-back": "Welcome back",
     "Project": "Project",
     "Analytics": "Analytics",
+    "sidebar": {
+        "dashboard": "Tableau de bord",
+        "claims": "Recours",
+        "claims-list": "Liste des recours",
+        "claims-new": "Soumettre un recours",
+        "statements": "États",
+        "statements-detailed": "Comptes Courants A/B",
+        "statements-global": "Comptes Courants A/FSSA",
+        "statements-annexes": "Etats annexes",
+        "accounting": "Comptabilité",
+        "encashment": "Encaissement",
+        "settlement": "Règlement"
+    },
     "registration": {
         "user-registration": {
             "welcome-title": "Welcome to User Registration",

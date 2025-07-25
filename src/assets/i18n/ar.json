@@ -2,6 +2,19 @@
     "welcome-back": "Welcome back",
     "Project": "Project",
     "Analytics": "Analytics",
+    "sidebar": {
+        "dashboard": "لوحة القيادة",
+        "claims": "المطالبات",
+        "claims-list": "قائمة المطالبات",
+        "claims-new": "تقديم مطالبة",
+        "statements": "البيانات",
+        "statements-detailed": "الحسابات الجارية A/B",
+        "statements-global": "الحسابات الجارية A/FSSA",
+        "statements-annexes": "البيانات المرفقة",
+        "accounting": "المحاسبة",
+        "encashment": "التحصيل",
+        "settlement": "التسوية"
+    },
     "registration": {
         "user-registration": {
             "welcome-title": "Welcome to User Registration",

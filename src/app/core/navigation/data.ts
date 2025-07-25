@@ -66,7 +66,32 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:description', // Changed to a more document/annexes-coherent icon
                 link: '/statements/annexe',
-                permission: [PERMISSIONS.ALL]
+                permission: [PERMISSIONS.READ_ANNEXE_STATEMENTS,PERMISSIONS.ALL]
+            }
+        ]
+    },
+    {
+        id: 'accounting',
+        title: 'sidebar.accounting',
+        type: 'group',
+        icon: 'mat_outline:account_balance',
+        permission: [PERMISSIONS.READ_ENCASHMENT_STATEMENTS, PERMISSIONS.READ_SETTLEMENT_STATEMENTS, PERMISSIONS.ALL],
+        children: [
+            {
+                id: 'accounting-encashment',
+                title: 'sidebar.encashment',
+                type: 'basic',
+                icon: 'mat_outline:payments',
+                link: '/accounting/encashment',
+                permission: [PERMISSIONS.READ_ENCASHMENT_STATEMENTS, PERMISSIONS.ALL]
+            },
+            {
+                id: 'accounting-settlement',
+                title: 'sidebar.settlement',
+                type: 'basic',
+                icon: 'mat_outline:receipt',
+                link: '/accounting/settlement',
+                permission: [PERMISSIONS.READ_SETTLEMENT_STATEMENTS, PERMISSIONS.ALL]
             }
         ]
     },
@@ -75,14 +100,14 @@ export const defaultNavigation: NavigationItem[] = [
         title: 'sidebar.admin',
         type: 'group',
         icon: 'mat_outline:admin_panel_settings',
-        permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.READ_PROFILES, PERMISSIONS.READ_COMPANIES, PERMISSIONS.ALL],
+        permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.READ_PROFILES, PERMISSIONS.READ_COMPANIES,PERMISSIONS.READ_MLOS, PERMISSIONS.MANAGE_CLOSURE, PERMISSIONS.MANAGE_FEES, PERMISSIONS.ALL],
         children: [
             {
                 id: 'admin-users',
                 title: 'sidebar.users',
                 type: 'collapsable',
                 icon: 'mat_outline:groups',
-                permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.READ_COMPANIES, PERMISSIONS.ALL],
+                permission: [PERMISSIONS.READ_EMPLOYEES, PERMISSIONS.READ_COMPANIES,PERMISSIONS.READ_MLOS, PERMISSIONS.ALL],
                 children: [
                     {
                         id: 'admin-mlo',
@@ -90,7 +115,7 @@ export const defaultNavigation: NavigationItem[] = [
                         type: 'basic',
                         icon: 'mat_outline:account_tree', // Changed to account_tree for organization coherence
                         link: '/admin/users/organization',
-                        permission: [PERMISSIONS.ALL]
+                        permission: [PERMISSIONS.READ_MLOS,PERMISSIONS.ALL]
                     },
                     {
                         id: 'admin-users-companies',
@@ -124,7 +149,7 @@ export const defaultNavigation: NavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:settings',
                 link: '/admin/params',
-                permission: [PERMISSIONS.ALL]
+                permission: [PERMISSIONS.MANAGE_CLOSURE, PERMISSIONS.MANAGE_FEES, PERMISSIONS.ALL]
             },
         ]
     }
