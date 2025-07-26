@@ -84,6 +84,7 @@
     "accounting": "Comptabilité",
     "encashment": "Encaissement",
     "settlement": "Règlement",
+    "fees": "Frais",
     "companies": "Compagnies",
     "mlo": "Organisation niveau marché",
     "employees": "utilisateurs",
@@ -1366,6 +1367,7 @@
     "read-annexe-statements": "Voir les relevés annexes",
     "read-encashment-statements": "Voir les quittances (encaissements)",
     "read-settlement-statements": "Voir les quittances (règlement)",
+    "read-fees-statements": "Voir les relevés globaux (des frais)",
     "manage-closure": "Gérer les clôtures",
     "manage-fees": "Gérer les frais",
     "all": "Tous les droits"

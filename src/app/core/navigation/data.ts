@@ -75,7 +75,7 @@ export const defaultNavigation: NavigationItem[] = [
         title: 'sidebar.accounting',
         type: 'group',
         icon: 'mat_outline:account_balance',
-        permission: [PERMISSIONS.READ_ENCASHMENT_STATEMENTS, PERMISSIONS.READ_SETTLEMENT_STATEMENTS, PERMISSIONS.ALL],
+        permission: [PERMISSIONS.READ_ENCASHMENT_STATEMENTS, PERMISSIONS.READ_SETTLEMENT_STATEMENTS, PERMISSIONS.READ_FEES_STATEMENTS, PERMISSIONS.ALL],
         children: [
             {
                 id: 'accounting-encashment',
@@ -92,6 +92,14 @@ export const defaultNavigation: NavigationItem[] = [
                 icon: 'mat_outline:receipt',
                 link: '/accounting/settlement',
                 permission: [PERMISSIONS.READ_SETTLEMENT_STATEMENTS, PERMISSIONS.ALL]
+            },
+            {
+                id: 'accounting-fees',
+                title: 'sidebar.fees',
+                type: 'basic',
+                icon: 'mat_outline:account_balance',
+                link: '/accounting/fees',
+                permission: [PERMISSIONS.READ_FEES_STATEMENTS, PERMISSIONS.ALL]
             }
         ]
     },

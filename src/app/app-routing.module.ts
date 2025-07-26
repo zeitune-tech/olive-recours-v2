@@ -98,6 +98,18 @@ const routes: Routes = [
                 },
                 loadChildren: () => import('./modules/statements/statements.module').then(m => m.StatementsModule)
             },
+            {
+                path: 'accounting',
+                canActivate: [],
+                canActivateChild: [],
+                data: {
+                    permission: null
+                },
+                resolve: {
+                    // StatementsResolver
+                },
+                loadChildren: () => import('./modules/accounting/accounting.module').then(m => m.AccountingModule)
+            },
             {path: 'profile', loadChildren: () => import('./modules/profiles/profiles.module').then(m => m.ProfilesModule)},
 
             // 404 & Catch all
