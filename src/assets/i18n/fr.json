@@ -1193,6 +1193,64 @@
       "create": "Créer"
     }
   },
+  "organizations": {
+    "title": "Organisations niveau marché",
+    "subtitle": "Gérez les organisations de niveau marché",
+    "add": "Ajouter une organisation",
+    "search_placeholder": "Rechercher des organisations...",
+    "reset": "Réinitialiser",
+    "list_title": "Liste des organisations",
+    "table": {
+      "organization": "Organisation",
+      "contact": "Contact",
+      "address": "Adresse",
+      "acronym": "Acronyme",
+      "date_created": "Date de création",
+      "actions": "Actions"
+    },
+    "na": "N/A",
+    "tooltips": {
+      "edit": "Modifier",
+      "delete": "Supprimer"
+    },
+    "empty": {
+      "title": "Aucune organisation trouvée",
+      "description": "Commencez par créer une nouvelle organisation."
+    },
+    "modal": {
+      "edit_title": "Modifier l'organisation",
+      "create_title": "Créer une nouvelle organisation",
+      "logo_section": {
+        "title": "Gestion du logo (édition uniquement)",
+        "no_logo": "Pas de logo",
+        "change_button": "Changer le logo",
+        "validate_button": "Valider",
+        "cancel_button": "Annuler",
+        "loading": "Envoi en cours..."
+      },
+      "form": {
+        "name": "Nom de l'organisation *",
+        "name_placeholder": "Entrez le nom de l'organisation",
+        "acronym": "Acronyme",
+        "acronym_placeholder": "Entrez l'acronyme",
+        "email": "Email *",
+        "email_placeholder": "Entrez l'adresse email",
+        "phone": "Téléphone *",
+        "phone_placeholder": "Entrez le numéro de téléphone",
+        "fax": "Fax",
+        "fax_placeholder": "Entrez le numéro de fax",
+        "gsm": "GSM",
+        "gsm_placeholder": "Entrez le numéro de GSM",
+        "address": "Adresse *",
+        "address_placeholder": "Entrez l'adresse de l'organisation",
+        "date_of_creation": "Date de création *",
+        "date_of_creation_edit": "Date de création"
+      },
+      "cancel": "Annuler",
+      "update": "Mettre à jour",
+      "create": "Créer"
+    }
+  },
   "errors": {
     "generic": "Une erreur est survenue",
     "closure": {
@@ -1263,6 +1321,7 @@
       "admin": "Administration",
       "users": "Utilisateurs",
       "companies": "Compagnies",
+      "organizations": "Organisations niveau marché",
       "employees": "Employés",
       "roles": "Rôles",
       "closures": "Clôtures",

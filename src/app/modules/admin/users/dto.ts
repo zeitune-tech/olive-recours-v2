@@ -32,6 +32,7 @@ export interface MarketLevelOrganisationRequest {
   fax?: string;
   gsm?: string;
   acronym?: string;
+  dateOfCreation?: string | Date;
 }
 
 export interface UpdateMarketLevelOrganizationRequest {
@@ -41,6 +42,8 @@ export interface UpdateMarketLevelOrganizationRequest {
   address: string;
   fax?: string;
   gsm?: string;
+  acronym?: string;
+  dateOfCreation?: string | Date;
 }
 
 export interface CompanyResponse {
@@ -77,6 +80,7 @@ export interface MarketLevelOrganizationResponse {
   gsm?: string;
   acronym?: string;
   logo?: string;
+  dateOfCreation?: string | Date;
 }
 
 export interface EmployeeRequest {

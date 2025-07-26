@@ -2,14 +2,13 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { Company } from '@core/services/company/company.interface';
 import { PermissionsService } from '@core/permissions/permissions.service';
 import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { PERMISSIONS } from '@core/permissions/permissions.data';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { CompanyRequest } from '../dto';
-import { UsersService } from '../users.service';
+import { MarketLevelOrganizationService } from './market-level-organization.service';
+import { MarketLevelOrganisationRequest, MarketLevelOrganizationResponse } from '../dto';
 
 @Component({
   selector: 'app-organization',
@@ -20,15 +19,15 @@ import { UsersService } from '../users.service';
 export class OrganizationComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   
-  companies: Company[] = [];
-  filteredCompanies: Company[] = [];
+  organizations: MarketLevelOrganizationResponse[] = [];
+  filteredOrganizations: MarketLevelOrganizationResponse[] = [];
   searchTerm: string = '';
   showModal: boolean = false;
   isEditMode: boolean = false;
-  selectedCompany: Company | null = null;
+  selectedOrganization: MarketLevelOrganizationResponse | null = null;
   loading: boolean = false;
   
-  companyData: CompanyRequest = {
+  organizationData: MarketLevelOrganisationRequest = {
     name: '',
     email: '',
     phone: '',
@@ -50,7 +49,7 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   loadingLogo: boolean = false;
   logoUploadError: string = '';
 
-  constructor(private usersService: UsersService,
+  constructor(private organizationService: MarketLevelOrganizationService,
     private _layoutService: LayoutService,
     private transloco: TranslocoService,
     private _userService: UserService,
@@ -59,19 +58,19 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this._layoutService.setPageTitle(this.transloco.translate('layout.titles.companies'));
+    this._layoutService.setPageTitle(this.transloco.translate('layout.titles.organizations'));
     this._layoutService.setCrumbs([
-      { title: this.transloco.translate('layout.crumbs.companies'), link: '/admin/users/companies', active: true }
+      { title: this.transloco.translate('layout.crumbs.organizations'), link: '/admin/users/organization', active: true }
     ]);
 
-    this.loadCompanies();
+    this.loadOrganizations();
 
     this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({
             next: (user) => {
               this.features = {
-                create: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.CREATE_COMPANY]),
-                update: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.UPDATE_COMPANY]),
-                delete: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.DELETE_COMPANY])
+                create: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.CREATE_MLO]),
+                update: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.UPDATE_MLO]),
+                delete: this._permissionService.hasPermission(user, [PERMISSIONS.ALL, PERMISSIONS.DELETE_MLO])
               }
             },
             error: (error) => {
@@ -85,73 +84,73 @@ export class OrganizationComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  loadCompanies() {
-    this.usersService.getAllCompanies()
+  loadOrganizations() {
+    this.organizationService.getAllOrganizations()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(companies => {
-        this.companies = companies;
-        this.filteredCompanies = companies;
+      .subscribe(organizations => {
+        this.organizations = organizations;
+        this.filteredOrganizations = organizations;
       });
   }
 
   onSearch() {
     if (!this.searchTerm.trim()) {
-      this.filteredCompanies = this.companies;
+      this.filteredOrganizations = this.organizations;
       return;
     }
     
     const term = this.searchTerm.toLowerCase();
-    this.filteredCompanies = this.companies.filter(company =>
-      company.name.toLowerCase().includes(term) ||
-      company.email.toLowerCase().includes(term) ||
-      company.phone.toLowerCase().includes(term) ||
-      company.address.toLowerCase().includes(term) ||
-      (company.acronym && company.acronym.toLowerCase().includes(term))
+    this.filteredOrganizations = this.organizations.filter(organization =>
+      organization.name.toLowerCase().includes(term) ||
+      organization.email.toLowerCase().includes(term) ||
+      organization.phone.toLowerCase().includes(term) ||
+      organization.address.toLowerCase().includes(term) ||
+      (organization.acronym && organization.acronym.toLowerCase().includes(term))
     );
   }
 
   resetFilters() {
     this.searchTerm = '';
-    this.filteredCompanies = this.companies;
+    this.filteredOrganizations = this.organizations;
   }
 
   openCreateModal() {
     this.isEditMode = false;
-    this.selectedCompany = null;
-    this.resetCompanyData();
+    this.selectedOrganization = null;
+    this.resetOrganizationData();
     this.showModal = true;
   }
 
-  editCompany(company: Company) {
+  editOrganization(organization: MarketLevelOrganizationResponse) {
     this.isEditMode = true;
-    this.selectedCompany = company;
-    this.companyData = {
-      name: company.name,
-      email: company.email,
-      phone: company.phone,
-      address: company.address,
-      fax: company.fax || '',
-      gsm: company.gsm || '',
-      acronym: company.acronym || '',
-      dateOfCreation: company.dateOfCreation || ''
+    this.selectedOrganization = organization;
+    this.organizationData = {
+      name: organization.name,
+      email: organization.email,
+      phone: organization.phone,
+      address: organization.address,
+      fax: organization.fax || '',
+      gsm: organization.gsm || '',
+      acronym: organization.acronym || '',
+      dateOfCreation: organization.dateOfCreation || ''
     };
-    this.selectedLogo = company.logo || null;
+    this.selectedLogo = organization.logo || null;
     this.selectedLogoFile = null;
     this.logoUploadError = '';
     this.showModal = true;
   }
 
-  deleteCompany(company: Company) {
-    if (confirm(`Are you sure you want to delete ${company.name}?`)) {
+  deleteOrganization(organization: MarketLevelOrganizationResponse) {
+    if (confirm(`Are you sure you want to delete ${organization.name}?`)) {
       this.loading = true;
-      this.usersService.deleteCompany(company.id)
+      this.organizationService.deleteOrganization(organization.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            this.loadCompanies();
+            this.loadOrganizations();
           },
           error: (error) => {
-            console.error('Error deleting company:', error);
+            console.error('Error deleting organization:', error);
             this.loading = false;
           }
         });
@@ -160,43 +159,43 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   closeModal() {
     this.showModal = false;
-    this.resetCompanyData();
+    this.resetOrganizationData();
   }
 
   onSubmit() {
-    if (this.isEditMode && this.selectedCompany) {
+    if (this.isEditMode && this.selectedOrganization) {
       this.loading = true;
-      this.usersService.updateCompany(this.selectedCompany.id, this.companyData)
+      this.organizationService.updateOrganization(this.selectedOrganization.id, this.organizationData)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            this.loadCompanies();
+            this.loadOrganizations();
             this.closeModal();
           },
           error: (error) => {
-            console.error('Error updating company:', error);
+            console.error('Error updating organization:', error);
             this.loading = false;
           }
         });
     } else {
       this.loading = true;
-      this.usersService.createCompany(this.companyData)
+      this.organizationService.createOrganization(this.organizationData)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            this.loadCompanies();
+            this.loadOrganizations();
             this.closeModal();
           },
           error: (error) => {
-            console.error('Error creating company:', error);
+            console.error('Error creating organization:', error);
             this.loading = false;
           }
         });
     }
   }
 
-  resetCompanyData() {
-    this.companyData = {
+  resetOrganizationData() {
+    this.organizationData = {
       name: '',
       email: '',
       phone: '',
@@ -208,12 +207,12 @@ export class OrganizationComponent implements OnInit, OnDestroy {
     };
   }
 
-  getCompanyInitials(name: string): string {
+  getOrganizationInitials(name: string): string {
     return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase().slice(0, 2);
   }
 
-  trackByCompany(index: number, company: Company): string {
-    return company.id;
+  trackByOrganization(index: number, organization: MarketLevelOrganizationResponse): string {
+    return organization.id;
   }
 
   onLogoSelected(event: Event) {
@@ -229,12 +228,12 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   }
 
   validateLogo() {
-    if (this.selectedCompany && this.selectedLogoFile) {
+    if (this.selectedOrganization && this.selectedLogoFile) {
       this.loadingLogo = true;
       this.logoUploadError = '';
-      this.usersService.uploadCompanyLogo(this.selectedCompany.id, this.selectedLogoFile).subscribe({
+      this.organizationService.uploadOrganizationLogo(this.selectedOrganization.id, this.selectedLogoFile).subscribe({
         next: () => {
-          // this.loadCompanies();
+          // this.loadOrganizations();
           this._changeDetectorRef.markForCheck();
           this.selectedLogoFile = null;
           this.logoUploadError = '';
@@ -250,7 +249,7 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   }
 
   rejectLogo() {
-    this.selectedLogo = this.selectedCompany?.logo || null;
+    this.selectedLogo = this.selectedOrganization?.logo || null;
     this.selectedLogoFile = null;
     this.logoUploadError = '';
     this._changeDetectorRef.markForCheck();
