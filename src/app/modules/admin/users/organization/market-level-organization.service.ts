@@ -59,7 +59,8 @@ export class MarketLevelOrganizationService {
 
   uploadOrganizationLogo(id: string, logo: File): Observable<any> {
     const formData = new FormData();
-    formData.append('logo', logo);
-    return this.http.post<any>(`${this.apiUrl}/${id}/logo`, formData);
+    formData.append('file', logo);
+    formData.append('uuid', id);
+    return this.http.post<any>(`${this.apiUrl}/logo`, formData);
   }
 }

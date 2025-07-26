@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { ManagementEntityResponse, MarketLevelOrganisationRequest, MarketLevelOrganizationResponse } from './dto';
+import { MarketLevelOrganisationRequest, MarketLevelOrganizationResponse } from './dto';
 
 @Injectable({
   providedIn: 'root'
