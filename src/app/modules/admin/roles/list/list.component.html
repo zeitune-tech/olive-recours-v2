@@ -262,7 +262,7 @@
                                            [checked]="roleData.permissions.includes(permission.id)"
                                            (change)="onPermissionCheckboxChange($event, permission.id)"
                                            class="form-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded" />
-                                    <span class="text-sm text-gray-800">{{ permission.description | transloco }}</span>
+                                    <span class="text-sm" [ngClass]="{'text-primary font-semibold': permission.name === 'ALL', 'text-gray-800': permission.name !== 'ALL'}">{{ permission.description | transloco }}</span>
                                 </label>
                             </div>
                         </div>
