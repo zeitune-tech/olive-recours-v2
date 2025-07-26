@@ -66,6 +66,8 @@
                                 {{ 'companies.table.acronym' | transloco }}</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 {{ 'companies.table.date_created' | transloco }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {{ 'companies.table.supervisor' | transloco }}</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 {{ 'companies.table.actions' | transloco }}</th>
                         </tr>
@@ -102,6 +104,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="text-xs text-gray-700">{{ company.dateOfCreation ? (company.dateOfCreation | date:'mediumDate') : ('companies.na' | transloco) }}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="text-xs text-gray-700">{{ company.supervisor?.name || ('companies.na' | transloco) }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
@@ -243,6 +248,14 @@
                         <input type="date" id="dateOfCreation" name="dateOfCreation" [(ngModel)]="companyData.dateOfCreation"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             required />
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="supervisorUuid" class="block text-sm font-medium text-gray-700 mb-1">{{'companies.modal.form.supervisor' | transloco}}</label>
+                        <select id="supervisorUuid" name="supervisorUuid" [(ngModel)]="companyData.supervisorUuid"
+                            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">{{'companies.modal.form.select_supervisor' | transloco}}</option>
+                            <option *ngFor="let org of organizations" [value]="org.id">{{ org.name }}</option>
+                        </select>
                     </div>
                 </div>
 

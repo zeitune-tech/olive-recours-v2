@@ -1,3 +1,5 @@
+import { MarketLevelOrganization } from "./organization/market-level-organization.interface";
+
 export interface CompanyRequest {
   name: string;
   email: string;
@@ -7,6 +9,7 @@ export interface CompanyRequest {
   gsm?: string;
   acronym?: string;
   dateOfCreation?: string | Date;
+  supervisorUuid?: string;
 }
 
 export enum ManagementEntityType {
@@ -57,6 +60,7 @@ export interface CompanyResponse {
   acronym?: string;
   logo?: string;
   dateOfCreation?: string | Date;
+  supervisor?: MarketLevelOrganization
 }
 
 export interface ManagementEntityResponse {
@@ -72,6 +76,7 @@ export interface ManagementEntityResponse {
 
 export interface MarketLevelOrganizationResponse {
   id: string;
+  uuid: string;
   name: string;
   email: string;
   phone: string;

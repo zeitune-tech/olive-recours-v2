@@ -10,6 +10,8 @@ import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { PERMISSIONS } from '@core/permissions/permissions.data';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { MarketLevelOrganizationService } from '../../market-level-organization.service';
+import { MarketLevelOrganizationResponse } from '../../dto';
 
 @Component({
   selector: 'app-companies-list',
@@ -36,7 +38,8 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     fax: '',
     gsm: '',
     acronym: '',
-    dateOfCreation: ''
+    dateOfCreation: '',
+    supervisorUuid: ''
   };
 
   features = {
@@ -50,12 +53,15 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   loadingLogo: boolean = false;
   logoUploadError: string = '';
 
+  organizations: MarketLevelOrganizationResponse[] = [];
+
   constructor(private usersService: UsersService,
     private _layoutService: LayoutService,
     private transloco: TranslocoService,
     private _userService: UserService,
     private _permissionService: PermissionsService,
-    private _changeDetectorRef: ChangeDetectorRef) { }
+    private _changeDetectorRef: ChangeDetectorRef,
+    private marketLevelOrganizationService: MarketLevelOrganizationService) { }
 
   ngOnInit() {
 
@@ -65,6 +71,7 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
     ]);
 
     this.loadCompanies();
+    this.loadOrganizations();
 
     this._userService.user$.pipe(takeUntil(this.destroy$)).subscribe({
             next: (user) => {
@@ -94,6 +101,14 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       });
   }
 
+  loadOrganizations() {
+    this.marketLevelOrganizationService.getAllOrganizations()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(organizations => {
+        this.organizations = organizations;
+      });
+  }
+
   onSearch() {
     if (!this.searchTerm.trim()) {
       this.filteredCompanies = this.companies;
@@ -106,7 +121,8 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       company.email.toLowerCase().includes(term) ||
       company.phone.toLowerCase().includes(term) ||
       company.address.toLowerCase().includes(term) ||
-      (company.acronym && company.acronym.toLowerCase().includes(term))
+      (company.acronym && company.acronym.toLowerCase().includes(term)) ||
+      (company.supervisor && company.supervisor.name.toLowerCase().includes(term))
     );
   }
 
@@ -133,7 +149,8 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       fax: company.fax || '',
       gsm: company.gsm || '',
       acronym: company.acronym || '',
-      dateOfCreation: company.dateOfCreation || ''
+      dateOfCreation: company.dateOfCreation || '',
+      supervisorUuid: company.supervisor?.uuid || ''
     };
     this.selectedLogo = company.logo || null;
     this.selectedLogoFile = null;
@@ -164,6 +181,9 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    if (!this.companyData.supervisorUuid) {
+      return;
+    }
     if (this.isEditMode && this.selectedCompany) {
       this.loading = true;
       this.usersService.updateCompany(this.selectedCompany.id, this.companyData)
@@ -204,12 +224,19 @@ export class CompaniesListComponent implements OnInit, OnDestroy {
       fax: '',
       gsm: '',
       acronym: '',
-      dateOfCreation: ''
+      dateOfCreation: '',
+      supervisorUuid: ''
     };
   }
 
   getCompanyInitials(name: string): string {
     return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase().slice(0, 2);
+  }
+
+  getSupervisorName(supervisorId: string): string {
+    if (!supervisorId) return '';
+    const supervisor = this.organizations.find(org => org.id === supervisorId);
+    return supervisor ? supervisor.name : '';
   }
 
   trackByCompany(index: number, company: Company): string {

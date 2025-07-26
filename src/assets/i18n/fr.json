@@ -1148,7 +1148,8 @@
       "address": "Adresse",
       "acronym": "Acronyme",
       "date_created": "Date de création",
-      "actions": "Actions"
+      "actions": "Actions",
+      "supervisor": "Entité superieure"
     },
     "na": "N/A",
     "tooltips": {
@@ -1186,7 +1187,9 @@
         "address": "Adresse *",
         "address_placeholder": "Entrez l'adresse de la compagnie",
         "date_of_creation": "Date de création *",
-        "date_of_creation_edit": "Date de création"
+        "date_of_creation_edit": "Date de création",
+        "select_supervisor": "Sélectionner l'entité superieure",
+        "supervisor":"Entité superieure"
       },
       "cancel": "Annuler",
       "update": "Mettre à jour",
