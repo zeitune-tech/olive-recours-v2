@@ -146,7 +146,7 @@
                                 <span
                                     *ngFor="let permission of profile.permissions.slice(0, 3); trackBy: trackByPermissionId"
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    {{ permission.name }}
+                                    {{ permission.description | transloco }}
                                 </span>
                                 <span *ngIf="profile.permissions.length > 3"
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
