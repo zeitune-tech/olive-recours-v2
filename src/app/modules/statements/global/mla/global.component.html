@@ -63,7 +63,7 @@
                         <th class="border px-2 py-1">{{ t('entities.statement.label') }}</th>
                         <th class="border px-2 py-1">{{ t('entities.statement.debit') }}</th>
                         <th class="border px-2 py-1">{{ t('entities.statement.credit') }}</th>
-                        <th class="border px-2 py-1">{{ t('entities.statement.balance') }}</th>
+                        <!-- <th class="border px-2 py-1">{{ t('entities.statement.balance') }}</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -75,7 +75,29 @@
                         </td>
                         <td class="border px-2 py-1">{{ cp.totalDebit | number:'1.0-0' }}</td>
                         <td class="border px-2 py-1">{{ cp.totalCredit | number:'1.0-0' }}</td>
-                        <td class="border px-2 py-1">{{ cp.balance | number:'1.0-0' }}</td>
+                        <!-- <td class="border px-2 py-1">{{ cp.balance | number:'1.0-0' }}</td> -->
+                    </tr>
+                    <tr>
+                        <td colspan="1" class="border px-2 py-1">{{ t('entities.statement.total') }}</td>
+                        <td colspan="1" class="border px-2 py-1">{{ globalStatement?.totalDebit }}</td>
+                        <td colspan="1" class="border px-2 py-1">{{ globalStatement?.totalCredit }}</td>
+                        <!-- <td colspan="1" class="border px-2 py-1">{{ globalStatement?.globalBalance }}</td> -->
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="border px-2 py-1">{{ t('entities.statement.fee_percentage') }}</td>
+                        <td colspan="1" class="border px-2 py-1">{{ globalStatement?.feePercentage }} %</td>
+                        <!-- <td colspan="1" class="border px-2 py-1">0</td> -->
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="border px-2 py-1">{{ t('entities.statement.fee_amount') }}</td>
+                        <td colspan="1" class="border px-2 py-1">{{ globalStatement?.totalFees }}</td>
+                        <!-- <td colspan="1" class="border px-2 py-1">0</td> -->
+                    </tr>
+                    <tr>
+                        <td colspan="1" class="border px-2 py-1">{{ t('entities.statement.balance') }}</td>
+                        <td colspan="1" class="border px-2 py-1">0</td>
+                        <td colspan="1" class="border px-2 py-1">{{ globalStatement?.globalBalance }}</td>
+                        <!-- <td colspan="1" class="border px-2 py-1">0</td> -->
                     </tr>
                 </tbody>
             </table>

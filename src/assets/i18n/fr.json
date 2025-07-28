@@ -448,6 +448,9 @@
       "balance": "Solde",
       "globalTitle": "État des comptes courants",
       "accountTitle": "État des comptes de ",
+      "total": "Total",
+      "fee_percentage": "Frais (pourcentage)",
+      "fee_amount": "Frais (Montant)",
       "table": {
         "title": "État des comptes",
         "description": "informations sur les états des comptes des compagnies"

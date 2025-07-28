@@ -10,5 +10,8 @@ export interface GlobalStatementSummary {
   totalDebit: number;
   totalCredit: number;
   globalBalance: number;
+  feePercentage: number;
+  totalFees: number;
   counterparties: CompanyCounterpartySummary[];
+
 }

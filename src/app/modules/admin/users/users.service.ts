@@ -66,7 +66,7 @@ export class UsersService {
 
   // Company operations
   getAllCompanies(): Observable<Company[]> {
-    return this.http.get<Company[]>(`${this.request_url}/companies`).pipe(
+    return this.http.get<Company[]>(`${this.request_url}/companies/admin`).pipe(
       tap((response) => {
         this.setCompanies(response);
         return response;
