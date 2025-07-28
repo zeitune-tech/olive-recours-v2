@@ -26,28 +26,29 @@ export class FeesComponent implements OnInit {
   PERMISSIONS_DATA = PERMISSIONS;
   MANAGEMENT_ENTITY_TYPES = Object.values(ManagementEntityType);
 
-  // Données des compagnies
-  companies: Company[] = [];
-  selectedCompany: Company | null = null;
-  
-  // Type d'annexe
-  selectedType: 'ALL' | 'TO_PAY' | 'TO_RECEIVE' = 'ALL';
-  
-  // Période
-  startDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Premier jour du mois courant
-  endDate: Date = new Date(); // Aujourd'hui
-  
-  // Données d'annexe
-  annexeData: AnnexeItem[] = [];
-  totalAmount: number = 0;
+  selectedMonth = new Date().getMonth() + 1;
+  selectedYear = new Date().getFullYear();
+
+  months = [
+    { value: 1, label: 'Janvier' },
+    { value: 2, label: 'Février' },
+    { value: 3, label: 'Mars' },
+    { value: 4, label: 'Avril' },
+    { value: 5, label: 'Mai' },
+    { value: 6, label: 'Juin' },
+    { value: 7, label: 'Juillet' },
+    { value: 8, label: 'Août' },
+    { value: 9, label: 'Septembre' },
+    { value: 10, label: 'Octobre' },
+    { value: 11, label: 'Novembre' },
+    { value: 12, label: 'Décembre' },
+  ];
 
   constructor(
     private _layoutService: LayoutService,
-    private _companyService: CompanyService,
     private _statementService: StatementService,
     private _translocoService: TranslocoService,
-    private _userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Définir le titre de la page et les fils d'Ariane
@@ -56,62 +57,29 @@ export class FeesComponent implements OnInit {
       { title: this._translocoService.translate('layout.crumbs.statements'), link: '#', active: false },
       { title: this._translocoService.translate('layout.crumbs.statements-annexes'), link: '/statements/annexe', active: true }
     ]);
-
-    // Charger la liste des compagnies
-    this._companyService.companies$.subscribe({
-      next: (companies) => {
-        this.companies = companies;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des compagnies:', error);
-      }
-    });
-
-    // Pour le profil Company, définir automatiquement la compagnie sélectionnée
-    this._userService.managementEntity$.subscribe(entity => {
-      if (entity && entity.type === ManagementEntityType.COMPANY) {
-        this.selectedCompany = entity as Company;
-      }
-    });
   }
 
-  /**
-   * Sélectionner une compagnie (pour le profil MLA)
-   */
-  selectCompany(company: Company): void {
-    this.selectedCompany = company;
-    this.annexeData = []; // Réinitialiser les données d'annexe
-  }
-
-  /**
-   * Télécharger le PDF des annexes
-   */
   downloadPdf(): void {
-    if (!this.selectedCompany) {
+    if(!this.selectedMonth || !this.selectedYear) {
       return;
     }
 
-    this._statementService.downloadAnnexePdf(this.selectedCompany.id, this.selectedType, this.startDate, this.endDate)
+    this._statementService.downloadFeesStatement(this.selectedMonth, this.selectedYear)
       .subscribe(blob => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `annexe_${this.selectedCompany?.name}_${this.formatDate(this.startDate)}_${this.formatDate(this.endDate)}.pdf`;
+        a.download = `frais_gestion_${this.selectedMonth}_${this.selectedYear}.pdf`;
         a.click();
         window.URL.revokeObjectURL(url);
       });
 
   }
 
-  /**
-   * Formater une date en chaîne de caractères (format: jj/mm/aaaa)
-   */
   formatDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
-
-
 }

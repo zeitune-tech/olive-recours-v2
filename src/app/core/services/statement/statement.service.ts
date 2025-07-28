@@ -122,4 +122,14 @@ export class StatementService {
       responseType: 'blob'
     });
   }
+
+  downloadFeesStatement(month: number, year: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/fees-all/pdf`, {
+      params: {
+        month,
+        year
+      },
+      responseType: 'blob'
+    });
+  }
 }

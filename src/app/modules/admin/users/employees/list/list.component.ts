@@ -11,9 +11,13 @@ import { UserService } from '@core/services/user/user.service';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Company } from '@core/services/company/company.interface';
+import { MarketLevelOrganization } from '../../organization/market-level-organization.interface';
 
-// Management Entity interface
-
+// Interface pour les groupes de compagnies
+interface CompanyGroup {
+  supervisor: MarketLevelOrganization | null;
+  companies: Company[];
+}
 
 @Component({
   selector: 'app-employees-list',
@@ -28,6 +32,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   filteredEmployees: Employee[] = [];
   availableProfiles: ProfileResponse[] = [];
   availableManagementEntities: Company[] = [];
+  availableMarketLevelOrganizations: MarketLevelOrganization[] = [];
   
   searchTerm: string = '';
   statusFilter: string = '';
@@ -142,18 +147,39 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   loadManagementEntities() {
-    // Assuming you have a method to get management entities
-    // If not, you can mock this or create the method in your service
     this.usersService.getAllManagementEntities()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (companies) => {
-          this.availableManagementEntities = companies.map((company: Company) => {
-            if(company.type === ManagementEntityType.COMPANY){
-              return company
+        next: (entities) => {
+          // Séparer les compagnies et les organisations de niveau marché
+          const companies: Company[] = [];
+          const marketLevelOrgs: MarketLevelOrganization[] = [];
+
+          entities.forEach((entity: any) => {
+            if (entity.type === ManagementEntityType.COMPANY) {
+              companies.push(new Company(entity));
+            } else if (entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION) {
+              marketLevelOrgs.push(new MarketLevelOrganization(
+                entity.id,
+                entity.uuid,
+                entity.name,
+                entity.email,
+                entity.phone,
+                entity.address,
+                entity.logo,
+                entity.level,
+                entity.type,
+                entity.acronym,
+                entity.fax,
+                entity.gsm,
+                entity.dateOfCreation
+              ));
             }
-            return company
           });
+
+          this.availableManagementEntities = companies;
+          this.availableMarketLevelOrganizations = marketLevelOrgs;
+          
         },
         error: (error) => {
           console.error('Error loading management entities:', error);
@@ -381,11 +407,18 @@ export class UsersListComponent implements OnInit, OnDestroy {
     return employee.id;
   }
 
-  get filteredManagementEntities(): Company[] {
+  get filteredManagementEntities(): any[] {
     if (!this.employeeData.accessLevel) {
       return [];
     }
-    return this.availableManagementEntities.filter(
+    
+    // Pour les compagnies, on utilise les groupes
+    if (this.employeeData.accessLevel === ManagementEntityType.COMPANY) {
+      return []; // Les compagnies sont gérées par groupedCompanies
+    }
+    
+    // Pour les autres types (ex: MARKET_LEVEL_ORGANIZATION)
+    return this.availableMarketLevelOrganizations.filter(
       entity => entity.type === this.employeeData.accessLevel
     );
   }
@@ -393,4 +426,5 @@ export class UsersListComponent implements OnInit, OnDestroy {
   onAccessLevelChange() {
     this.employeeData.managementEntity = '';
   }
+
 }

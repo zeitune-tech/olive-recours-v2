@@ -22,6 +22,7 @@ import { HasPermissionDirective } from "@core/permissions/has-permission.directi
 import { FeesComponent } from './fees/fees.component';
 import { EncashmentComponent } from './encashment/encashment.component';
 import { SettlementComponent } from "./settlement/settlement.component";
+import { TranslocoDirective } from "@jsverse/transloco";
 
 @NgModule({
     declarations: [
@@ -49,7 +50,8 @@ import { SettlementComponent } from "./settlement/settlement.component";
         SharedModule,
         TableModule,
         MatProgressSpinnerModule,
-        HasPermissionDirective
+        HasPermissionDirective,
+        TranslocoDirective
     ],
     exports: [],
     providers: []
