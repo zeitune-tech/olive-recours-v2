@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { RouterModule } from "@angular/router";
 import { TableModule } from "@lhacksrt/components/table/table.module";
 import { SharedModule } from "@shared/shared.module";
@@ -23,6 +24,7 @@ import { FeesComponent } from './fees/fees.component';
 import { EncashmentComponent } from './encashment/encashment.component';
 import { SettlementComponent } from "./settlement/settlement.component";
 import { TranslocoDirective } from "@jsverse/transloco";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
     declarations: [
@@ -32,6 +34,7 @@ import { TranslocoDirective } from "@jsverse/transloco";
     ],
     imports: [
         RouterModule.forChild(routes),
+        HttpClientModule,
         MatIconModule,
         MatTableModule,
         MatPaginatorModule,
@@ -45,6 +48,8 @@ import { TranslocoDirective } from "@jsverse/transloco";
         MatDividerModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
         FormsModule,
         ReactiveFormsModule,
         SharedModule,

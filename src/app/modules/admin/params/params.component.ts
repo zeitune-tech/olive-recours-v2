@@ -9,7 +9,7 @@ import { ConfirmationService } from '../../../../@lhacksrt/services/confirmation
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslocoService } from '@jsverse/transloco';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
-import { FeeRequest, FeeResponse } from './params.dto';
+import { FeeRequest, FeeResponse, ModeEncaissementRequest, ModeEncaissementResponse } from './params.dto';
 
 @Component({
   selector: 'app-params',
@@ -23,14 +23,20 @@ export class ParamsComponent implements OnInit {
   closure: ClosureResponse | null = null;
   loading = false;
   error: string | null = null;
-  
+
   // Fee properties
   feeForm: FormGroup;
   currentFee: FeeResponse | null = null;
   allFees: FeeResponse[] = [];
   loadingFee = false;
   errorFee: string | null = null;
-  
+
+  modeEncaissementForm: FormGroup;
+  modesEncaissement: ModeEncaissementResponse[] = [];
+  editingModeEncaissement: ModeEncaissementResponse | null = null;
+  loadingModeEncaissement = false;
+  errorModeEncaissement: string | null = null;
+
   months = [
     { value: 1, label: 'closure.months.janvier' },
     { value: 2, label: 'closure.months.février' },
@@ -52,11 +58,16 @@ export class ParamsComponent implements OnInit {
       exercise: [null, [Validators.required, Validators.min(2000)]],
       month: [null, [Validators.required, Validators.min(1), Validators.max(12)]]
     });
-    
+
     // Initialize fee form
     this.feeForm = this.fb.group({
       rate: [null, [Validators.required, Validators.min(0)]],
       startDate: [null, [Validators.required]]
+    });
+
+    this.modeEncaissementForm = this.fb.group({
+      code: ['', [Validators.required, Validators.minLength(2)]],
+      libelle: ['', [Validators.required, Validators.minLength(2)]],
     });
   }
 
@@ -78,7 +89,7 @@ export class ParamsComponent implements OnInit {
         this.closureForm.reset();
       }
     });
-    
+
     // Initialize fee data
     this.paramsService.currentFee$.subscribe((fee) => {
       this.currentFee = fee;
@@ -91,11 +102,15 @@ export class ParamsComponent implements OnInit {
         this.feeForm.reset();
       }
     });
-    
+
+    this.paramsService.modesEncaissement$.subscribe((modes) => {
+      this.modesEncaissement = modes;
+    });
+
     // Load data
     this.loadData();
   }
-  
+
   private loadData() {
     // Load closure data
     this.loading = true;
@@ -106,7 +121,7 @@ export class ParamsComponent implements OnInit {
         this.loading = false;
       }
     });
-    
+
     // Load current fee
     this.loadingFee = true;
     this.paramsService.getCurrentFee().subscribe({
@@ -116,12 +131,21 @@ export class ParamsComponent implements OnInit {
         this.loadingFee = false;
       }
     });
-    
+
     // Load all fees for history
     this.paramsService.getAllFees().subscribe({
       next: (fees) => { this.allFees = fees; },
       error: (err) => {
         this.errorFee = this.transloco.translate('fees.error.load_history');
+      }
+    });
+
+    this.loadingModeEncaissement = true;
+    this.paramsService.getModesEncaissement().subscribe({
+      next: () => { this.loadingModeEncaissement = false; },
+      error: (err) => {
+        this.errorModeEncaissement = this.transloco.translate('modes_encaissement.error.load');
+        this.loadingModeEncaissement = false;
       }
     });
   }
@@ -203,33 +227,33 @@ export class ParamsComponent implements OnInit {
       }
     });
   }
-  
+
   // Fee methods
   submitFee() {
     if (this.feeForm.invalid) return;
     this.errorFee = null;
     const formValue = this.feeForm.value;
-    
+
     // Check if trying to set the same fee
     if (this.isSameFee(formValue)) {
       this.errorFee = this.transloco.translate('fees.error.same_rate');
       return;
     }
-    
+
     this.doSubmitFee(formValue);
   }
-  
+
   private doSubmitFee(formValue: any) {
     this.loadingFee = true;
     const request: FeeRequest = {
       rate: Number(formValue.rate),
       startDate: formValue.startDate
     };
-    
+
     const action = this.currentFee ? this.paramsService.updateFee(request) : this.paramsService.createFee(request);
     action.subscribe({
-      next: (response) => { 
-        this.loadingFee = false; 
+      next: (response) => {
+        this.loadingFee = false;
         // Reload all fees to update the history
         this.paramsService.getAllFees().subscribe({
           next: (fees) => { this.allFees = fees; }
@@ -241,7 +265,7 @@ export class ParamsComponent implements OnInit {
       }
     });
   }
-  
+
   // Helper to check if the form value is the same as the current fee
   isSameFee(formValue: any): boolean {
     if (!this.currentFee) return false;
@@ -250,7 +274,7 @@ export class ParamsComponent implements OnInit {
       formValue.startDate === this.currentFee.startDate
     );
   }
-  
+
   // Helper to check if a fee is the current active fee
   isCurrentFee(fee: FeeResponse): boolean {
     if (!this.currentFee) return false;
@@ -267,5 +291,73 @@ export class ParamsComponent implements OnInit {
         this.loadingFee = false;
       }
     });
+  }
+
+  submitModeEncaissement() {
+    if (this.modeEncaissementForm.invalid) return;
+    this.errorModeEncaissement = null;
+    
+    this.loadingModeEncaissement = true;
+    const request: ModeEncaissementRequest = this.modeEncaissementForm.value;
+    
+    const action = this.editingModeEncaissement 
+      ? this.paramsService.updateModeEncaissement(this.editingModeEncaissement.uuid, request)
+      : this.paramsService.createModeEncaissement(request);
+      
+    action.subscribe({
+      next: () => { 
+        this.loadingModeEncaissement = false;
+        this.resetModeEncaissementForm();
+      },
+      error: (err) => {
+        this.errorModeEncaissement = this.transloco.translate('modes_encaissement.error.save');
+        this.loadingModeEncaissement = false;
+      }
+    });
+  }
+  
+  editModeEncaissement(mode: ModeEncaissementResponse) {
+    this.editingModeEncaissement = mode;
+    this.modeEncaissementForm.patchValue({
+      code: mode.code,
+      libelle: mode.libelle,
+    });
+  }
+  
+  deleteModeEncaissement(uuid: string) {
+    const dialogRef = this.confirmationService.open({
+      title: this.transloco.translate('modes_encaissement.confirmation.delete_title'),
+      message: this.transloco.translate('modes_encaissement.confirmation.delete_message'),
+      icon: { show: true, name: 'heroicons_outline:exclamation', color: 'warn' },
+      actions: {
+        confirm: { show: true, label: this.transloco.translate('common.delete'), color: 'warn' },
+        cancel: { show: true, label: this.transloco.translate('common.cancel') }
+      },
+      dismissible: true
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirmed') {
+        this.loadingModeEncaissement = true;
+        this.paramsService.deleteModeEncaissement(uuid).subscribe({
+          next: () => { 
+            this.loadingModeEncaissement = false;
+            if (this.editingModeEncaissement?.uuid === uuid) {
+              this.resetModeEncaissementForm();
+            }
+          },
+          error: (err) => {
+            this.errorModeEncaissement = this.transloco.translate('modes_encaissement.error.delete');
+            this.loadingModeEncaissement = false;
+          }
+        });
+      }
+    });
+  }
+  
+  resetModeEncaissementForm() {
+    this.editingModeEncaissement = null;
+    this.modeEncaissementForm.reset();
+    this.errorModeEncaissement = null;
   }
 }

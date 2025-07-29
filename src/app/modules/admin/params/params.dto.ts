@@ -9,3 +9,14 @@ export interface FeeResponse {
   startDate: string; // Date de début
   endDate?: string; // Date de fin (optionnel)
 }
+
+export interface ModeEncaissementRequest {
+  code: string;
+  libelle: string;
+}
+
+export interface ModeEncaissementResponse {
+  uuid: string;
+  code: string;
+  libelle: string;
+}

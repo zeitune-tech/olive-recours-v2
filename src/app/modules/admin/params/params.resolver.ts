@@ -8,6 +8,7 @@ export const ParamsResolver: ResolveFn<Promise<boolean>> = async (route, state) 
   try {
     await firstValueFrom(paramsService.getClosure());
     await firstValueFrom(paramsService.getCurrentFee());
+    await firstValueFrom(paramsService.getModesEncaissement()); // Nouvelle ligne
     return true;
   } catch {
     return false;

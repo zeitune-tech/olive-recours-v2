@@ -1,135 +1,121 @@
-<main class="w-full">
-    <ng-container *hasPermission="{
-      has: [PERMISSIONS_DATA.ALL, PERMISSIONS_DATA.READ_GLOBAL_STATEMENTS],
-      mode: 'any',
-      profile: MANAGEMENT_ENTITY_TYPES[1]
-    }">
-        <!-- MLA profile - can select company -->
-        <div class="w-full mb-20" *transloco="let t">
-            <div class="flex flex-col mb-6">
-                <h1 class="text-2xl md:text-4xl font-bold py-4">
-                    {{ t('entities.statement.annexe.title') }}
-                </h1>
-                <p class="text-sm md:text-base text-gray-600">
-                    {{ t('entities.statement.annexe.description') }}
-                </p>
-            </div>
+<div class="w-full mb-20" *transloco="let t">
+    <div class="flex flex-col mb-6">
+        <h1 class="text-2xl md:text-4xl font-bold py-4">
+            {{ t('entities.statement.settlement.title') }}
+        </h1>
+        <p class="text-sm md:text-base text-gray-600">
+            {{ t('entities.statement.settlement.description') }}
+        </p>
+    </div>
 
-            <!-- Liste des compagnies -->
-            <div class="flex flex-wrap justify-center items-center gap-4 mb-6">
-                <div *ngFor="let company of companies"
-                    (click)="selectCompany(company)"
-                    class="flex flex-col items-center bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow transition min-w-52 max-w-52"
-                    [class.ring-2]="selectedCompany?.id === company.id"
-                    [class.ring-primary-600]="selectedCompany?.id === company.id">
-                    <img [src]="company.logo" alt="{{ company.acronym }}" class="w-auto h-12 object-cover rounded-md mb-2" />
-                    <p class="text-center text-xs font-medium">{{ company.name }}</p>
-                </div>
-            </div>
+    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
 
-            <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                <h2 class="text-xl font-bold mb-4">{{ t('entities.statement.annexe.subtitle') }}</h2>
-
-                <!-- Type d'annexe -->
-                <div class="mb-6">
+        <!-- Settlement Form -->
+        <div class="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+            <h3 class="text-lg font-semibold mb-4">{{ t('entities.settlement.form_title') }}</h3>
+            <form [formGroup]="settlementForm"
+                (ngSubmit)="selectedSettlement ? updateSettlement() : createSettlement()">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>{{ t('entities.statement.annexe.type') }}</mat-label>
-                        <mat-select [(value)]="selectedType">
-                            <mat-option value="ALL">{{ t('entities.statement.annexe.types.all') }}</mat-option>
-                            <mat-option value="TO_PAY">{{ t('entities.statement.annexe.types.to_pay') }}</mat-option>
-                            <mat-option value="TO_RECEIVE">{{ t('entities.statement.annexe.types.to_receive') }}</mat-option>
-                        </mat-select>
+                        <mat-label>{{ t('accounting.encashment.montant') }}</mat-label>
+                        <input matInput type="number" formControlName="montant">
+                        <mat-error *ngIf="settlementForm.get('montant')?.invalid && settlementForm.get('montant')?.touched">
+                            {{ t('accounting.encashment.montant_required') }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-full">
+                        <mat-label>{{ t('accounting.encashment.dateEncaissement') }}</mat-label>
+                        <input matInput [matDatepicker]="settlementDatePicker" formControlName="dateEncaissement">
+                        <mat-datepicker-toggle matSuffix [for]="settlementDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #settlementDatePicker></mat-datepicker>
+                        <mat-error *ngIf="settlementForm.get('dateEncaissement')?.invalid && settlementForm.get('dateEncaissement')?.touched">
+                            {{ t('accounting.encashment.dateEncaissement_required') }}
+                        </mat-error>
                     </mat-form-field>
                 </div>
 
-                <!-- Période -->
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="flex-1 flex gap-6">
-                        <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>{{ t('entities.statement.annexe.start_date') }}</mat-label>
-                            <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
-                            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #startPicker></mat-datepicker>
-                        </mat-form-field>
+                <mat-form-field appearance="outline" class="w-full mb-4">
+                    <mat-label>{{ t('accounting.encashment.commentaire') }}</mat-label>
+                    <textarea matInput formControlName="commentaire" rows="3"></textarea>
+                </mat-form-field>
 
-                        <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>{{ t('entities.statement.annexe.end_date') }}</mat-label>
-                            <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
-                            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #endPicker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <!-- Boutons d'action -->
-                <div class="flex justify-end gap-4">
-                    <button mat-raised-button color="primary" (click)="downloadPdf()">
-                        <mat-icon>download</mat-icon>
-                        {{ t('buttons.downloadPdf') }}
+                <div class="flex justify-end gap-2">
+                    <button mat-button type="button" *ngIf="selectedSettlement" (click)="resetForm()">
+                        {{ t('buttons.cancel') }}
+                    </button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="settlementForm.invalid">
+                        {{ selectedSettlement ? t('buttons.update') : t('buttons.create') }}
                     </button>
                 </div>
+            </form>
+        </div>
+
+        <!-- Settlement List -->
+        <div class="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+            <h3 class="text-lg font-semibold mb-4">{{ t('entities.settlement.list_title') }}</h3>
+            <div class="overflow-x-auto">
+                <table mat-table [dataSource]="settlements" class="w-full">
+                    <ng-container matColumnDef="montant">
+                        <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encashment.montant') }}</th>
+                        <td mat-cell *matCellDef="let settlement">{{ settlement.montant }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dateEncaissement">
+                        <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encashment.dateEncaissement') }}</th>
+                        <td mat-cell *matCellDef="let settlement">{{ settlement.dateEncaissement | date }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="commentaire">
+                        <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encashment.commentaire') }}</th>
+                        <td mat-cell *matCellDef="let settlement">{{ settlement.commentaire }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encashment.actions') }}</th>
+                        <td mat-cell *matCellDef="let settlement">
+                            <button mat-icon-button color="primary" (click)="editSettlement(settlement)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteSettlement(settlement.uuid)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button mat-icon-button color="accent" (click)="generateEtatReglementPdf(settlement.uuid)">
+                                <mat-icon>picture_as_pdf</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="['montant', 'dateEncaissement', 'commentaire', 'actions']"></tr>
+                    <tr mat-row *matRowDef="let row; columns: ['montant', 'dateEncaissement', 'commentaire', 'actions'];"></tr>
+
+                    <!-- Loading Row -->
+                    <tr *ngIf="loading" class="mat-row">
+                        <td class="mat-cell" colspan="4">
+                            <div class="flex justify-center p-4">
+                                <mat-spinner diameter="30"></mat-spinner>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- No Data Row -->
+                    <tr *ngIf="!loading && (!settlements || settlements.length === 0)" class="mat-row">
+                        <td class="mat-cell" colspan="4">
+                            <div class="text-center p-4 text-gray-500">
+                                {{ t('entities.settlement.no_data') }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
-    </ng-container>
 
-    <ng-container *hasPermission="{
-      has: [PERMISSIONS_DATA.ALL, PERMISSIONS_DATA.READ_GLOBAL_STATEMENTS],
-      mode: 'any',
-      profile: MANAGEMENT_ENTITY_TYPES[0]
-    }">
-        <!-- Company profile - cannot select company -->
-        <div class="w-full mb-20" *transloco="let t">
-            <div class="flex flex-col mb-6">
-                <h1 class="text-2xl md:text-4xl font-bold py-4">
-                    {{ t('entities.statement.annexe.title') }}
-                </h1>
-                <p class="text-sm md:text-base text-gray-600">
-                    {{ t('entities.statement.annexe.description') }}
-                </p>
-            </div>
-
-            <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                <h2 class="text-xl font-bold mb-4">{{ t('entities.statement.annexe.subtitle') }}</h2>
-
-                <!-- Type d'annexe -->
-                <div class="mb-6">
-                    <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>{{ t('entities.statement.annexe.type') }}</mat-label>
-                        <mat-select [(value)]="selectedType">
-                            <mat-option value="ALL">{{ t('entities.statement.annexe.types.all') }}</mat-option>
-                            <mat-option value="TO_PAY">{{ t('entities.statement.annexe.types.to_pay') }}</mat-option>
-                            <mat-option value="TO_RECEIVE">{{ t('entities.statement.annexe.types.to_receive') }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <!-- Période -->
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="flex-1 flex gap-6">
-                        <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>{{ t('entities.statement.annexe.start_date') }}</mat-label>
-                            <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
-                            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #startPicker></mat-datepicker>
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>{{ t('entities.statement.annexe.end_date') }}</mat-label>
-                            <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
-                            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                            <mat-datepicker #endPicker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <!-- Boutons d'action -->
-                <div class="flex justify-end gap-4">
-                    <button mat-raised-button color="primary" (click)="downloadPdf()">
-                        <mat-icon>download</mat-icon>
-                        {{ t('buttons.downloadPdf') }}
-                    </button>
-                </div>
-            </div>
+        <!-- Boutons d'action -->
+        <div class="flex justify-end gap-4">
+            <button mat-raised-button color="primary" (click)="downloadPdf()">
+                <mat-icon>download</mat-icon>
+                {{ t('buttons.downloadPdf') }}
+            </button>
         </div>
-    </ng-container>
-</main>
+    </div>
+</div>

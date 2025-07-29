@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { FeeRequest, FeeResponse } from './params.dto';
+import { FeeRequest, FeeResponse, ModeEncaissementRequest, ModeEncaissementResponse } from './params.dto';
 
 export interface ClosureRequest {
   exercise: number;
@@ -23,6 +23,8 @@ export class ParamsService {
   private readonly fees_url = environment.request_url + '/fees';
   private closure: BehaviorSubject<ClosureResponse | null> = new BehaviorSubject<ClosureResponse | null>(null);
   private currentFee: BehaviorSubject<FeeResponse | null> = new BehaviorSubject<FeeResponse | null>(null);
+  private readonly modesEncaissement_url = environment.request_url + '/mode-encaissement';
+private modesEncaissement: BehaviorSubject<ModeEncaissementResponse[]> = new BehaviorSubject<ModeEncaissementResponse[]>([]);
 
   constructor(private http: HttpClient) {}
 
@@ -123,4 +125,53 @@ export class ParamsService {
       })
     );
   }
+
+  // Mode encaissement methods
+  get modesEncaissement$(): Observable<ModeEncaissementResponse[]> {
+    return this.modesEncaissement.asObservable();
+  }
+
+  setModesEncaissement(modes: ModeEncaissementResponse[]) {
+    this.modesEncaissement.next(modes);
+  }
+
+  getModesEncaissement(): Observable<ModeEncaissementResponse[]> {
+    return this.http.get<ModeEncaissementResponse[]>(this.modesEncaissement_url).pipe(
+      tap((response) => {
+        this.setModesEncaissement(response);
+      })
+    );
+  }
+  
+  getModeEncaissementByUuid(uuid: string): Observable<ModeEncaissementResponse> {
+    return this.http.get<ModeEncaissementResponse>(`${this.modesEncaissement_url}/${uuid}`);
+  }
+  
+  createModeEncaissement(request: ModeEncaissementRequest): Observable<ModeEncaissementResponse> {
+    return this.http.post<ModeEncaissementResponse>(this.modesEncaissement_url, request).pipe(
+      tap((response) => {
+        // Recharger la liste après création
+        this.getModesEncaissement().subscribe();
+      })
+    );
+  }
+  
+  updateModeEncaissement(uuid: string, request: ModeEncaissementRequest): Observable<ModeEncaissementResponse> {
+    return this.http.put<ModeEncaissementResponse>(`${this.modesEncaissement_url}/${uuid}`, request).pipe(
+      tap((response) => {
+        // Recharger la liste après mise à jour
+        this.getModesEncaissement().subscribe();
+      })
+    );
+  }
+  
+  deleteModeEncaissement(uuid: string): Observable<void> {
+    return this.http.delete<void>(`${this.modesEncaissement_url}/${uuid}`).pipe(
+      tap(() => {
+        // Recharger la liste après suppression
+        this.getModesEncaissement().subscribe();
+      })
+    );
+  }
+  
 }
