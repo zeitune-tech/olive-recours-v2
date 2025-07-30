@@ -7,10 +7,19 @@ import { TranslocoService } from '@jsverse/transloco';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { ManagementEntityType } from '../../admin/users/dto';
 import { UserService } from '@core/services/user/user.service';
-import { AccountingService, EncaissementQuittanceResponseDto, EncaissementQuittanceRequestDto } from '../accounting.service';
+import { 
+  AccountingService, 
+  QuittanceRequest, 
+  QuittanceResponse,
+  QuittanceClaimRequest,
+  QuittanceClaimResponse,
+  EncaissementQuittanceClaimRequest,
+  EncaissementQuittanceClaimResponse,
+  ModeEncaissementResponse
+} from '../accounting.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 
 interface AnnexeItem {
@@ -39,18 +48,31 @@ export class EncashmentComponent implements OnInit {
   selectedType: 'ALL' | 'TO_PAY' | 'TO_RECEIVE' = 'ALL';
   
   // Période
-  startDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Premier jour du mois courant
-  endDate: Date = new Date(); // Aujourd'hui
+  startDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  endDate: Date = new Date();
   
   // Données d'annexe
   annexeData: AnnexeItem[] = [];
   totalAmount: number = 0;
 
-  // Encashment data
-  encashments: EncaissementQuittanceResponseDto[] = [];
+  // Quittance data
+  quittances: QuittanceResponse[] = [];
+  selectedQuittance: QuittanceResponse | null = null;
+  quittanceClaims: QuittanceClaimResponse[] = [];
+  encaissements: EncaissementQuittanceClaimResponse[] = [];
+  modesEncaissement: ModeEncaissementResponse[] = [];
+  
   loading = false;
-  encashmentForm: FormGroup;
-  selectedEncashment: EncaissementQuittanceResponseDto | null = null;
+  
+  // Forms
+  quittanceForm!: FormGroup;
+  quittanceClaimForm!: FormGroup;
+  encaissementForm!: FormGroup;
+  
+  // Selected items for editing
+  selectedQuittanceForEdit: QuittanceResponse | null = null;
+  selectedQuittanceClaim: QuittanceClaimResponse | null = null;
+  selectedEncaissement: EncaissementQuittanceClaimResponse | null = null;
 
   constructor(
     private _layoutService: LayoutService,
@@ -63,14 +85,55 @@ export class EncashmentComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private _formBuilder: FormBuilder
   ) {
-    this.encashmentForm = this._formBuilder.group({
-      quittanceUuid: ['', Validators.required],
+  }
+
+  initializeForms(): void {
+    // Quittance form
+    this.quittanceForm = this._formBuilder.group({
+      numero: ['', Validators.required],
+      nature: ['ENCAISSEMENT', Validators.required], // Fixé à ENCAISSEMENT
       montant: [0, [Validators.required, Validators.min(0)]],
-      dateEncaissement: [new Date(), Validators.required],
-      modeReglement: ['', Validators.required],
-      reference: [''],
-      commentaire: ['']
+      sortQuittance: [null],
+      dateSortQuittance: [null]
     });
+
+    // QuittanceClaim form
+    this.quittanceClaimForm = this._formBuilder.group({
+      quittanceId: ['', Validators.required],
+      montant: [0, [Validators.required, Validators.min(0)]],
+      payerCompanyId: [null],
+      receiverCompanyId: [null],
+      claimIds: [[]]
+    });
+
+    // Encaissement form
+    this.encaissementForm = this._formBuilder.group({
+      quittanceClaimId: ['', Validators.required],
+      modeEncaissementId: ['', Validators.required],
+      montantEncaisse: [0, [Validators.required, Validators.min(0)]],
+      dateEncaissement: [new Date(), Validators.required],
+      numero: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this._layoutService.setPageTitle(this._translocoService.translate('layout.titles.quittance_encashment'));
+    
+    this._layoutService.setCrumbs([
+      { title: this._translocoService.translate('layout.crumbs.accounting'), link: '#', active: false },
+      { title: this._translocoService.translate('layout.crumbs.quittance_encashment'), link: '/accounting/quittance-encashment', active: true }
+    ]);
+
+    this.initializeForms();
+
+    
+    this.loadInitialData();
+  }
+
+  loadInitialData(): void {
+    this.loadCompanies();
+    this.loadQuittances();
+    this.loadModesEncaissement();
   }
 
   loadCompanies(): void {
@@ -80,249 +143,8 @@ export class EncashmentComponent implements OnInit {
         this.selectCompany(companies[0]);
       }
     });
-  }
 
-  selectCompany(company: Company): void {
-    this.selectedCompany = company;
-    this.loadEncashments();
-  }
-
-  loadEncashments(): void {
-    if (!this.selectedCompany) return;
-    
-    this.loading = true;
-    this._accountingService.getAllEncashments()
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (data) => {
-          this.encashments = data;
-          this.updateAnnexeData();
-        },
-        error: (error) => {
-          console.error('Error loading encashments', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.load_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  updateAnnexeData(): void {
-    // Transform encashments to annexe items for display
-    this.annexeData = this.encashments.map(encashment => ({
-      reference: encashment.reference || '',
-      date: encashment.dateEncaissement ? new Date(encashment.dateEncaissement) : new Date(),
-      counterpartyName: 'Client', // This should be replaced with actual data
-      amount: encashment.montant || 0,
-      status: 'PAID' // This should be determined based on actual data
-    }));
-
-    // Filter by type if needed
-    if (this.selectedType !== 'ALL') {
-      // Implement filtering logic based on selectedType
-    }
-
-    // Calculate total amount
-    this.totalAmount = this.annexeData.reduce((sum, item) => sum + item.amount, 0);
-  }
-
-  createEncashment(): void {
-    if (this.encashmentForm.invalid) {
-      return;
-    }
-
-    const requestDto: EncaissementQuittanceRequestDto = this.encashmentForm.value;
-    
-    this.loading = true;
-    this._accountingService.createEncashment(requestDto)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (response) => {
-          this._snackBar.open(
-            this._translocoService.translate('entities.encashment.created_success'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 3000 }
-          );
-          this.loadEncashments();
-          this.resetForm();
-        },
-        error: (error) => {
-          console.error('Error creating encashment', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.creation_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  updateEncashment(): void {
-    if (!this.selectedEncashment || !this.selectedEncashment.uuid || this.encashmentForm.invalid) {
-      return;
-    }
-
-    const requestDto: EncaissementQuittanceRequestDto = this.encashmentForm.value;
-    
-    this.loading = true;
-    this._accountingService.updateEncashment(this.selectedEncashment.uuid, requestDto)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (response) => {
-          this._snackBar.open(
-            this._translocoService.translate('entities.encashment.updated_success'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 3000 }
-          );
-          this.loadEncashments();
-          this.resetForm();
-        },
-        error: (error) => {
-          console.error('Error updating encashment', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.update_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  deleteEncashment(uuid: string): void {
-    if (!uuid) return;
-    
-    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) {
-      return;
-    }
-    
-    this.loading = true;
-    this._accountingService.deleteEncashment(uuid)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: () => {
-          this._snackBar.open(
-            this._translocoService.translate('entities.encashment.deleted_success'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 3000 }
-          );
-          this.loadEncashments();
-        },
-        error: (error) => {
-          console.error('Error deleting encashment', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.delete_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  generateEtatEncaissementPdf(uuid: string): void {
-    if (!uuid) return;
-    
-    this.loading = true;
-    this._accountingService.generateEtatEncaissementPdf(uuid)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `etat-encaissement-${uuid}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
-        },
-        error: (error) => {
-          console.error('Error generating PDF', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.pdf_generation_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  generateEtatReglementPdf(uuid: string): void {
-    if (!uuid) return;
-    
-    this.loading = true;
-    this._accountingService.generateEtatReglementPdf(uuid)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `etat-reglement-${uuid}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
-        },
-        error: (error) => {
-          console.error('Error generating PDF', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.pdf_generation_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  editEncashment(encashment: EncaissementQuittanceResponseDto): void {
-    this.selectedEncashment = encashment;
-    this.encashmentForm.patchValue({
-      quittanceUuid: encashment.quittanceUuid,
-      montant: encashment.montant,
-      dateEncaissement: encashment.dateEncaissement ? new Date(encashment.dateEncaissement) : new Date(),
-      modeReglement: encashment.modeReglement,
-      reference: encashment.reference,
-      commentaire: encashment.commentaire
-    });
-  }
-
-  resetForm(): void {
-    this.selectedEncashment = null;
-    this.encashmentForm.reset({
-      quittanceUuid: '',
-      montant: 0,
-      dateEncaissement: new Date(),
-      modeReglement: '',
-      reference: '',
-      commentaire: ''
-    });
-  }
-    ngOnInit(): void {
-    // Définir le titre de la page et les fils d'Ariane
-    this._layoutService.setPageTitle(this._translocoService.translate('layout.titles.statements'));
-    
-    this._layoutService.setCrumbs([
-      { title: this._translocoService.translate('layout.crumbs.statements'), link: '#', active: false },
-      { title: this._translocoService.translate('layout.crumbs.statements-annexes'), link: '/statements/annexe', active: true }
-    ]);
-    
-    // Load initial data
-    this.loadCompanies();
-    this.loadEncashments();
-
-    // Charger la liste des compagnies
-    this._companyService.companies$.subscribe({
-      next: (companies) => {
-        this.companies = companies;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des compagnies:', error);
-      }
-    });
-
-    // Pour le profil Company, définir automatiquement la compagnie sélectionnée
+    // Auto-select company for Company type users
     this._userService.managementEntity$.subscribe(entity => {
       if (entity && entity.type === ManagementEntityType.COMPANY) {
         this.selectedCompany = entity as Company;
@@ -330,29 +152,398 @@ export class EncashmentComponent implements OnInit {
     });
   }
 
-  /**
-   * Télécharger le PDF des annexes
-   */
+  selectCompany(company: Company): void {
+    this.selectedCompany = company;
+    this.loadQuittances();
+  }
+
+  loadQuittances(): void {
+    this.loading = true;
+    this._accountingService.getAllQuittances()
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (data) => {
+          // Filtrer seulement les quittances d'encaissement
+          this.quittances = data.filter(q => q.nature === 'ENCAISSEMENT');
+          this.updateAnnexeData();
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  loadQuittanceClaimsForQuittance(quittanceUuid: string): void {
+    this._accountingService.getQuittanceClaimsByQuittance(quittanceUuid)
+      .subscribe({
+        next: (claims) => {
+          this.quittanceClaims = claims;
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  loadEncaissementsForQuittanceClaim(quittanceClaimUuid: string): void {
+    this._accountingService.getEncaissementsByQuittanceClaim(quittanceClaimUuid)
+      .subscribe({
+        next: (encaissements) => {
+          this.encaissements = encaissements;
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  loadModesEncaissement(): void {
+    this._accountingService.getAllModesEncaissement()
+      .subscribe({
+        next: (modes) => {
+          this.modesEncaissement = modes;
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  // ============= QUITTANCE METHODS =============
+
+  createQuittance(): void {
+    if (this.quittanceForm.invalid) return;
+
+    const request: QuittanceRequest = {
+      ...this.quittanceForm.value,
+      nature: 'ENCAISSEMENT' // Force la nature à ENCAISSEMENT
+    };
+    
+    this.loading = true;
+    this._accountingService.createQuittance(request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance.created_success');
+          this.loadQuittances();
+          this.resetQuittanceForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.creation_failed', error);
+        }
+      });
+  }
+
+  updateQuittance(): void {
+    if (!this.selectedQuittanceForEdit || this.quittanceForm.invalid) return;
+
+    const request: QuittanceRequest = {
+      ...this.quittanceForm.value,
+      nature: 'ENCAISSEMENT'
+    };
+    
+    this.loading = true;
+    this._accountingService.updateQuittance(this.selectedQuittanceForEdit.uuid, request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance.updated_success');
+          this.loadQuittances();
+          this.resetQuittanceForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.update_failed', error);
+        }
+      });
+  }
+
+  deleteQuittance(uuid: string): void {
+    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) return;
+    
+    this.loading = true;
+    this._accountingService.deleteQuittance(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => {
+          this.showSuccess('entities.quittance.deleted_success');
+          this.loadQuittances();
+        },
+        error: (error) => {
+          this.handleError('common.errors.delete_failed', error);
+        }
+      });
+  }
+
+  editQuittance(quittance: QuittanceResponse): void {
+    this.selectedQuittanceForEdit = quittance;
+    this.quittanceForm.patchValue({
+      numero: quittance.numero,
+      nature: quittance.nature,
+      montant: quittance.montant,
+      sortQuittance: quittance.sortQuittance,
+      dateSortQuittance: quittance.dateSortQuittance ? new Date(quittance.dateSortQuittance) : null
+    });
+  }
+
+  selectQuittance(quittance: QuittanceResponse): void {
+    this.selectedQuittance = quittance;
+    this.loadQuittanceClaimsForQuittance(quittance.uuid);
+    // Pré-remplir le form de QuittanceClaim
+    this.quittanceClaimForm.patchValue({
+      quittanceId: quittance.uuid
+    });
+  }
+
+  // ============= QUITTANCE CLAIM METHODS =============
+
+  createQuittanceClaim(): void {
+    if (this.quittanceClaimForm.invalid) return;
+
+    const request: QuittanceClaimRequest = this.quittanceClaimForm.value;
+    
+    this.loading = true;
+    this._accountingService.createQuittanceClaim(request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance_claim.created_success');
+          if (this.selectedQuittance) {
+            this.loadQuittanceClaimsForQuittance(this.selectedQuittance.uuid);
+          }
+          this.resetQuittanceClaimForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.creation_failed', error);
+        }
+      });
+  }
+
+  updateQuittanceClaim(): void {
+    if (!this.selectedQuittanceClaim || this.quittanceClaimForm.invalid) return;
+
+    const request: QuittanceClaimRequest = this.quittanceClaimForm.value;
+    
+    this.loading = true;
+    this._accountingService.updateQuittanceClaim(this.selectedQuittanceClaim.uuid, request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance_claim.updated_success');
+          if (this.selectedQuittance) {
+            this.loadQuittanceClaimsForQuittance(this.selectedQuittance.uuid);
+          }
+          this.resetQuittanceClaimForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.update_failed', error);
+        }
+      });
+  }
+
+  deleteQuittanceClaim(uuid: string): void {
+    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) return;
+    
+    this.loading = true;
+    this._accountingService.deleteQuittanceClaim(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => {
+          this.showSuccess('entities.quittance_claim.deleted_success');
+          if (this.selectedQuittance) {
+            this.loadQuittanceClaimsForQuittance(this.selectedQuittance.uuid);
+          }
+        },
+        error: (error) => {
+          this.handleError('common.errors.delete_failed', error);
+        }
+      });
+  }
+
+  editQuittanceClaim(claim: QuittanceClaimResponse): void {
+    this.selectedQuittanceClaim = claim;
+    this.quittanceClaimForm.patchValue({
+      quittanceId: claim.quittance.uuid,
+      montant: claim.montant,
+      payerCompanyId: claim.payerCompany?.id,
+      receiverCompanyId: claim.receiverCompany?.id,
+      claimIds: claim.claims?.map(c => c.id) || []
+    });
+  }
+
+  selectQuittanceClaim(claim: QuittanceClaimResponse): void {
+    this.selectedQuittanceClaim = claim;
+    this.loadEncaissementsForQuittanceClaim(claim.uuid);
+    // Pré-remplir le form d'encaissement
+    this.encaissementForm.patchValue({
+      quittanceClaimId: claim.uuid
+    });
+  }
+
+  // ============= ENCAISSEMENT METHODS =============
+
+  createEncaissement(): void {
+    if (this.encaissementForm.invalid) return;
+
+    const request: EncaissementQuittanceClaimRequest = this.encaissementForm.value;
+    
+    this.loading = true;
+    this._accountingService.createEncaissement(request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.encaissement.created_success');
+          if (this.selectedQuittanceClaim) {
+            this.loadEncaissementsForQuittanceClaim(this.selectedQuittanceClaim.uuid);
+          }
+          this.resetEncaissementForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.creation_failed', error);
+        }
+      });
+  }
+
+  updateEncaissement(): void {
+    if (!this.selectedEncaissement || this.encaissementForm.invalid) return;
+
+    const request: EncaissementQuittanceClaimRequest = this.encaissementForm.value;
+    
+    this.loading = true;
+    this._accountingService.updateEncaissement(this.selectedEncaissement.uuid, request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.encaissement.updated_success');
+          if (this.selectedQuittanceClaim) {
+            this.loadEncaissementsForQuittanceClaim(this.selectedQuittanceClaim.uuid);
+          }
+          this.resetEncaissementForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.update_failed', error);
+        }
+      });
+  }
+
+  deleteEncaissement(uuid: string): void {
+    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) return;
+    
+    this.loading = true;
+    this._accountingService.deleteEncaissement(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => {
+          this.showSuccess('entities.encaissement.deleted_success');
+          if (this.selectedQuittanceClaim) {
+            this.loadEncaissementsForQuittanceClaim(this.selectedQuittanceClaim.uuid);
+          }
+        },
+        error: (error) => {
+          this.handleError('common.errors.delete_failed', error);
+        }
+      });
+  }
+
+  editEncaissement(encaissement: EncaissementQuittanceClaimResponse): void {
+    this.selectedEncaissement = encaissement;
+    this.encaissementForm.patchValue({
+      quittanceClaimId: encaissement.quittanceClaim.uuid,
+      modeEncaissementId: encaissement.modeEncaissement.uuid,
+      montantEncaisse: encaissement.montantEncaisse,
+      dateEncaissement: encaissement.dateEncaissement ? new Date(encaissement.dateEncaissement) : new Date(),
+      numero: encaissement.numero
+    });
+  }
+
+  // ============= PDF GENERATION =============
+
+  generateQuittancePdf(uuid: string): void {
+    this.loading = true;
+    this._accountingService.generateQuittancePdf(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (blob) => {
+          this.downloadBlob(blob, `quittance-${uuid}.pdf`);
+        },
+        error: (error) => {
+          this.handleError('common.errors.pdf_generation_failed', error);
+        }
+      });
+  }
+
+  generateEtatEncaissementPdf(uuid: string): void {
+    this.loading = true;
+    this._accountingService.generateEtatEncaissementPdf(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (blob) => {
+          this.downloadBlob(blob, `etat-encaissement-${uuid}.pdf`);
+        },
+        error: (error) => {
+          this.handleError('common.errors.pdf_generation_failed', error);
+        }
+      });
+  }
+
+  // ============= FORM RESET METHODS =============
+
+  resetQuittanceForm(): void {
+    this.selectedQuittanceForEdit = null;
+    this.quittanceForm.reset({
+      numero: '',
+      nature: 'ENCAISSEMENT',
+      montant: 0,
+      sortQuittance: null,
+      dateSortQuittance: null
+    });
+  }
+
+  resetQuittanceClaimForm(): void {
+    this.selectedQuittanceClaim = null;
+    this.quittanceClaimForm.reset({
+      quittanceId: this.selectedQuittance?.uuid || '',
+      montant: 0,
+      payerCompanyId: null,
+      receiverCompanyId: null,
+      claimIds: []
+    });
+  }
+
+  resetEncaissementForm(): void {
+    this.selectedEncaissement = null;
+    this.encaissementForm.reset({
+      quittanceClaimId: this.selectedQuittanceClaim?.uuid || '',
+      modeEncaissementId: '',
+      montantEncaisse: 0,
+      dateEncaissement: new Date(),
+      numero: ''
+    });
+  }
+
+  // ============= UTILITY METHODS =============
+
+  updateAnnexeData(): void {
+    this.annexeData = this.quittances.map(quittance => ({
+      reference: quittance.numero,
+      date: quittance.dateSortQuittance ? new Date(quittance.dateSortQuittance) : new Date(),
+      counterpartyName: 'Client', // À adapter selon vos données
+      amount: quittance.montant,
+      status: 'PAID' // À adapter selon vos données
+    }));
+
+    this.totalAmount = this.annexeData.reduce((sum, item) => sum + item.amount, 0);
+  }
+
   downloadPdf(): void {
-    if (!this.selectedCompany) {
-      return;
-    }
+    if (!this.selectedCompany) return;
 
     this._statementService.downloadAnnexePdf(this.selectedCompany.id, this.selectedType, this.startDate, this.endDate)
       .subscribe(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `annexe_${this.selectedCompany?.name}_${this.formatDate(this.startDate)}_${this.formatDate(this.endDate)}.pdf`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+        const filename = `annexe_encaissement_${this.selectedCompany?.name}_${this.formatDate(this.startDate)}_${this.formatDate(this.endDate)}.pdf`;
+        this.downloadBlob(blob, filename);
       });
-
   }
 
-  /**
-   * Formater une date en chaîne de caractères (format: jj/mm/aaaa)
-   */
   formatDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -360,5 +551,31 @@ export class EncashmentComponent implements OnInit {
     return `${day}/${month}/${year}`;
   }
 
+  private downloadBlob(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
 
+  private showSuccess(messageKey: string): void {
+    this._snackBar.open(
+      this._translocoService.translate(messageKey),
+      this._translocoService.translate('buttons.actions.close'),
+      { duration: 3000 }
+    );
+  }
+
+  private handleError(messageKey: string, error: any): void {
+    console.error('Error:', error);
+    this._snackBar.open(
+      this._translocoService.translate(messageKey),
+      this._translocoService.translate('buttons.actions.close'),
+      { duration: 5000 }
+    );
+  }
 }

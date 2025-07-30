@@ -7,7 +7,16 @@ import { TranslocoService } from '@jsverse/transloco';
 import { LayoutService } from '@lhacksrt/services/layout/layout.service';
 import { ManagementEntityType } from '../../admin/users/dto';
 import { UserService } from '@core/services/user/user.service';
-import { AccountingService, EncaissementQuittanceResponseDto, EncaissementQuittanceRequestDto } from '../accounting.service';
+import { 
+  AccountingService, 
+  QuittanceRequest, 
+  QuittanceResponse,
+  QuittanceClaimRequest,
+  QuittanceClaimResponse,
+  EncaissementQuittanceClaimRequest,
+  EncaissementQuittanceClaimResponse,
+  ModeEncaissementResponse
+} from '../accounting.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -39,18 +48,31 @@ export class SettlementComponent implements OnInit {
   selectedType: 'ALL' | 'TO_PAY' | 'TO_RECEIVE' = 'ALL';
   
   // Période
-  startDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Premier jour du mois courant
-  endDate: Date = new Date(); // Aujourd'hui
+  startDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  endDate: Date = new Date();
   
   // Données d'annexe
   annexeData: AnnexeItem[] = [];
   totalAmount: number = 0;
 
-  // Settlement data
-  settlements: EncaissementQuittanceResponseDto[] = [];
+  // Quittance data
+  quittances: QuittanceResponse[] = [];
+  selectedQuittance: QuittanceResponse | null = null;
+  quittanceClaims: QuittanceClaimResponse[] = [];
+  reglements: EncaissementQuittanceClaimResponse[] = [];
+  modesEncaissement: ModeEncaissementResponse[] = [];
+  
   loading = false;
-  settlementForm: FormGroup;
-  selectedSettlement: EncaissementQuittanceResponseDto | null = null;
+  
+  // Forms
+  quittanceForm!: FormGroup;
+  quittanceClaimForm!: FormGroup;
+  reglementForm!: FormGroup;
+  
+  // Selected items for editing
+  selectedQuittanceForEdit: QuittanceResponse | null = null;
+  selectedQuittanceClaim: QuittanceClaimResponse | null = null;
+  selectedReglement: EncaissementQuittanceClaimResponse | null = null;
 
   constructor(
     private _layoutService: LayoutService,
@@ -63,17 +85,55 @@ export class SettlementComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private _formBuilder: FormBuilder
   ) {
-    this.settlementForm = this._formBuilder.group({
-      quittanceUuid: ['', Validators.required],
+  }
+
+  initializeForms(): void {
+    // Quittance form
+    this.quittanceForm = this._formBuilder.group({
+      numero: ['', Validators.required],
+      nature: ['REGLEMENT', Validators.required], // Fixé à REGLEMENT
       montant: [0, [Validators.required, Validators.min(0)]],
+      sortQuittance: [null],
+      dateSortQuittance: [null]
+    });
+
+    // QuittanceClaim form
+    this.quittanceClaimForm = this._formBuilder.group({
+      quittanceId: ['', Validators.required],
+      montant: [0, [Validators.required, Validators.min(0)]],
+      payerCompanyId: [null],
+      receiverCompanyId: [null],
+      claimIds: [[]]
+    });
+
+    // Reglement form (similar to encaissement but for settlements)
+    this.reglementForm = this._formBuilder.group({
+      quittanceClaimId: ['', Validators.required],
+      modeEncaissementId: ['', Validators.required],
+      montantEncaisse: [0, [Validators.required, Validators.min(0)]],
       dateEncaissement: [new Date(), Validators.required],
-      modeReglement: ['', Validators.required],
-      reference: [''],
-      commentaire: ['']
+      numero: ['']
     });
   }
 
+  ngOnInit(): void {
+    this._layoutService.setPageTitle(this._translocoService.translate('layout.titles.quittance_settlement'));
+    
+    this._layoutService.setCrumbs([
+      { title: this._translocoService.translate('layout.crumbs.accounting'), link: '#', active: false },
+      { title: this._translocoService.translate('layout.crumbs.quittance_settlement'), link: '/accounting/quittance-settlement', active: true }
+    ]);
+    
+    this.initializeForms();
 
+    this.loadInitialData();
+  }
+
+  loadInitialData(): void {
+    this.loadCompanies();
+    this.loadQuittances();
+    this.loadModesEncaissement();
+  }
 
   loadCompanies(): void {
     this._companyService.getCompaniesAll().subscribe(companies => {
@@ -82,250 +142,8 @@ export class SettlementComponent implements OnInit {
         this.selectCompany(companies[0]);
       }
     });
-  }
 
-  selectCompany(company: Company): void {
-    this.selectedCompany = company;
-    this.loadSettlements();
-  }
-
-  loadSettlements(): void {
-    if (!this.selectedCompany) return;
-    
-    this.loading = true;
-    this._accountingService.getAllEncashments()
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (data) => {
-          this.settlements = data;
-          this.updateAnnexeData();
-        },
-        error: (error) => {
-          console.error('Error loading settlements', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.load_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  updateAnnexeData(): void {
-    // Transform settlements to annexe items for display
-    this.annexeData = this.settlements.map(settlement => ({
-      reference: settlement.reference || '',
-      date: settlement.dateEncaissement ? new Date(settlement.dateEncaissement) : new Date(),
-      counterpartyName: 'Client', // This should be replaced with actual data
-      amount: settlement.montant || 0,
-      status: 'PAID' // This should be determined based on actual data
-    }));
-
-    // Filter by type if needed
-    if (this.selectedType !== 'ALL') {
-      // Implement filtering logic based on selectedType
-    }
-
-    // Calculate total amount
-    this.totalAmount = this.annexeData.reduce((sum, item) => sum + item.amount, 0);
-  }
-
-  createSettlement(): void {
-    if (this.settlementForm.invalid) {
-      return;
-    }
-
-    const requestDto: EncaissementQuittanceRequestDto = this.settlementForm.value;
-    
-    this.loading = true;
-    this._accountingService.createEncashment(requestDto)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (response) => {
-          this._snackBar.open(
-            this._translocoService.translate('entities.settlement.created_success'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 3000 }
-          );
-          this.loadSettlements();
-          this.resetForm();
-        },
-        error: (error) => {
-          console.error('Error creating settlement', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.creation_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  updateSettlement(): void {
-    if (!this.selectedSettlement || !this.selectedSettlement.uuid || this.settlementForm.invalid) {
-      return;
-    }
-
-    const requestDto: EncaissementQuittanceRequestDto = this.settlementForm.value;
-    
-    this.loading = true;
-    this._accountingService.updateEncashment(this.selectedSettlement.uuid, requestDto)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (response) => {
-          this._snackBar.open(
-            this._translocoService.translate('entities.settlement.updated_success'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 3000 }
-          );
-          this.loadSettlements();
-          this.resetForm();
-        },
-        error: (error) => {
-          console.error('Error updating settlement', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.update_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  deleteSettlement(uuid: string): void {
-    if (!uuid) return;
-    
-    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) {
-      return;
-    }
-    
-    this.loading = true;
-    this._accountingService.deleteEncashment(uuid)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: () => {
-          this._snackBar.open(
-            this._translocoService.translate('entities.settlement.deleted_success'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 3000 }
-          );
-          this.loadSettlements();
-        },
-        error: (error) => {
-          console.error('Error deleting settlement', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.delete_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  generateEtatEncaissementPdf(uuid: string): void {
-    if (!uuid) return;
-    
-    this.loading = true;
-    this._accountingService.generateEtatEncaissementPdf(uuid)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `etat-encaissement-${uuid}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
-        },
-        error: (error) => {
-          console.error('Error generating PDF', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.pdf_generation_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  generateEtatReglementPdf(uuid: string): void {
-    if (!uuid) return;
-    
-    this.loading = true;
-    this._accountingService.generateEtatReglementPdf(uuid)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `etat-reglement-${uuid}.pdf`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
-        },
-        error: (error) => {
-          console.error('Error generating PDF', error);
-          this._snackBar.open(
-            this._translocoService.translate('common.errors.pdf_generation_failed'),
-            this._translocoService.translate('common.actions.close'),
-            { duration: 5000 }
-          );
-        }
-      });
-  }
-
-  editSettlement(settlement: EncaissementQuittanceResponseDto): void {
-    this.selectedSettlement = settlement;
-    this.settlementForm.patchValue({
-      quittanceUuid: settlement.quittanceUuid,
-      montant: settlement.montant,
-      dateEncaissement: settlement.dateEncaissement ? new Date(settlement.dateEncaissement) : new Date(),
-      modeReglement: settlement.modeReglement,
-      reference: settlement.reference,
-      commentaire: settlement.commentaire
-    });
-  }
-
-  resetForm(): void {
-    this.selectedSettlement = null;
-    this.settlementForm.reset({
-      quittanceUuid: '',
-      montant: 0,
-      dateEncaissement: new Date(),
-      modeReglement: '',
-      reference: '',
-      commentaire: ''
-    });
-  }
-
-  ngOnInit(): void {
-    // Définir le titre de la page et les fils d'Ariane
-    this._layoutService.setPageTitle(this._translocoService.translate('layout.titles.statements'));
-    
-    // Load initial data
-    this.loadCompanies();
-    this.loadSettlements();
-    
-    this._layoutService.setCrumbs([
-      { title: this._translocoService.translate('layout.crumbs.statements'), link: '#', active: false },
-      { title: this._translocoService.translate('layout.crumbs.statements-annexes'), link: '/statements/annexe', active: true }
-    ]);
-
-    // Charger la liste des compagnies
-    this._companyService.companies$.subscribe({
-      next: (companies) => {
-        this.companies = companies;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des compagnies:', error);
-      }
-    });
-
-    // Pour le profil Company, définir automatiquement la compagnie sélectionnée
+    // Auto-select company for Company type users
     this._userService.managementEntity$.subscribe(entity => {
       if (entity && entity.type === ManagementEntityType.COMPANY) {
         this.selectedCompany = entity as Company;
@@ -333,31 +151,398 @@ export class SettlementComponent implements OnInit {
     });
   }
 
-  /**
+  selectCompany(company: Company): void {
+    this.selectedCompany = company;
+    this.loadQuittances();
+  }
 
-  /**
-   * Télécharger le PDF des annexes
-   */
+  loadQuittances(): void {
+    this.loading = true;
+    this._accountingService.getAllQuittances()
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (data) => {
+          // Filtrer seulement les quittances de règlement
+          this.quittances = data.filter(q => q.nature === 'REGLEMENT');
+          this.updateAnnexeData();
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  loadQuittanceClaimsForQuittance(quittanceUuid: string): void {
+    this._accountingService.getQuittanceClaimsByQuittance(quittanceUuid)
+      .subscribe({
+        next: (claims) => {
+          this.quittanceClaims = claims;
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  loadReglementsForQuittanceClaim(quittanceClaimUuid: string): void {
+    this._accountingService.getEncaissementsByQuittanceClaim(quittanceClaimUuid)
+      .subscribe({
+        next: (reglements) => {
+          this.reglements = reglements;
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  loadModesEncaissement(): void {
+    this._accountingService.getAllModesEncaissement()
+      .subscribe({
+        next: (modes) => {
+          this.modesEncaissement = modes;
+        },
+        error: (error) => {
+          this.handleError('common.errors.load_failed', error);
+        }
+      });
+  }
+
+  // ============= QUITTANCE METHODS =============
+
+  createQuittance(): void {
+    if (this.quittanceForm.invalid) return;
+
+    const request: QuittanceRequest = {
+      ...this.quittanceForm.value,
+      nature: 'REGLEMENT' // Force la nature à REGLEMENT
+    };
+    
+    this.loading = true;
+    this._accountingService.createQuittance(request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance.created_success');
+          this.loadQuittances();
+          this.resetQuittanceForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.creation_failed', error);
+        }
+      });
+  }
+
+  updateQuittance(): void {
+    if (!this.selectedQuittanceForEdit || this.quittanceForm.invalid) return;
+
+    const request: QuittanceRequest = {
+      ...this.quittanceForm.value,
+      nature: 'REGLEMENT'
+    };
+    
+    this.loading = true;
+    this._accountingService.updateQuittance(this.selectedQuittanceForEdit.uuid, request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance.updated_success');
+          this.loadQuittances();
+          this.resetQuittanceForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.update_failed', error);
+        }
+      });
+  }
+
+  deleteQuittance(uuid: string): void {
+    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) return;
+    
+    this.loading = true;
+    this._accountingService.deleteQuittance(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => {
+          this.showSuccess('entities.quittance.deleted_success');
+          this.loadQuittances();
+        },
+        error: (error) => {
+          this.handleError('common.errors.delete_failed', error);
+        }
+      });
+  }
+
+  editQuittance(quittance: QuittanceResponse): void {
+    this.selectedQuittanceForEdit = quittance;
+    this.quittanceForm.patchValue({
+      numero: quittance.numero,
+      nature: quittance.nature,
+      montant: quittance.montant,
+      sortQuittance: quittance.sortQuittance,
+      dateSortQuittance: quittance.dateSortQuittance ? new Date(quittance.dateSortQuittance) : null
+    });
+  }
+
+  selectQuittance(quittance: QuittanceResponse): void {
+    this.selectedQuittance = quittance;
+    this.loadQuittanceClaimsForQuittance(quittance.uuid);
+    // Pré-remplir le form de QuittanceClaim
+    this.quittanceClaimForm.patchValue({
+      quittanceId: quittance.uuid
+    });
+  }
+
+  // ============= QUITTANCE CLAIM METHODS =============
+
+  createQuittanceClaim(): void {
+    if (this.quittanceClaimForm.invalid) return;
+
+    const request: QuittanceClaimRequest = this.quittanceClaimForm.value;
+    
+    this.loading = true;
+    this._accountingService.createQuittanceClaim(request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance_claim.created_success');
+          if (this.selectedQuittance) {
+            this.loadQuittanceClaimsForQuittance(this.selectedQuittance.uuid);
+          }
+          this.resetQuittanceClaimForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.creation_failed', error);
+        }
+      });
+  }
+
+  updateQuittanceClaim(): void {
+    if (!this.selectedQuittanceClaim || this.quittanceClaimForm.invalid) return;
+
+    const request: QuittanceClaimRequest = this.quittanceClaimForm.value;
+    
+    this.loading = true;
+    this._accountingService.updateQuittanceClaim(this.selectedQuittanceClaim.uuid, request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.quittance_claim.updated_success');
+          if (this.selectedQuittance) {
+            this.loadQuittanceClaimsForQuittance(this.selectedQuittance.uuid);
+          }
+          this.resetQuittanceClaimForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.update_failed', error);
+        }
+      });
+  }
+
+  deleteQuittanceClaim(uuid: string): void {
+    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) return;
+    
+    this.loading = true;
+    this._accountingService.deleteQuittanceClaim(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => {
+          this.showSuccess('entities.quittance_claim.deleted_success');
+          if (this.selectedQuittance) {
+            this.loadQuittanceClaimsForQuittance(this.selectedQuittance.uuid);
+          }
+        },
+        error: (error) => {
+          this.handleError('common.errors.delete_failed', error);
+        }
+      });
+  }
+
+  editQuittanceClaim(claim: QuittanceClaimResponse): void {
+    this.selectedQuittanceClaim = claim;
+    this.quittanceClaimForm.patchValue({
+      quittanceId: claim.quittance.uuid,
+      montant: claim.montant,
+      payerCompanyId: claim.payerCompany?.id,
+      receiverCompanyId: claim.receiverCompany?.id,
+      claimIds: claim.claims?.map(c => c.id) || []
+    });
+  }
+
+  selectQuittanceClaim(claim: QuittanceClaimResponse): void {
+    this.selectedQuittanceClaim = claim;
+    this.loadReglementsForQuittanceClaim(claim.uuid);
+    // Pré-remplir le form de règlement
+    this.reglementForm.patchValue({
+      quittanceClaimId: claim.uuid
+    });
+  }
+
+  // ============= REGLEMENT METHODS =============
+
+  createReglement(): void {
+    if (this.reglementForm.invalid) return;
+
+    const request: EncaissementQuittanceClaimRequest = this.reglementForm.value;
+    
+    this.loading = true;
+    this._accountingService.createEncaissement(request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.reglement.created_success');
+          if (this.selectedQuittanceClaim) {
+            this.loadReglementsForQuittanceClaim(this.selectedQuittanceClaim.uuid);
+          }
+          this.resetReglementForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.creation_failed', error);
+        }
+      });
+  }
+
+  updateReglement(): void {
+    if (!this.selectedReglement || this.reglementForm.invalid) return;
+
+    const request: EncaissementQuittanceClaimRequest = this.reglementForm.value;
+    
+    this.loading = true;
+    this._accountingService.updateEncaissement(this.selectedReglement.uuid, request)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('entities.reglement.updated_success');
+          if (this.selectedQuittanceClaim) {
+            this.loadReglementsForQuittanceClaim(this.selectedQuittanceClaim.uuid);
+          }
+          this.resetReglementForm();
+        },
+        error: (error) => {
+          this.handleError('common.errors.update_failed', error);
+        }
+      });
+  }
+
+  deleteReglement(uuid: string): void {
+    if (!confirm(this._translocoService.translate('common.confirmations.delete'))) return;
+    
+    this.loading = true;
+    this._accountingService.deleteEncaissement(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => {
+          this.showSuccess('entities.reglement.deleted_success');
+          if (this.selectedQuittanceClaim) {
+            this.loadReglementsForQuittanceClaim(this.selectedQuittanceClaim.uuid);
+          }
+        },
+        error: (error) => {
+          this.handleError('common.errors.delete_failed', error);
+        }
+      });
+  }
+
+  editReglement(reglement: EncaissementQuittanceClaimResponse): void {
+    this.selectedReglement = reglement;
+    this.reglementForm.patchValue({
+      quittanceClaimId: reglement.quittanceClaim.uuid,
+      modeEncaissementId: reglement.modeEncaissement.uuid,
+      montantEncaisse: reglement.montantEncaisse,
+      dateEncaissement: reglement.dateEncaissement ? new Date(reglement.dateEncaissement) : new Date(),
+      numero: reglement.numero
+    });
+  }
+
+  // ============= PDF GENERATION =============
+
+  generateQuittancePdf(uuid: string): void {
+    this.loading = true;
+    this._accountingService.generateQuittancePdf(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (blob) => {
+          this.downloadBlob(blob, `quittance-reglement-${uuid}.pdf`);
+        },
+        error: (error) => {
+          this.handleError('common.errors.pdf_generation_failed', error);
+        }
+      });
+  }
+
+  generateEtatReglementPdf(uuid: string): void {
+    this.loading = true;
+    this._accountingService.generateEtatReglementPdf(uuid)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (blob) => {
+          this.downloadBlob(blob, `etat-reglement-${uuid}.pdf`);
+        },
+        error: (error) => {
+          this.handleError('common.errors.pdf_generation_failed', error);
+        }
+      });
+  }
+
+  // ============= FORM RESET METHODS =============
+
+  resetQuittanceForm(): void {
+    this.selectedQuittanceForEdit = null;
+    this.quittanceForm.reset({
+      numero: '',
+      nature: 'REGLEMENT',
+      montant: 0,
+      sortQuittance: null,
+      dateSortQuittance: null
+    });
+  }
+
+  resetQuittanceClaimForm(): void {
+    this.selectedQuittanceClaim = null;
+    this.quittanceClaimForm.reset({
+      quittanceId: this.selectedQuittance?.uuid || '',
+      montant: 0,
+      payerCompanyId: null,
+      receiverCompanyId: null,
+      claimIds: []
+    });
+  }
+
+  resetReglementForm(): void {
+    this.selectedReglement = null;
+    this.reglementForm.reset({
+      quittanceClaimId: this.selectedQuittanceClaim?.uuid || '',
+      modeEncaissementId: '',
+      montantEncaisse: 0,
+      dateEncaissement: new Date(),
+      numero: ''
+    });
+  }
+
+  // ============= UTILITY METHODS =============
+
+  updateAnnexeData(): void {
+    this.annexeData = this.quittances.map(quittance => ({
+      reference: quittance.numero,
+      date: quittance.dateSortQuittance ? new Date(quittance.dateSortQuittance) : new Date(),
+      counterpartyName: 'Fournisseur', // À adapter selon vos données
+      amount: quittance.montant,
+      status: 'PAID' // À adapter selon vos données
+    }));
+
+    this.totalAmount = this.annexeData.reduce((sum, item) => sum + item.amount, 0);
+  }
+
   downloadPdf(): void {
-    if (!this.selectedCompany) {
-      return;
-    }
+    if (!this.selectedCompany) return;
 
     this._statementService.downloadAnnexePdf(this.selectedCompany.id, this.selectedType, this.startDate, this.endDate)
       .subscribe(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `annexe_${this.selectedCompany?.name}_${this.formatDate(this.startDate)}_${this.formatDate(this.endDate)}.pdf`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+        const filename = `annexe_reglement_${this.selectedCompany?.name}_${this.formatDate(this.startDate)}_${this.formatDate(this.endDate)}.pdf`;
+        this.downloadBlob(blob, filename);
       });
-
   }
 
-  /**
-   * Formater une date en chaîne de caractères (format: jj/mm/aaaa)
-   */
   formatDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -365,5 +550,31 @@ export class SettlementComponent implements OnInit {
     return `${day}/${month}/${year}`;
   }
 
+  private downloadBlob(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
 
+  private showSuccess(messageKey: string): void {
+    this._snackBar.open(
+      this._translocoService.translate(messageKey),
+      this._translocoService.translate('buttons.actions.close'),
+      { duration: 3000 }
+    );
+  }
+
+  private handleError(messageKey: string, error: any): void {
+    console.error('Error:', error);
+    this._snackBar.open(
+      this._translocoService.translate(messageKey),
+      this._translocoService.translate('buttons.actions.close'),
+      { duration: 5000 }
+    );
+  }
 }

@@ -330,8 +330,8 @@ export class ParamsComponent implements OnInit {
       message: this.transloco.translate('modes_encaissement.confirmation.delete_message'),
       icon: { show: true, name: 'heroicons_outline:exclamation', color: 'warn' },
       actions: {
-        confirm: { show: true, label: this.transloco.translate('common.delete'), color: 'warn' },
-        cancel: { show: true, label: this.transloco.translate('common.cancel') }
+        confirm: { show: true, label: this.transloco.translate('buttons.delete'), color: 'warn' },
+        cancel: { show: true, label: this.transloco.translate('buttons.cancel') }
       },
       dismissible: true
     });
@@ -340,7 +340,7 @@ export class ParamsComponent implements OnInit {
       if (result === 'confirmed') {
         this.loadingModeEncaissement = true;
         this.paramsService.deleteModeEncaissement(uuid).subscribe({
-          next: () => { 
+          next: () => {
             this.loadingModeEncaissement = false;
             if (this.editingModeEncaissement?.uuid === uuid) {
               this.resetModeEncaissementForm();

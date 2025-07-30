@@ -25,6 +25,7 @@ import { EncashmentComponent } from './encashment/encashment.component';
 import { SettlementComponent } from "./settlement/settlement.component";
 import { TranslocoDirective } from "@jsverse/transloco";
 import { HttpClientModule } from "@angular/common/http";
+import { MatTabsModule } from "@angular/material/tabs";
 
 @NgModule({
     declarations: [
@@ -33,31 +34,32 @@ import { HttpClientModule } from "@angular/common/http";
         SettlementComponent
     ],
     imports: [
-        RouterModule.forChild(routes),
-        HttpClientModule,
-        MatIconModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatMenuModule,
-        MatTooltipModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatDividerModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatSnackBarModule,
-        MatProgressSpinnerModule,
-        FormsModule,
-        ReactiveFormsModule,
-        SharedModule,
-        TableModule,
-        MatProgressSpinnerModule,
-        HasPermissionDirective,
-        TranslocoDirective
-    ],
+    RouterModule.forChild(routes),
+    HttpClientModule,
+    MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModule,
+    TableModule,
+    MatProgressSpinnerModule,
+    HasPermissionDirective,
+    TranslocoDirective,
+    MatTabsModule
+],
     exports: [],
     providers: []
 })
