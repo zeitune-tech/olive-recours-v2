@@ -1,377 +1,153 @@
 <div class="w-full mb-20" *transloco="let t">
-    <div class="flex flex-col mb-6">
-        <h1 class="text-2xl md:text-4xl font-bold py-4">
-            {{ t('entities.quittance.encashment.title') }}
-        </h1>
-        <p class="text-sm md:text-base text-gray-600">
-            {{ t('entities.quittance.encashment.description') }}
-        </p>
+
+  <div class="flex flex-col mb-6">
+    <h1 class="text-2xl md:text-4xl font-bold py-4">
+      {{ t('entities.accounting.encashment.title') }}
+    </h1>    
+    <p class="text-sm md:text-base text-gray-600">
+      {{ t('entities.accounting.encashment.description') }}
+    </p>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
+    <h2 class="text-xl font-bold mb-4">{{ t('entities.accounting.encashment.statementsTitle') }}</h2>
+
+    <!-- View Mode Toggle -->
+    <div class="flex items-center gap-4 mb-6">
+      <mat-button-toggle-group [(value)]="isMonthlyView" (change)="onViewModeChange()">
+        <mat-button-toggle [value]="true">{{ t('entities.accounting.monthlyView') }}</mat-button-toggle>
+        <mat-button-toggle [value]="false">{{ t('entities.accounting.periodView') }}</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-        
-        <!-- Navigation par onglets -->
-        <mat-tab-group class="mb-6">
-            
-            <!-- Onglet Quittances -->
-            <mat-tab [label]="t('accounting.quittance.tab_title')">
-                <div class="pt-4">
-                    
-                    <!-- Formulaire Quittance -->
-                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                        <h3 class="text-lg font-semibold mb-3">{{ t('accounting.quittance.form_title') }}</h3>
-                        <form [formGroup]="quittanceForm" (ngSubmit)="selectedQuittanceForEdit ? updateQuittance() : createQuittance()">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.quittance.numero') }}</mat-label>
-                                    <input matInput formControlName="numero">
-                                    <mat-error *ngIf="quittanceForm.get('numero')?.invalid && quittanceForm.get('numero')?.touched">
-                                        {{ t('accounting.quittance.numero_required') }}
-                                    </mat-error>
-                                </mat-form-field>
+    <!-- Monthly View Selectors -->
+    <div *ngIf="isMonthlyView" class="flex items-center gap-4 mb-6">
+      <div class="flex-1 flex gap-6">
+        <mat-form-field appearance="outline" class="w-40">
+          <mat-label>{{ t('entities.accounting.month') }}</mat-label>
+          <mat-select [(value)]="selectedMonth" (selectionChange)="onMonthYearChange()">
+            <mat-option *ngFor="let m of months" [value]="m.value">{{ m.label }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.quittance.montant') }}</mat-label>
-                                    <input matInput type="number" formControlName="montant">
-                                    <mat-error *ngIf="quittanceForm.get('montant')?.invalid && quittanceForm.get('montant')?.touched">
-                                        {{ t('accounting.quittance.montant_required') }}
-                                    </mat-error>
-                                </mat-form-field>
+        <mat-form-field appearance="outline" class="w-32">
+          <mat-label>{{ t('entities.accounting.year') }}</mat-label>
+          <input matInput type="number" [(ngModel)]="selectedYear" (change)="onMonthYearChange()">
+        </mat-form-field>
+      </div>
+    </div>
 
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.quittance.dateSortQuittance') }}</mat-label>
-                                    <input matInput [matDatepicker]="quittanceDatePicker" formControlName="dateSortQuittance">
-                                    <mat-datepicker-toggle matSuffix [for]="quittanceDatePicker"></mat-datepicker-toggle>
-                                    <mat-datepicker #quittanceDatePicker></mat-datepicker>
-                                </mat-form-field>
-                            </div>
+    <!-- Period View Selectors -->
+    <div *ngIf="!isMonthlyView" class="flex items-center gap-4 mb-6">
+      <div class="flex-1 flex gap-6">
+        <mat-form-field appearance="outline" class="w-48">
+          <mat-label>{{ t('entities.accounting.startDate') }}</mat-label>
+          <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onDateRangeChange()">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
 
-                            <div class="flex justify-end gap-2">
-                                <button mat-button type="button" *ngIf="selectedQuittanceForEdit" (click)="resetQuittanceForm()">
-                                    {{ t('common.cancel') }}
-                                </button>
-                                <button mat-raised-button color="primary" type="submit" [disabled]="quittanceForm.invalid">
-                                    {{ selectedQuittanceForEdit ? t('common.update') : t('buttons.create') }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+        <mat-form-field appearance="outline" class="w-48">
+          <mat-label>{{ t('entities.accounting.endDate') }}</mat-label>
+          <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="onDateRangeChange()">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
 
-                    <!-- Liste des Quittances -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-3">{{ t('accounting.quittance.list_title') }}</h3>
-                        <div class="overflow-x-auto">
-                            <table mat-table [dataSource]="quittances" class="w-full">
-                                <ng-container matColumnDef="numero">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.quittance.numero') }}</th>
-                                    <td mat-cell *matCellDef="let quittance">{{ quittance.numero }}</td>
-                                </ng-container>
+    <!-- Action Buttons -->
+    <div class="flex items-center gap-4 mb-6">
+      <button mat-raised-button color="primary" (click)="loadEncaissementStatement()" [disabled]="isLoading">
+        <mat-icon>refresh</mat-icon>
+        {{ t('buttons.loadStatement') }}
+      </button>
+      <button mat-raised-button color="primary" (click)="downloadPdf()" [disabled]="isLoading || !encaissementStatement">
+        <mat-icon>download</mat-icon>
+        {{ t('buttons.downloadPdf') }}
+      </button>
+    </div>
 
-                                <ng-container matColumnDef="montant">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.quittance.montant') }}</th>
-                                    <td mat-cell *matCellDef="let quittance">{{ quittance.montant | currency:'XOF':'symbol':'1.0-0' }}</td>
-                                </ng-container>
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading" class="flex justify-center py-8">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
 
-                                <ng-container matColumnDef="dateSortQuittance">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.quittance.dateSortQuittance') }}</th>
-                                    <td mat-cell *matCellDef="let quittance">{{ quittance.dateSortQuittance | date:'dd/MM/yyyy' }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="actions">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('buttons.actions') }}</th>
-                                    <td mat-cell *matCellDef="let quittance">
-                                        <button mat-icon-button color="accent" 
-                                                (click)="selectQuittance(quittance)"
-                                                [class.bg-blue-100]="selectedQuittance?.uuid === quittance.uuid"
-                                                matTooltip="{{ t('common.select') }}">
-                                            <mat-icon>visibility</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="primary" (click)="editQuittance(quittance)">
-                                            <mat-icon>edit</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="warn" (click)="deleteQuittance(quittance.uuid)">
-                                            <mat-icon>delete</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="accent" (click)="generateQuittancePdf(quittance.uuid)">
-                                            <mat-icon>picture_as_pdf</mat-icon>
-                                        </button>
-                                    </td>
-                                </ng-container>
-
-                                <tr mat-header-row *matHeaderRowDef="['numero', 'montant', 'dateSortQuittance', 'actions']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['numero', 'montant', 'dateSortQuittance', 'actions']" 
-                                    [class.bg-blue-50]="selectedQuittance?.uuid === row.uuid"></tr>
-
-                                <tr class="mat-row" *matNoDataRow>
-                                    <td class="mat-cell text-center py-4" colspan="4">
-                                        <div *ngIf="loading" class="flex justify-center">
-                                            <mat-spinner diameter="30"></mat-spinner>
-                                        </div>
-                                        <div *ngIf="!loading">
-                                            {{ t('accounting.quittance.no_data') }}
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </mat-tab>
-
-            <!-- Onglet QuittanceClaims -->
-            <mat-tab [label]="t('accounting.quittance_claim.tab_title')" [disabled]="!selectedQuittance">
-                <div class="pt-4" *ngIf="selectedQuittance">
-                    
-                    <div class="bg-blue-50 p-3 rounded mb-4">
-                        <p class="text-sm text-blue-800">
-                            <strong>{{ t('accounting.quittance_claim.selected_quittance') }}:</strong> 
-                            {{ selectedQuittance.numero }} - {{ selectedQuittance.montant | currency:'XOF':'symbol':'1.0-0' }}
-                        </p>
-                    </div>
-
-                    <!-- Formulaire QuittanceClaim -->
-                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                        <h3 class="text-lg font-semibold mb-3">{{ t('accounting.quittance_claim.form_title') }}</h3>
-                        <form [formGroup]="quittanceClaimForm" (ngSubmit)="selectedQuittanceClaim ? updateQuittanceClaim() : createQuittanceClaim()">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.quittance_claim.montant') }}</mat-label>
-                                    <input matInput type="number" formControlName="montant">
-                                    <mat-error *ngIf="quittanceClaimForm.get('montant')?.invalid && quittanceClaimForm.get('montant')?.touched">
-                                        {{ t('accounting.quittance_claim.montant_required') }}
-                                    </mat-error>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.quittance_claim.payer_company') }}</mat-label>
-                                    <mat-select formControlName="payerCompanyId">
-                                        <mat-option value="">{{ t('common.select_option') }}</mat-option>
-                                        <mat-option *ngFor="let company of companies" [value]="company.id">
-                                            {{ company.name }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-
-                            <mat-form-field appearance="outline" class="w-full mb-4">
-                                <mat-label>{{ t('accounting.quittance_claim.receiver_company') }}</mat-label>
-                                <mat-select formControlName="receiverCompanyId">
-                                    <mat-option value="">{{ t('common.select_option') }}</mat-option>
-                                    <mat-option *ngFor="let company of companies" [value]="company.id">
-                                        {{ company.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-
-                            <div class="flex justify-end gap-2">
-                                <button mat-button type="button" *ngIf="selectedQuittanceClaim" (click)="resetQuittanceClaimForm()">
-                                    {{ t('common.cancel') }}
-                                </button>
-                                <button mat-raised-button color="primary" type="submit" [disabled]="quittanceClaimForm.invalid">
-                                    {{ selectedQuittanceClaim ? t('common.update') : t('buttons.create') }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Liste des QuittanceClaims -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-3">{{ t('accounting.quittance_claim.list_title') }}</h3>
-                        <div class="overflow-x-auto">
-                            <table mat-table [dataSource]="quittanceClaims" class="w-full">
-                                <ng-container matColumnDef="montant">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.quittance_claim.montant') }}</th>
-                                    <td mat-cell *matCellDef="let claim">{{ claim.montant | currency:'XOF':'symbol':'1.0-0' }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="payerCompany">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.quittance_claim.payer_company') }}</th>
-                                    <td mat-cell *matCellDef="let claim">{{ claim.payerCompany?.name || '-' }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="receiverCompany">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.quittance_claim.receiver_company') }}</th>
-                                    <td mat-cell *matCellDef="let claim">{{ claim.receiverCompany?.name || '-' }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="actions">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('buttons.actions') }}</th>
-                                    <td mat-cell *matCellDef="let claim">
-                                        <button mat-icon-button color="accent" 
-                                                (click)="selectQuittanceClaim(claim)"
-                                                [class.bg-blue-100]="selectedQuittanceClaim?.uuid === claim.uuid"
-                                                matTooltip="{{ t('common.select') }}">
-                                            <mat-icon>visibility</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="primary" (click)="editQuittanceClaim(claim)">
-                                            <mat-icon>edit</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="warn" (click)="deleteQuittanceClaim(claim.uuid)">
-                                            <mat-icon>delete</mat-icon>
-                                        </button>
-                                    </td>
-                                </ng-container>
-
-                                <tr mat-header-row *matHeaderRowDef="['montant', 'payerCompany', 'receiverCompany', 'actions']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['montant', 'payerCompany', 'receiverCompany', 'actions']"
-                                    [class.bg-blue-50]="selectedQuittanceClaim?.uuid === row.uuid"></tr>
-
-                                <tr class="mat-row" *matNoDataRow>
-                                    <td class="mat-cell text-center py-4" colspan="4">
-                                        <div *ngIf="loading" class="flex justify-center">
-                                            <mat-spinner diameter="30"></mat-spinner>
-                                        </div>
-                                        <div *ngIf="!loading">
-                                            {{ t('accounting.quittance_claim.no_data') }}
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </mat-tab>
-
-            <!-- Onglet Encaissements -->
-            <mat-tab [label]="t('accounting.encaissement.tab_title')" [disabled]="!selectedQuittanceClaim">
-                <div class="pt-4" *ngIf="selectedQuittanceClaim">
-                    
-                    <div class="bg-green-50 p-3 rounded mb-4">
-                        <p class="text-sm text-green-800">
-                            <strong>{{ t('accounting.encaissement.selected_claim') }}:</strong> 
-                            {{ selectedQuittanceClaim.montant | currency:'XOF':'symbol':'1.0-0' }}
-                            <span class="ml-2 text-xs">
-                                ({{ t('accounting.encaissement.from_quittance') }}: {{ selectedQuittance?.numero }})
-                            </span>
-                        </p>
-                    </div>
-
-                    <!-- Formulaire Encaissement -->
-                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                        <h3 class="text-lg font-semibold mb-3">{{ t('accounting.encaissement.form_title') }}</h3>
-                        <form [formGroup]="encaissementForm" (ngSubmit)="selectedEncaissement ? updateEncaissement() : createEncaissement()">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.encaissement.montant_encaisse') }}</mat-label>
-                                    <input matInput type="number" formControlName="montantEncaisse">
-                                    <mat-error *ngIf="encaissementForm.get('montantEncaisse')?.invalid && encaissementForm.get('montantEncaisse')?.touched">
-                                        {{ t('accounting.encaissement.montant_required') }}
-                                    </mat-error>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.encaissement.mode_encaissement') }}</mat-label>
-                                    <mat-select formControlName="modeEncaissementId">
-                                        <mat-option *ngFor="let mode of modesEncaissement" [value]="mode.uuid">
-                                            {{ mode.libelle }}
-                                        </mat-option>
-                                    </mat-select>
-                                    <mat-error *ngIf="encaissementForm.get('modeEncaissementId')?.invalid && encaissementForm.get('modeEncaissementId')?.touched">
-                                        {{ t('accounting.encaissement.mode_required') }}
-                                    </mat-error>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="w-full">
-                                    <mat-label>{{ t('accounting.encaissement.date_encaissement') }}</mat-label>
-                                    <input matInput [matDatepicker]="encaissementDatePicker" formControlName="dateEncaissement">
-                                    <mat-datepicker-toggle matSuffix [for]="encaissementDatePicker"></mat-datepicker-toggle>
-                                    <mat-datepicker #encaissementDatePicker></mat-datepicker>
-                                    <mat-error *ngIf="encaissementForm.get('dateEncaissement')?.invalid && encaissementForm.get('dateEncaissement')?.touched">
-                                        {{ t('accounting.encaissement.date_required') }}
-                                    </mat-error>
-                                </mat-form-field>
-                            </div>
-
-                            <mat-form-field appearance="outline" class="w-full mb-4">
-                                <mat-label>{{ t('accounting.encaissement.numero') }}</mat-label>
-                                <input matInput formControlName="numero">
-                            </mat-form-field>
-
-                            <div class="flex justify-end gap-2">
-                                <button mat-button type="button" *ngIf="selectedEncaissement" (click)="resetEncaissementForm()">
-                                    {{ t('common.cancel') }}
-                                </button>
-                                <button mat-raised-button color="primary" type="submit" [disabled]="encaissementForm.invalid">
-                                    {{ selectedEncaissement ? t('common.update') : t('buttons.create') }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Liste des Encaissements -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-3">{{ t('accounting.encaissement.list_title') }}</h3>
-                        <div class="overflow-x-auto">
-                            <table mat-table [dataSource]="encaissements" class="w-full">
-                                <ng-container matColumnDef="montantEncaisse">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encaissement.montant_encaisse') }}</th>
-                                    <td mat-cell *matCellDef="let encaissement">{{ encaissement.montantEncaisse | currency:'XOF':'symbol':'1.0-0' }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="modeEncaissement">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encaissement.mode_encaissement') }}</th>
-                                    <td mat-cell *matCellDef="let encaissement">{{ encaissement.modeEncaissement.libelle }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="dateEncaissement">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encaissement.date_encaissement') }}</th>
-                                    <td mat-cell *matCellDef="let encaissement">{{ encaissement.dateEncaissement | date:'dd/MM/yyyy' }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="numero">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('accounting.encaissement.numero') }}</th>
-                                    <td mat-cell *matCellDef="let encaissement">{{ encaissement.numero || '-' }}</td>
-                                </ng-container>
-
-                                <ng-container matColumnDef="actions">
-                                    <th mat-header-cell *matHeaderCellDef>{{ t('buttons.actions') }}</th>
-                                    <td mat-cell *matCellDef="let encaissement">
-                                        <button mat-icon-button color="primary" (click)="editEncaissement(encaissement)">
-                                            <mat-icon>edit</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="warn" (click)="deleteEncaissement(encaissement.uuid)">
-                                            <mat-icon>delete</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="accent" (click)="generateEtatEncaissementPdf(encaissement.uuid)">
-                                            <mat-icon>picture_as_pdf</mat-icon>
-                                        </button>
-                                    </td>
-                                </ng-container>
-
-                                <tr mat-header-row *matHeaderRowDef="['montantEncaisse', 'modeEncaissement', 'dateEncaissement', 'numero', 'actions']"></tr>
-                                <tr mat-row *matRowDef="let row; columns: ['montantEncaisse', 'modeEncaissement', 'dateEncaissement', 'numero', 'actions']"></tr>
-
-                                <tr class="mat-row" *matNoDataRow>
-                                    <td class="mat-cell text-center py-4" colspan="5">
-                                        <div *ngIf="loading" class="flex justify-center">
-                                            <mat-spinner diameter="30"></mat-spinner>
-                                        </div>
-                                        <div *ngIf="!loading">
-                                            {{ t('accounting.encaissement.no_data') }}
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </mat-tab>
-
-        </mat-tab-group>
-
-        <!-- Boutons d'action globaux -->
-        <div class="flex justify-end gap-4 mt-6 pt-4 border-t border-gray-200">
-            <button mat-raised-button color="primary" (click)="downloadPdf()" [disabled]="!selectedCompany">
-                <mat-icon>download</mat-icon>
-                {{ t('buttons.downloadPdf') }}
-            </button>
-            
-            <button mat-raised-button color="accent" 
-                    (click)="generateEtatEncaissementPdf(selectedQuittance?.uuid || '')" 
-                    [disabled]="!selectedQuittance">
-                <mat-icon>assessment</mat-icon>
-                {{ t('buttons.generateReport') }}
-            </button>
+    <!-- Statement Table -->
+    <div *ngIf="encaissementStatement && !isLoading" class="mt-6">
+      <h3 class="text-lg font-semibold mb-3">
+        {{ t('entities.accounting.encashment.statementFor') }}: {{ entity?.name }}
+      </h3>
+      
+      <!-- Summary Info -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-blue-800">{{ t('entities.accounting.encashment.totalQuittances') }}</h4>
+          <p class="text-2xl font-bold text-blue-900">{{ encaissementStatement.nombreQuittances }}</p>
         </div>
+        <div class="bg-green-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-green-800">{{ t('entities.accounting.encashment.totalAmount') }}</h4>
+          <p class="text-2xl font-bold text-green-900">{{ encaissementStatement.totalMontantQuittances | number:'1.0-0' }} FCFA</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-purple-800">{{ t('entities.accounting.period') }}</h4>
+          <p class="text-lg font-semibold text-purple-900">{{ encaissementStatement.period }}</p>
+        </div>
+        <div class="bg-orange-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-orange-800">{{ t('entities.accounting.generatedBy') }}</h4>
+          <p class="text-lg font-semibold text-orange-900">{{ encaissementStatement.generatedBy }}</p>
+        </div>
+      </div>
+
+      <!-- Quittance Lines Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full border text-sm">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="border px-4 py-2 text-left">{{ t('entities.accounting.encashment.quittanceNumber') }}</th>
+              <th class="border px-4 py-2 text-right">{{ t('entities.accounting.encashment.quittanceAmount') }}</th>
+              <th class="border px-4 py-2 text-left">{{ t('entities.accounting.encashment.issueDate') }}</th>
+              <th class="border px-4 py-2 text-left">{{ t('entities.accounting.encashment.claimNumber') }}</th>
+              <th class="border px-4 py-2 text-left">{{ t('entities.accounting.encashment.claimReference') }}</th>
+              <th class="border px-4 py-2 text-right">{{ t('entities.accounting.encashment.encashmentCount') }}</th>
+              <th class="border px-4 py-2 text-right">{{ t('entities.accounting.encashment.totalEncashed') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let line of encaissementStatement.quittanceLines" class="hover:bg-gray-50">
+              <td class="border px-4 py-2 font-medium">{{ line.quittanceNumero }}</td>
+              <td class="border px-4 py-2 text-right">{{ line.montantQuittance | number:'1.0-0' }}</td>
+              <td class="border px-4 py-2">{{ line.dateSortQuittance | date:'dd/MM/yyyy' }}</td>
+              <td class="border px-4 py-2">{{ line.claimNumero || '-' }}</td>
+              <td class="border px-4 py-2">{{ line.claimReference || '-' }}</td>
+              <td class="border px-4 py-2 text-right">{{ line.nombreEncaissements }}</td>
+              <td class="border px-4 py-2 text-right">{{ line.totalMontantEncaisse | number:'1.0-0' }}</td>
+            </tr>
+          </tbody>
+          <tfoot class="bg-gray-100 font-semibold">
+            <tr>
+              <td class="border px-4 py-2">{{ t('entities.accounting.total') }}</td>
+              <td class="border px-4 py-2 text-right">{{ encaissementStatement.totalMontantQuittances | number:'1.0-0' }}</td>
+              <td class="border px-4 py-2" colspan="4"></td>
+              <td class="border px-4 py-2 text-right">
+                {{ getTotalEncashed() | number:'1.0-0' }}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Generation Info -->
+      <div class="mt-4 text-sm text-gray-600 text-center">
+        {{ t('entities.accounting.generatedOn') }}: {{ encaissementStatement.generationDate | date:'dd/MM/yyyy HH:mm' }}
+      </div>
     </div>
+
+    <!-- No Data Message -->
+    <div *ngIf="!encaissementStatement && !isLoading" class="text-center py-8">
+      <mat-icon class="text-gray-400 text-6xl mb-4">description</mat-icon>
+      <p class="text-gray-500">{{ t('entities.accounting.encashment.noData') }}</p>
+    </div>
+  </div>
+
 </div>

@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
@@ -26,6 +27,7 @@ import { SettlementComponent } from "./settlement/settlement.component";
 import { TranslocoDirective } from "@jsverse/transloco";
 import { HttpClientModule } from "@angular/common/http";
 import { MatTabsModule } from "@angular/material/tabs";
+import { QuittanceStatementService } from "./quittance-statement.service";
 
 @NgModule({
     declarations: [
@@ -58,7 +60,8 @@ import { MatTabsModule } from "@angular/material/tabs";
     MatProgressSpinnerModule,
     HasPermissionDirective,
     TranslocoDirective,
-    MatTabsModule
+    MatTabsModule,
+    MatButtonToggleModule
 ],
     exports: [],
     providers: []

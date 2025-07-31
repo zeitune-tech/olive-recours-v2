@@ -124,10 +124,7 @@
     "upload-document": "Uploader un document",
     "download": "Télécharger",
     "reset_filters": "Réinitialiser les filtres",
-    "view": "Voir",
-    "generateSettlementReport": "Générer état règlement",
-    "generateReport": "Générer état",
-    "actions": "Actions"
+    "view": "Voir"
   },
   "forms": {
     "search": "Rechercher...",
@@ -462,7 +459,7 @@
         "title": "États annexes",
         "type": "Type d'annexe",
         "subtitle": "Filtres",
-        "types": {
+        "types":{
           "all": "Tous",
           "to_pay": "À régler",
           "to_receive": "À encaisser"
@@ -483,18 +480,6 @@
         "status": "Statut",
         "due_date": "Date d'échéance",
         "total": "Total"
-      }
-    },
-    "quittance":{
-      "encashment":{
-        "title": "Quittances d'encaissement",
-        "subtitle": "Gestion des quittances d'encaissement",
-        "description": "Gestion des quittances d'encaissement"
-      },
-      "settlement":{
-        "title": "Quittances de règlement",
-        "subtitle": "Gestion des quittances de règlement",
-        "description": "Gestion des quittances de règlement"
       }
     }
   },
@@ -1208,7 +1193,7 @@
         "date_of_creation": "Date de création *",
         "date_of_creation_edit": "Date de création",
         "select_supervisor": "Sélectionner l'entité superieure",
-        "supervisor": "Entité superieure"
+        "supervisor":"Entité superieure"
       },
       "cancel": "Annuler",
       "update": "Mettre à jour",
@@ -1322,14 +1307,17 @@
       "statements-detailed": "Relevé détaillé",
       "statements-global": "Relevé global",
       "statements-annexes": "États annexes",
+      "accounting": "Comptabilité",
+      "encashment": "États d'Encaissement",
+      "settlement": "États de Règlement",
+      "fees": "États des Frais",
       "admin": "Administration",
       "users": "Utilisateurs",
       "companies": "Compagnies",
       "employees": "Employés",
       "roles": "Rôles",
       "closures": "Clôtures",
-      "profile": "Profil",
-      "params": "Paramètres"
+      "profile": "Profil"
     },
     "crumbs": {
       "dashboard": "Tableau de bord",
@@ -1341,6 +1329,10 @@
       "statements-detailed": "Relevé détaillé",
       "statements-global": "Relevé global",
       "statements-annexes": "États annexes",
+      "accounting": "Comptabilité",
+      "encashment": "États d'Encaissement",
+      "settlement": "États de Règlement",
+      "fees": "États des Frais",
       "admin": "Administration",
       "users": "Utilisateurs",
       "companies": "Compagnies",
@@ -1348,11 +1340,105 @@
       "employees": "Employés",
       "roles": "Rôles",
       "closures": "Clôtures",
-      "profile": "Profil",
-      "params": "Paramètres",
-      "accounting": "Comptabilité",
-      "quittance_encashment": "Encaissement",
-      "quittance_settlement": "Reglement"
+      "profile": "Profil"
+    }
+  },
+  "accounting": {
+    "encashment": {
+      "title": "Encaissement",
+      "description": "Gestion des encaissements",
+      "form_title": "Formulaire d'encaissement",
+      "amount": "Montant",
+      "amount_required": "Le montant est requis",
+      "date": "Date",
+      "date_required": "La date est requise",
+      "description": "Description",
+      "cancel": "Annuler",
+      "create": "Créer",
+      "update": "Mettre à jour",
+      "list_title": "Liste des encaissements",
+      "actions": "Actions",
+      "no_data": "Aucun encaissement trouvé"
+    },
+    "settlement": {
+      "title": "Règlement",
+      "description": "Gestion des règlements",
+      "form_title": "Formulaire de règlement",
+      "amount": "Montant",
+      "amount_required": "Le montant est requis",
+      "date": "Date",
+      "date_required": "La date est requise",
+      "description": "Description",
+      "list_title": "Liste des règlements",
+      "actions": "Actions",
+      "no_data": "Aucun règlement trouvé"
+    }
+  },
+  "entities": {
+    "statement": {
+      "encashment": {
+        "title": "Encaissement",
+        "description": "Gestion des encaissements"
+      },
+      "settlement": {
+        "title": "Règlement",
+        "description": "Gestion des règlements"
+      }
+    },
+    "settlement": {
+      "form_title": "Formulaire de règlement",
+      "amount": "Montant",
+      "amount_required": "Le montant est requis",
+      "date": "Date",
+      "date_required": "La date est requise",
+      "description": "Description",
+      "list_title": "Liste des règlements",
+      "actions": "Actions",
+      "no_data": "Aucun règlement trouvé"
+    },
+    "accounting": {
+      "monthlyView": "Vue mensuelle",
+      "periodView": "Vue par période",
+      "month": "Mois",
+      "year": "Année",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "period": "Période",
+      "generatedBy": "Généré par",
+      "generatedOn": "Généré le",
+      "total": "Total",
+      "encashment": {
+        "title": "États d'Encaissement",
+        "description": "Visualisez et téléchargez les états d'encaissement des quittances par période",
+        "statementsTitle": "États des Quittances d'Encaissement",
+        "statementFor": "État pour",
+        "totalQuittances": "Nombre de quittances",
+        "totalAmount": "Montant total des quittances",
+        "quittanceNumber": "N° Quittance",
+        "quittanceAmount": "Montant Quittance",
+        "issueDate": "Date de sortie",
+        "claimNumber": "N° Recours",
+        "claimReference": "Référence Recours",
+        "encashmentCount": "Nb Encaissements",
+        "totalEncashed": "Total Encaissé",
+        "noData": "Aucune donnée d'encaissement disponible pour cette période"
+      },
+      "settlement": {
+        "title": "États de Règlement",
+        "description": "Visualisez et téléchargez les états de règlement des quittances par période",
+        "statementsTitle": "États des Quittances de Règlement",
+        "statementFor": "État pour",
+        "totalQuittances": "Nombre de quittances",
+        "totalAmount": "Montant total des quittances",
+        "quittanceNumber": "N° Quittance",
+        "quittanceAmount": "Montant Quittance",
+        "issueDate": "Date de sortie",
+        "claimNumber": "N° Recours",
+        "claimReference": "Référence Recours",
+        "settlementCount": "Nb Règlements",
+        "totalSettled": "Total Réglé",
+        "noData": "Aucune donnée de règlement disponible pour cette période"
+      }
     }
   },
   "permissions": {
@@ -1418,106 +1504,6 @@
       "create-error": "Une erreur s'est produite lors de la soumission du recours",
       "update-success": "Le recours a été mis à jour avec succès",
       "update-error": "Une erreur s'est produite lors de la mise à jour du recours"
-    }
-  },
-  "modes_encaissement": {
-    "title": "Modes d'Encaissement",
-    "subtitle": "Gérer les différents modes d'encaissement disponibles",
-    "form": {
-      "libelle": "Libellé",
-      "libelle_placeholder": "Ex: Espèces, Chèque, Virement...",
-      "libelle_helper": "Nom du mode d'encaissement",
-      "description": "Description",
-      "description_placeholder": "Description optionnelle",
-      "description_helper": "Informations complémentaires",
-      "create": "Créer",
-      "update": "Modifier",
-      "cancel": "Annuler",
-      "code": "Code",
-      "code_placeholder": "Saisir le code",
-      "code_helper": "Code unique pour le mode d'encaissement"
-    },
-    "list": {
-      "title": "Modes d'encaissement configurés",
-      "libelle": "Libellé",
-      "description": "Description",
-      "date_creation": "Date de création",
-      "actions": "Actions",
-      "code": "Code"
-    },
-    "loading": "Chargement...",
-    "no_modes": "Aucun mode d'encaissement configuré",
-    "error": {
-      "load": "Erreur lors du chargement",
-      "save": "Erreur lors de la sauvegarde",
-      "delete": "Erreur lors de la suppression"
-    },
-    "confirmation": {
-      "delete_title": "Supprimer le mode d'encaissement",
-      "delete_message": "Êtes-vous sûr de vouloir supprimer ce mode d'encaissement ?"
-    }
-  },
-  "accounting": {
-    "quittance": {
-      "tab_title": "Quittances",
-      "form_title": "Nouvelle quittance d'encaissement",
-      "list_title": "Quittances d'encaissement",
-      "numero": "Numéro",
-      "montant": "Montant",
-      "dateSortQuittance": "Date de sortie",
-      "no_data": "Aucune quittance trouvée"
-    },
-    "quittance_claim": {
-      "tab_title": "Claims",
-      "form_title": "Nouveau claim",
-      "list_title": "Claims de la quittance",
-      "selected_quittance": "Quittance sélectionnée",
-      "montant": "Montant",
-      "payer_company": "Société payeur",
-      "receiver_company": "Société receveur",
-      "no_data": "Aucun claim trouvé"
-    },
-    "encaissement": {
-      "tab_title": "Encaissements",
-      "form_title": "Nouvel encaissement",
-      "list_title": "Encaissements du claim",
-      "selected_claim": "Claim sélectionné",
-      "from_quittance": "de la quittance",
-      "montant_encaisse": "Montant encaissé",
-      "mode_encaissement": "Mode d'encaissement",
-      "date_encaissement": "Date d'encaissement",
-      "numero": "N° référence",
-      "no_data": "Aucun encaissement trouvé"
-    },
-    "settlement": {
-      "quittance_tab_title": "Quittances de Règlement",
-      "claim_tab_title": "Claims",
-      "reglement_tab_title": "Règlements",
-      "quittance_form_title": "Nouvelle quittance de règlement",
-      "quittance_list_title": "Quittances de règlement",
-      "claim_form_title": "Nouveau claim de règlement",
-      "claim_list_title": "Claims de la quittance",
-      "reglement_form_title": "Nouveau règlement",
-      "reglement_list_title": "Règlements du claim",
-      "nature_reglement": "RÈGLEMENT",
-      "selected_quittance": "Quittance sélectionnée",
-      "selected_claim": "Claim sélectionné",
-      "from_quittance": "de la quittance",
-      "numero": "Numéro",
-      "montant": "Montant",
-      "dateSortQuittance": "Date de sortie",
-      "nature": "Nature",
-      "claim_montant": "Montant claim",
-      "payer_company": "Société payeur",
-      "receiver_company": "Société receveur",
-      "montant_regle": "Montant réglé",
-      "mode_reglement": "Mode de règlement",
-      "date_reglement": "Date de règlement",
-      "numero_reference": "N° référence",
-      "total_amount": "Total règlements",
-      "quittance_no_data": "Aucune quittance de règlement",
-      "claim_no_data": "Aucun claim trouvé",
-      "reglement_no_data": "Aucun règlement trouvé"
     }
   }
 }
