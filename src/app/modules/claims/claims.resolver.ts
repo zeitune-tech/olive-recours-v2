@@ -6,7 +6,7 @@ import { forkJoin } from 'rxjs';
 import { Claim } from '@core/services/claim/claim.interface';
 import { ManagementEntity } from '@core/services/management-entity/management-entity.interface';
 
-export const claimsResolver: ResolveFn<{ claims: Claim[]; company: ManagementEntity }> = (route, state) => {
+export const claimsResolver: ResolveFn<{ claims: Claim[]; company: ManagementEntity | null }> = (route, state) => {
   const claimService = inject(ClaimService);
   const userService = inject(UserService);
   return forkJoin({

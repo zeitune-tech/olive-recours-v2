@@ -108,7 +108,7 @@ export class ClaimNewComponent implements OnInit {
 
 		this._userService.managementEntity$.subscribe({
 			next: (managementEntity) => {
-				this.managementEntity = managementEntity;
+				this.managementEntity = managementEntity || {} as ManagementEntity;
 			},
 			error: (error) => {
 				console.error('Erreur lors du chargement de l\'entité de gestion', error);

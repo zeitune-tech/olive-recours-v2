@@ -7,7 +7,7 @@ import { ManagementEntity } from '@core/services/management-entity/management-en
 export const newClaimResolver: ResolveFn<boolean> = (route, state) => {
   const userService = inject(UserService);
   return userService.getManagementEntity().pipe(
-    map((managementEntity: ManagementEntity) => {
+    map((managementEntity: ManagementEntity | null) => {
       if (!managementEntity) {
         return false;
       }

@@ -12,6 +12,25 @@
   <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
     <h2 class="text-xl font-bold mb-4">{{ t('entities.accounting.settlement.statementsTitle') }}</h2>
 
+    <!-- Company Selection for MLA -->
+    <div *ngIf="isMLA()" class="mb-6">
+      <h3 class="text-lg font-semibold mb-3">{{ t('entities.accounting.selectCompany') }}</h3>
+      <div class="flex flex-wrap justify-start items-center gap-4 mb-4">
+        <div *ngFor="let company of companies"
+            (click)="selectCompany(company)"
+            class="flex flex-col items-center bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow transition min-w-40 max-w-40"
+            [class.ring-2]="selectedCompany?.id === company.id"
+            [class.ring-primary-600]="selectedCompany?.id === company.id">
+            <img [src]="company.logo" alt="{{ company.acronym }}" class="w-auto h-10 object-cover rounded-md mb-2" />
+            <p class="text-center text-xs font-medium">{{ company.name }}</p>
+        </div>
+      </div>
+      <div *ngIf="!selectedCompany" class="text-orange-600 text-sm mb-4">
+        <mat-icon class="align-middle mr-1">info</mat-icon>
+        {{ t('entities.accounting.pleaseSelectCompany') }}
+      </div>
+    </div>
+
     <!-- View Mode Toggle -->
     <div class="flex items-center gap-4 mb-6">
       <mat-button-toggle-group [(value)]="isMonthlyView" (change)="onViewModeChange()">
@@ -76,7 +95,7 @@
     <!-- Statement Table -->
     <div *ngIf="reglementStatement && !isLoading" class="mt-6">
       <h3 class="text-lg font-semibold mb-3">
-        {{ t('entities.accounting.settlement.statementFor') }}: {{ entity?.name }}
+        {{ t('entities.accounting.settlement.statementFor') }}: {{ getDisplayEntityName() }}
       </h3>
       
       <!-- Summary Info -->
@@ -144,9 +163,19 @@
     </div>
 
     <!-- No Data Message -->
-    <div *ngIf="!reglementStatement && !isLoading" class="text-center py-8">
+    <div *ngIf="!reglementStatement && !isLoading && !hasError" class="text-center py-8">
       <mat-icon class="text-gray-400 text-6xl mb-4">receipt</mat-icon>
       <p class="text-gray-500">{{ t('entities.accounting.settlement.noData') }}</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="hasError && !isLoading" class="text-center py-8">
+      <mat-icon class="text-red-400 text-6xl mb-4">error</mat-icon>
+      <p class="text-red-500">{{ t('entities.accounting.settlement.errorLoading') }}</p>
+      <button mat-raised-button color="primary" (click)="loadReglementStatement()" class="mt-4">
+        <mat-icon>refresh</mat-icon>
+        {{ t('buttons.retry') }}
+      </button>
     </div>
   </div>
 

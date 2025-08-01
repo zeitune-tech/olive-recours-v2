@@ -7,12 +7,12 @@ import { ManagementEntity } from '../management-entity/management-entity.interfa
 import { ManagementEntityType } from 'src/app/modules/admin/users/dto';
 
 @Injectable()
-export class UserService{
+export class UserService {
     private baseUrl = environment.request_url + '/employees';
     private request_url = environment.request_url;
     private _managementEntityBaseUrl = environment.request_url + '/companies';
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
-    private _managementEntity: ReplaySubject<ManagementEntity> = new ReplaySubject<ManagementEntity>(1);
+    private _managementEntity: BehaviorSubject<ManagementEntity | null> = new BehaviorSubject<ManagementEntity | null>(null);
     private _hasEntity: boolean = false;
     private _permissions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
     private _level: BehaviorSubject<ManagementEntityType | null> = new BehaviorSubject<ManagementEntityType | null>(null);
@@ -20,7 +20,7 @@ export class UserService{
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient) {}
+    constructor(private _httpClient: HttpClient) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -40,11 +40,11 @@ export class UserService{
         return this._user.asObservable();
     }
 
-    get managementEntity$(): Observable<ManagementEntity> {
+    get managementEntity$(): Observable<ManagementEntity | null> {
         return this._managementEntity.asObservable();
     }
 
-    set managementEntity(value: ManagementEntity) {
+    set managementEntity(value: ManagementEntity | null) {
         // Store the value
         this._managementEntity.next(value);
     }
@@ -80,15 +80,15 @@ export class UserService{
      */
     get(): Observable<User> {
         // First try to get from the subject
-      
+
         return this._httpClient.get<User>(`${this.baseUrl}/me`).pipe(
             tap((user) => {
                 this.user = user;
                 if (user.managementEntity)
                     this._hasEntity = true;
-                if(user.permissions)
+                if (user.permissions)
                     this.permissions = user.permissions;
-                if(user.profileType){
+                if (user.profileType) {
                     this.level = user.profileType;
                 }
             }),
@@ -105,21 +105,21 @@ export class UserService{
         return this._httpClient.put<User>(`${this.baseUrl}/${user.id}`, user).pipe(
             map((response) => {
                 this._user.next(response);
-                if(response.permissions)
+                if (response.permissions)
                     this.permissions = response.permissions;
             })
         );
     }
 
-    updateManagementEntity(entity: ManagementEntity): Observable<any> {
+    updateManagementEntity(entity: ManagementEntity | null): Observable<any> {
         return this._httpClient.put<ManagementEntity>(`${this._managementEntityBaseUrl}/update`, entity).pipe(
             map((response) => {
-                this._managementEntity.next({...response});
+                this._managementEntity.next({ ...response });
             })
         );
     }
 
-    getManagementEntity(): Observable<ManagementEntity> {
+    getManagementEntity(): Observable<ManagementEntity | null> {
         return this._httpClient.get<ManagementEntity>(`${this._managementEntityBaseUrl}/me`).pipe(
             tap((entity) => {
                 this.managementEntity = entity;
@@ -131,7 +131,7 @@ export class UserService{
     uploadFile(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
-        
+
         return this._httpClient.post(`${this._managementEntityBaseUrl}/logo`, formData);
     }
 
@@ -141,9 +141,9 @@ export class UserService{
                 this._user.next(response as User);
             })
         );
-      }
-    
-      updateCompany(data: {
+    }
+
+    updateCompany(data: {
         name: string;
         acronym: string;
         email: string;
@@ -154,15 +154,15 @@ export class UserService{
         gsm?: string;
         legalStatus?: string;
         registrationNumber?: string;
-      }): Observable<any> {
+    }): Observable<any> {
         return this._httpClient.put(`${this.request_url}/profiles/company`, data).pipe(
             map((response) => {
                 this._managementEntity.next(response as ManagementEntity);
             })
         );
-      }
-    
-      updatePassword(data: { oldPassword: string; newPassword: string; confirmNewPassword: string }): Observable<any> {
+    }
+
+    updatePassword(data: { oldPassword: string; newPassword: string; confirmNewPassword: string }): Observable<any> {
         return this._httpClient.put(`${this.request_url}/employees/me/password`, data);
-      }
+    }
 }

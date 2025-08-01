@@ -39,8 +39,8 @@ export class DashboardComponent implements OnInit {
             this.user = user;
         });
 
-        this._userService.managementEntity$.subscribe((entity: ManagementEntity) => {
-            this.entity = entity;
+        this._userService.managementEntity$.subscribe((entity: ManagementEntity | null) => {
+            this.entity = entity || {} as ManagementEntity;
         });
     }
 

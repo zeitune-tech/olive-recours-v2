@@ -79,8 +79,8 @@ export class ProfilesComponent implements OnInit {
           this.selectedFile = null;
           
           // Refresh the logo from the server
-          this.userService.getManagementEntity().subscribe((entity: ManagementEntity) => {
-            this.logo = entity.logo;
+          this.userService.getManagementEntity().subscribe((entity: ManagementEntity | null) => {
+            this.logo = entity?.logo || '';
             this.timestamp = Date.now(); // Update timestamp to force new image load
             this.notificationService.showMessage('Image mise à jour avec succès.');
             this._changeDetectorRef.markForCheck();
@@ -131,19 +131,19 @@ export class ProfilesComponent implements OnInit {
       this._changeDetectorRef.markForCheck();
     });
 
-    this.userService.getManagementEntity().subscribe((entity: ManagementEntity) => {
-      this.logo = entity.logo;
+    this.userService.getManagementEntity().subscribe((entity: ManagementEntity | null) => {
+      this.logo = entity?.logo || '';
       // Patch du formulaire entreprise
       this.companyForm.patchValue({
-        name: entity.name || '',
-        acronym: entity.acronym || '',
-        email: entity.email || '',
-        phone: entity.phone || '',
-        address: entity.address || '',
-        fax: entity.fax || '',
-        gsm: entity.gsm || '',
-        legalStatus: entity.legalStatus || '',
-        registrationNumber: entity.registrationNumber || ''
+        name: entity?.name || '',
+        acronym: entity?.acronym || '',
+        email: entity?.email || '',
+        phone: entity?.phone || '',
+        address: entity?.address || '',
+        fax: entity?.fax || '',
+        gsm: entity?.gsm || '',
+        legalStatus: entity?.legalStatus || '',
+        registrationNumber: entity?.registrationNumber || ''
       });
       this._changeDetectorRef.markForCheck();
     });

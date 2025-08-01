@@ -111,13 +111,14 @@
     "upload-logo": "Uploader le logo",
     "logout": "Déconnexion",
     "back": "Retour",
+    "retry": "Réessayer",
+    "loadStatement": "Charger l'état",
     "next": "Suivant",
     "previous": "Précédent",
     "confirm": "Confirmer",
     "confirm_and_create": "Confirmer & Créer",
     "submit": "Soumettre",
     "create": "Créer",
-    "loadStatement": "charger les états",
     "downloadPdf": "état PDF",
     "loadAnnexe": "charger les annexes",
     "downloadAnnexePdf": "annexe PDF",
@@ -527,6 +528,8 @@
       "generatedBy": "Généré par",
       "generatedOn": "Généré le",
       "total": "Total",
+      "pleaseSelectCompany": "Veuillez sélectionner une compagnie",
+      "selectCompany": "Sélectionner une compagnie",
       "encashment": {
         "title": "États d'Encaissement",
         "description": "Visualisez et téléchargez les états d'encaissement des quittances par période",
@@ -1528,9 +1531,32 @@
     }
   },
   "accounting": {
+    "selectCompany": "Sélectionner une compagnie",
+    "pleaseSelectCompany": "Veuillez sélectionner une compagnie pour continuer",
+    "monthlyView": "Vue mensuelle",
+    "periodView": "Vue par période",
+    "month": "Mois",
+    "year": "Année",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "period": "Période",
+    "generatedBy": "Généré par",
+    "generatedOn": "Généré le",
+    "total": "Total",
     "encashment": {
-      "title": "Encaissement",
-      "description": "Gestion des encaissements",
+      "title": "États d'Encaissement",
+      "description": "Consulter les états d'encaissement des quittances",
+      "statementsTitle": "États d'Encaissement",
+      "statementFor": "État d'encaissement pour",
+      "totalQuittances": "Nombre de quittances",
+      "totalAmount": "Montant total des quittances",
+      "quittanceNumber": "Numéro de quittance",
+      "quittanceAmount": "Montant de la quittance",
+      "issueDate": "Date de sortie",
+      "claimNumber": "Numéro de claim",
+      "claimReference": "Référence du claim",
+      "encashmentCount": "Nombre d'encaissements",
+      "totalEncashed": "Total encaissé",
       "form_title": "Formulaire d'encaissement",
       "amount": "Montant",
       "amount_required": "Le montant est requis",
@@ -1541,7 +1567,8 @@
       "update": "Mettre à jour",
       "list_title": "Liste des encaissements",
       "actions": "Actions",
-      "no_data": "Aucun encaissement trouvé"
+      "no_data": "Aucune donnée disponible pour la période sélectionnée",
+      "errorLoading": "Erreur lors du chargement des données d'encaissement"
     },
     "quittance": {
       "tab_title": "Quittances",
@@ -1575,6 +1602,19 @@
       "no_data": "Aucun encaissement trouvé"
     },
     "settlement": {
+      "title": "États de Règlement",
+      "description": "Consulter les états de règlement des quittances",
+      "statementsTitle": "États de Règlement",
+      "statementFor": "État de règlement pour",
+      "totalQuittances": "Nombre de quittances",
+      "totalAmount": "Montant total des quittances",
+      "quittanceNumber": "Numéro de quittance",
+      "quittanceAmount": "Montant de la quittance",
+      "issueDate": "Date de sortie",
+      "claimNumber": "Numéro de claim",
+      "claimReference": "Référence du claim",
+      "settlementCount": "Nombre de règlements",
+      "totalSettled": "Total réglé",
       "quittance_tab_title": "Quittances de Règlement",
       "claim_tab_title": "Claims",
       "reglement_tab_title": "Règlements",
@@ -1603,8 +1643,6 @@
       "quittance_no_data": "Aucune quittance de règlement",
       "claim_no_data": "Aucun claim trouvé",
       "reglement_no_data": "Aucun règlement trouvé",
-      "title": "Règlement",
-      "description": "Gestion des règlements",
       "form_title": "Formulaire de règlement",
       "amount": "Montant",
       "amount_required": "Le montant est requis",
@@ -1612,7 +1650,8 @@
       "date_required": "La date est requise",
       "list_title": "Liste des règlements",
       "actions": "Actions",
-      "no_data": "Aucun règlement trouvé"
+      "no_data": "Aucune donnée disponible pour la période sélectionnée",
+      "errorLoading": "Erreur lors du chargement des données de règlement"
     }
   }
 }

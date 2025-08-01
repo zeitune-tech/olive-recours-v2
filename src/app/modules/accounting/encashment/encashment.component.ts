@@ -7,6 +7,8 @@ import { ManagementEntityType } from '../../admin/users/dto';
 import { UserService } from '@core/services/user/user.service';
 import { QuittanceStatementService, QuittanceStatementSummary } from '../quittance-statement.service';
 import { ToastService } from '../../../components/toast/toast.service';
+import { CompanyService } from '@core/services/company/company.service';
+import { Company } from '@core/services/company/company.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -15,7 +17,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './encashment.component.html',
 })
 export class EncashmentComponent implements OnInit, OnDestroy {
-  
+
   PERMISSIONS_DATA = PERMISSIONS;
   MANAGEMENT_ENTITY_TYPES = Object.values(ManagementEntityType);
 
@@ -23,7 +25,7 @@ export class EncashmentComponent implements OnInit, OnDestroy {
   selectedYear = new Date().getFullYear();
   startDate = new Date();
   endDate = new Date();
-  
+
   months = [
     { value: 1, label: 'Janvier' },
     { value: 2, label: 'Février' },
@@ -41,10 +43,13 @@ export class EncashmentComponent implements OnInit, OnDestroy {
 
   isMonthlyView = true;
   isLoading = false;
-  
+
   encaissementStatement?: QuittanceStatementSummary;
   entity?: ManagementEntity;
-  
+  companies: Company[] = [];
+  selectedCompany: Company | null = null;
+  hasError = false;
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -52,18 +57,12 @@ export class EncashmentComponent implements OnInit, OnDestroy {
     private _quittanceStatementService: QuittanceStatementService,
     private _transloco: TranslocoService,
     private _userService: UserService,
-    private _toastService: ToastService
+    private _toastService: ToastService,
+    private _companyService: CompanyService
   ) {
     // Initialize date range (current month)
     this.startDate = new Date(this.selectedYear, this.selectedMonth - 1, 1);
     this.endDate = new Date(this.selectedYear, this.selectedMonth, 0);
-    
-    this._userService.managementEntity$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((entity: ManagementEntity) => {
-        this.entity = entity;
-        console.log(entity);
-      });
   }
 
   ngOnInit(): void {
@@ -72,11 +71,23 @@ export class EncashmentComponent implements OnInit, OnDestroy {
       { title: this._transloco.translate('layout.crumbs.accounting'), link: '#', active: false },
       { title: this._transloco.translate('layout.crumbs.encashment'), link: '/accounting/encashment', active: true }
     ]);
-    
-    // Load data only when component is initialized
-    if (this.entity) {
-      this.loadEncaissementStatement();
-    }
+
+
+    this._userService.managementEntity$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((entity: ManagementEntity | null) => {
+        this.entity = entity || undefined;
+        console.log(entity);
+
+        // If MLA, load companies for selection
+        if (entity?.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION) {
+          this.loadCompanies();
+        } else {
+          this.loadEncaissementStatement();
+        }
+
+      });
+
   }
 
   ngOnDestroy(): void {
@@ -86,31 +97,46 @@ export class EncashmentComponent implements OnInit, OnDestroy {
 
   loadEncaissementStatement(): void {
     if (!this.entity) return;
-    
+
+    // For MLA, ensure a company is selected
+    if (this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION && !this.selectedCompany) {
+      this._toastService.show('warn', 'Veuillez sélectionner une compagnie');
+      return;
+    }
+
     this.isLoading = true;
-    
-    const loadStatement$ = this.isMonthlyView 
+    this.hasError = false;
+
+    // Use selected company ID for MLA, entity ID for company
+    const entityId = this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION
+      ? this.selectedCompany!.id
+      : this.entity.id;
+
+    const loadStatement$ = this.isMonthlyView
       ? this._quittanceStatementService.getMonthlyEncaissementStatement(
-          this.entity.id, 
-          this.selectedMonth, 
-          this.selectedYear
-        )
+        entityId,
+        this.selectedMonth,
+        this.selectedYear
+      )
       : this._quittanceStatementService.getEncaissementStatement(
-          this.entity.id,
-          this.startDate.toISOString(),
-          this.endDate.toISOString()
-        );
+        entityId,
+        this.startDate.toISOString(),
+        this.endDate.toISOString()
+      );
 
     loadStatement$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
           this.encaissementStatement = data;
+          this.hasError = false;
           this.isLoading = false;
         },
         error: (error) => {
           console.error('Error loading encaissement statement:', error);
-          this._toastService.show('error','Erreur lors du chargement de l\'état d\'encaissement');
+          this._toastService.show('error', 'Erreur lors du chargement de l\'état d\'encaissement');
+          this.hasError = true;
+          this.encaissementStatement = undefined;
           this.isLoading = false;
         }
       });
@@ -118,20 +144,31 @@ export class EncashmentComponent implements OnInit, OnDestroy {
 
   downloadPdf(): void {
     if (!this.entity) return;
-    
+
+    // For MLA, ensure a company is selected
+    if (this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION && !this.selectedCompany) {
+      this._toastService.show('warn', 'Veuillez sélectionner une compagnie');
+      return;
+    }
+
     this.isLoading = true;
-    
+
+    // Use selected company ID for MLA, entity ID for company
+    const entityId = this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION
+      ? this.selectedCompany!.id
+      : this.entity.id;
+
     const downloadPdf$ = this.isMonthlyView
       ? this._quittanceStatementService.downloadMonthlyEncaissementStatementPdf(
-          this.entity.id,
-          this.selectedMonth,
-          this.selectedYear
-        )
+        entityId,
+        this.selectedMonth,
+        this.selectedYear
+      )
       : this._quittanceStatementService.downloadEncaissementStatementPdf(
-          this.entity.id,
-          this.startDate.toISOString(),
-          this.endDate.toISOString()
-        );
+        entityId,
+        this.startDate.toISOString(),
+        this.endDate.toISOString()
+      );
 
     downloadPdf$
       .pipe(takeUntil(this.destroy$))
@@ -140,18 +177,18 @@ export class EncashmentComponent implements OnInit, OnDestroy {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          const fileName = this.isMonthlyView 
+          const fileName = this.isMonthlyView
             ? `encaissement_${this.selectedMonth}_${this.selectedYear}.pdf`
             : `encaissement_${this.startDate.toISOString().split('T')[0]}_${this.endDate.toISOString().split('T')[0]}.pdf`;
           a.download = fileName;
           a.click();
           window.URL.revokeObjectURL(url);
           this.isLoading = false;
-          this._toastService.show('success','PDF téléchargé avec succès');
+          this._toastService.show('success', 'PDF téléchargé avec succès');
         },
         error: (error) => {
           console.error('Error downloading PDF:', error);
-          this._toastService.show('error','Erreur lors du téléchargement du PDF');
+          this._toastService.show('error', 'Erreur lors du téléchargement du PDF');
           this.isLoading = false;
         }
       });
@@ -178,6 +215,40 @@ export class EncashmentComponent implements OnInit, OnDestroy {
       return 0;
     }
     return this.encaissementStatement.quittanceLines.reduce((sum, line) => sum + line.totalMontantEncaisse, 0);
+  }
+
+  loadCompanies(): void {
+    this._companyService.getCompaniesAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (companies) => {
+          this.companies = companies;
+        },
+        error: (error) => {
+          console.error('Error loading companies:', error);
+          this._toastService.show('error', 'Erreur lors du chargement des compagnies');
+        }
+      });
+  }
+
+  selectCompany(company: Company): void {
+    this.selectedCompany = company;
+    this.encaissementStatement = undefined;
+    this.hasError = false;
+  }
+
+  isMLA(): boolean {
+    return this.entity?.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION;
+  }
+
+  getDisplayEntityName(): string {
+    if (!this.entity) return '';
+
+    if (this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION) {
+      return this.selectedCompany?.name || 'Aucune compagnie sélectionnée';
+    }
+
+    return this.entity.name;
   }
 
 }

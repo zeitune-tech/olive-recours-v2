@@ -7,6 +7,8 @@ import { ManagementEntityType } from '../../admin/users/dto';
 import { UserService } from '@core/services/user/user.service';
 import { QuittanceStatementService, QuittanceStatementSummary } from '../quittance-statement.service';
 import { ToastService } from '../../../components/toast/toast.service';
+import { CompanyService } from '@core/services/company/company.service';
+import { Company } from '@core/services/company/company.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -44,6 +46,9 @@ export class SettlementComponent implements OnInit, OnDestroy {
   
   reglementStatement?: QuittanceStatementSummary;
   entity?: ManagementEntity;
+  companies: Company[] = [];
+  selectedCompany: Company | null = null;
+  hasError = false;
   
   private destroy$ = new Subject<void>();
 
@@ -52,7 +57,8 @@ export class SettlementComponent implements OnInit, OnDestroy {
     private _quittanceStatementService: QuittanceStatementService,
     private _transloco: TranslocoService,
     private _userService: UserService,
-    private _toastService: ToastService
+    private _toastService: ToastService,
+    private _companyService: CompanyService
   ) {
     // Initialize date range (current month)
     this.startDate = new Date(this.selectedYear, this.selectedMonth - 1, 1);
@@ -60,8 +66,13 @@ export class SettlementComponent implements OnInit, OnDestroy {
     
     this._userService.managementEntity$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((entity: ManagementEntity) => {
-        this.entity = entity;
+      .subscribe((entity: ManagementEntity | null) => {
+        this.entity = entity || undefined;
+        
+        // If MLA, load companies for selection
+        if (entity?.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION) {
+          this.loadCompanies();
+        }
       });
   }
 
@@ -74,7 +85,10 @@ export class SettlementComponent implements OnInit, OnDestroy {
     
     // Load data only when component is initialized
     if (this.entity) {
-      this.loadReglementStatement();
+      // For companies, load directly. For MLAs, wait for company selection
+      if (this.entity.type === ManagementEntityType.COMPANY) {
+        this.loadReglementStatement();
+      }
     }
   }
 
@@ -86,16 +100,28 @@ export class SettlementComponent implements OnInit, OnDestroy {
   loadReglementStatement(): void {
     if (!this.entity) return;
     
+    // For MLA, ensure a company is selected
+    if (this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION && !this.selectedCompany) {
+      this._toastService.show('warn', 'Veuillez sélectionner une compagnie');
+      return;
+    }
+    
     this.isLoading = true;
+    this.hasError = false;
+    
+    // Use selected company ID for MLA, entity ID for company
+    const entityId = this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION 
+      ? this.selectedCompany!.id 
+      : this.entity.id;
     
     const loadStatement$ = this.isMonthlyView 
       ? this._quittanceStatementService.getMonthlyReglementStatement(
-          this.entity.id, 
+          entityId, 
           this.selectedMonth, 
           this.selectedYear
         )
       : this._quittanceStatementService.getReglementStatement(
-          this.entity.id,
+          entityId,
           this.startDate.toISOString(),
           this.endDate.toISOString()
         );
@@ -105,11 +131,14 @@ export class SettlementComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.reglementStatement = data;
+          this.hasError = false;
           this.isLoading = false;
         },
         error: (error) => {
           console.error('Error loading reglement statement:', error);
           this._toastService.show('error','Erreur lors du chargement de l\'état de règlement');
+          this.hasError = true;
+          this.reglementStatement = undefined;
           this.isLoading = false;
         }
       });
@@ -118,16 +147,27 @@ export class SettlementComponent implements OnInit, OnDestroy {
   downloadPdf(): void {
     if (!this.entity) return;
     
+    // For MLA, ensure a company is selected
+    if (this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION && !this.selectedCompany) {
+      this._toastService.show('warn', 'Veuillez sélectionner une compagnie');
+      return;
+    }
+    
     this.isLoading = true;
+    
+    // Use selected company ID for MLA, entity ID for company
+    const entityId = this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION 
+      ? this.selectedCompany!.id 
+      : this.entity.id;
     
     const downloadPdf$ = this.isMonthlyView
       ? this._quittanceStatementService.downloadMonthlyReglementStatementPdf(
-          this.entity.id,
+          entityId,
           this.selectedMonth,
           this.selectedYear
         )
       : this._quittanceStatementService.downloadReglementStatementPdf(
-          this.entity.id,
+          entityId,
           this.startDate.toISOString(),
           this.endDate.toISOString()
         );
@@ -177,6 +217,40 @@ export class SettlementComponent implements OnInit, OnDestroy {
       return 0;
     }
     return this.reglementStatement.quittanceLines.reduce((sum, line) => sum + line.totalMontantEncaisse, 0);
+  }
+
+  loadCompanies(): void {
+    this._companyService.getCompaniesAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (companies) => {
+          this.companies = companies;
+        },
+        error: (error) => {
+          console.error('Error loading companies:', error);
+          this._toastService.show('error', 'Erreur lors du chargement des compagnies');
+        }
+      });
+  }
+
+  selectCompany(company: Company): void {
+    this.selectedCompany = company;
+    this.reglementStatement = undefined;
+    this.hasError = false;
+  }
+
+  isMLA(): boolean {
+    return this.entity?.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION;
+  }
+
+  getDisplayEntityName(): string {
+    if (!this.entity) return '';
+    
+    if (this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION) {
+      return this.selectedCompany?.name || 'Aucune compagnie sélectionnée';
+    }
+    
+    return this.entity.name;
   }
 
 }
