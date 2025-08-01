@@ -1,0 +1,197 @@
+<div class="encaissement-dialog" *transloco="let t">
+  <h2 mat-dialog-title class="text-xl font-semibold mb-4">
+    {{ data.isEdit ? t('entities.accounting.encaissement.editTitle') : t('entities.accounting.encaissement.createTitle') }}
+  </h2>
+  
+  <mat-dialog-content class="max-h-[80vh] overflow-y-auto">
+    <!-- Quittance Information (readonly) -->
+    <div class="quittance-info bg-gray-50 p-4 rounded-lg mb-6">
+      <h3 class="text-lg font-semibold mb-2">{{ t('entities.accounting.encaissement.quittanceInfo') }}</h3>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span class="font-medium">{{ t('entities.accounting.encaissement.quittanceNumber') }}:</span>
+          <span class="ml-2">{{ data.quittance.numero }}</span>
+        </div>
+        <div>
+          <span class="font-medium">{{ t('entities.accounting.encaissement.quittanceAmount') }}:</span>
+          <span class="ml-2 font-semibold text-blue-600">{{ data.quittance.montant | number:'1.0-0' }} FCFA</span>
+        </div>
+        <div>
+          <span class="font-medium">{{ t('entities.accounting.encaissement.availableBalance') }}:</span>
+          <span class="ml-2 font-semibold text-green-600">{{ data.soldeQuittance | number:'1.0-0' }} FCFA</span>
+        </div>
+        <div>
+          <span class="font-medium">{{ t('entities.accounting.encaissement.nature') }}:</span>
+          <span class="ml-2">{{ data.quittance.nature }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Encaissement Type Selection -->
+    <div class="mb-6" *ngIf="!data.isEdit">
+      <h4 class="text-md font-semibold mb-3">{{ t('entities.accounting.encaissement.encaissementType') }}</h4>
+      <mat-radio-group [(ngModel)]="encaissementType" name="encaissementType" class="flex gap-6">
+        <mat-radio-button value="global" class="mr-4">
+          {{ t('entities.accounting.encaissement.globalType') }}
+        </mat-radio-button>
+        <mat-radio-button value="detail">
+          {{ t('entities.accounting.encaissement.detailType') }}
+        </mat-radio-button>
+      </mat-radio-group>
+      <p class="text-sm text-gray-600 mt-2">
+        <span *ngIf="encaissementType === 'global'">{{ t('entities.accounting.encaissement.globalTypeDescription') }}</span>
+        <span *ngIf="encaissementType === 'detail'">{{ t('entities.accounting.encaissement.detailTypeDescription') }}</span>
+      </p>
+    </div>
+
+    <!-- Global Encaissement Form -->
+    <div *ngIf="encaissementType === 'global'" [formGroup]="globalForm">
+      <h4 class="text-md font-semibold mb-4">{{ t('entities.accounting.encaissement.globalEncaissement') }}</h4>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ t('entities.accounting.encaissement.encaissementNumber') }}</mat-label>
+          <input matInput formControlName="numero" required>
+          <mat-error *ngIf="globalForm.get('numero')?.invalid && globalForm.get('numero')?.touched">
+            {{ getErrorMessage('numero') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ t('entities.accounting.encaissement.amount') }}</mat-label>
+          <input matInput type="number" formControlName="montant" required min="0.01" [max]="data.soldeQuittance">
+          <span matSuffix>FCFA</span>
+          <mat-error *ngIf="globalForm.get('montant')?.invalid && globalForm.get('montant')?.touched">
+            {{ getErrorMessage('montant') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ t('entities.accounting.encaissement.encaissementDate') }}</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateEncaissement" required>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="globalForm.get('dateEncaissement')?.invalid && globalForm.get('dateEncaissement')?.touched">
+            {{ getErrorMessage('dateEncaissement') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>{{ t('entities.accounting.encaissement.encaissementMode') }}</mat-label>
+          <mat-select formControlName="modeEncaissementUuid" required>
+            <mat-option *ngFor="let mode of modesEncaissement" [value]="mode.uuid">
+              {{ mode.libelle }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="globalForm.get('modeEncaissementUuid')?.invalid && globalForm.get('modeEncaissementUuid')?.touched">
+            {{ getErrorMessage('modeEncaissementUuid') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Detail Encaissement Form -->
+    <div *ngIf="encaissementType === 'detail'" [formGroup]="detailForm">
+      <h4 class="text-md font-semibold mb-4">{{ t('entities.accounting.encaissement.detailEncaissement') }}</h4>
+      
+      <mat-form-field appearance="outline" class="w-full mb-4">
+        <mat-label>{{ t('entities.accounting.encaissement.encaissementNumber') }}</mat-label>
+        <input matInput formControlName="numero" required>
+        <mat-error *ngIf="detailForm.get('numero')?.invalid && detailForm.get('numero')?.touched">
+          {{ getErrorMessage('numero', detailForm) }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Paiements List -->
+      <div formArrayName="paiements">
+        <div class="flex justify-between items-center mb-4">
+          <h5 class="text-md font-semibold">{{ t('entities.accounting.encaissement.payments') }}</h5>
+          <div class="text-sm">
+            <span class="font-medium">{{ t('entities.accounting.encaissement.totalPayments') }}:</span>
+            <span class="ml-2 font-semibold" 
+                  [class.text-red-600]="getTotalPaiements() > data.soldeQuittance"
+                  [class.text-green-600]="getTotalPaiements() <= data.soldeQuittance">
+              {{ getTotalPaiements() | number:'1.0-0' }} FCFA
+            </span>
+          </div>
+        </div>
+
+        <div *ngFor="let paiement of paiementsFormArray.controls; let i = index" 
+             [formGroupName]="i" 
+             class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+          
+          <div class="flex justify-between items-center mb-3">
+            <h6 class="font-medium">{{ t('entities.accounting.encaissement.payment') }} {{ i + 1 }}</h6>
+            <button mat-icon-button (click)="removePaiement(i)" 
+                    color="warn" 
+                    [disabled]="paiementsFormArray.length <= 1"
+                    type="button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ t('entities.accounting.encaissement.amount') }}</mat-label>
+              <input matInput type="number" formControlName="montant" required min="0.01">
+              <span matSuffix>FCFA</span>
+              <mat-error *ngIf="paiement.get('montant')?.invalid && paiement.get('montant')?.touched">
+                {{ getErrorMessage('montant', paiement) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ t('entities.accounting.encaissement.encaissementDate') }}</mat-label>
+              <input matInput [matDatepicker]="paiementPicker" formControlName="dateEncaissement" required>
+              <mat-datepicker-toggle matIconSuffix [for]="paiementPicker"></mat-datepicker-toggle>
+              <mat-datepicker #paiementPicker></mat-datepicker>
+              <mat-error *ngIf="paiement.get('dateEncaissement')?.invalid && paiement.get('dateEncaissement')?.touched">
+                {{ getErrorMessage('dateEncaissement', paiement) }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ t('entities.accounting.encaissement.encaissementMode') }}</mat-label>
+              <mat-select formControlName="modeEncaissementUuid" required>
+                <mat-option *ngFor="let mode of modesEncaissement" [value]="mode.uuid">
+                  {{ mode.libelle }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="paiement.get('modeEncaissementUuid')?.invalid && paiement.get('modeEncaissementUuid')?.touched">
+                {{ getErrorMessage('modeEncaissementUuid', paiement) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <button mat-stroked-button (click)="addPaiement()" color="primary" type="button" class="w-full">
+          <mat-icon>add</mat-icon>
+          {{ t('entities.accounting.encaissement.addPayment') }}
+        </button>
+
+        <!-- Total validation message -->
+        <div *ngIf="getTotalPaiements() > data.soldeQuittance" class="mt-2 text-red-600 text-sm">
+          <mat-icon class="align-middle text-sm mr-1">error</mat-icon>
+          {{ t('entities.accounting.encaissement.totalExceedsBalance') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading" class="flex justify-center py-4">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="p-4 border-t border-gray-200">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading">
+      {{ t('buttons.cancel') }}
+    </button>
+    <button mat-raised-button color="primary" (click)="onSave()" 
+            [disabled]="!isFormValid() || isLoading">
+      <mat-icon *ngIf="!isLoading">{{ data.isEdit ? 'edit' : 'save' }}</mat-icon>
+      <mat-spinner *ngIf="isLoading" diameter="20" class="mr-2"></mat-spinner>
+      {{ data.isEdit ? t('buttons.update') : t('buttons.create') }}
+    </button>
+  </mat-dialog-actions>
+</div>

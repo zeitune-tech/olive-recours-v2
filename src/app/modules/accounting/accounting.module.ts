@@ -16,6 +16,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatRadioModule } from "@angular/material/radio";
 import { RouterModule } from "@angular/router";
 import { TableModule } from "@lhacksrt/components/table/table.module";
 import { SharedModule } from "@shared/shared.module";
@@ -24,16 +25,23 @@ import { HasPermissionDirective } from "@core/permissions/has-permission.directi
 import { FeesComponent } from './fees/fees.component';
 import { EncashmentComponent } from './encashment/encashment.component';
 import { SettlementComponent } from "./settlement/settlement.component";
+import { QuittanceListComponent } from './quittance-list/quittance-list.component';
+import { EncaissementDialogComponent } from './encaissement-dialog/encaissement-dialog.component';
+import { EncaissementsStatementsComponent } from './encaissements-statements/encaissements-statements.component';
 import { TranslocoDirective } from "@jsverse/transloco";
 import { HttpClientModule } from "@angular/common/http";
 import { MatTabsModule } from "@angular/material/tabs";
 import { QuittanceStatementService } from "./quittance-statement.service";
+import { EncaissementQuittanceService } from './encaissement-quittance.service';
 
 @NgModule({
     declarations: [
         FeesComponent,
         EncashmentComponent,
-        SettlementComponent
+        SettlementComponent,
+        QuittanceListComponent,
+        EncaissementDialogComponent,
+        EncaissementsStatementsComponent
     ],
     imports: [
     RouterModule.forChild(routes),
@@ -53,6 +61,7 @@ import { QuittanceStatementService } from "./quittance-statement.service";
     MatNativeDateModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,

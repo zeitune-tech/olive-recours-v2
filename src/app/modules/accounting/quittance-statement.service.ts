@@ -195,4 +195,24 @@ export class QuittanceStatementService {
       responseType: 'blob'
     });
   }
+
+  // ============= ENHANCED ENCAISSEMENT STATEMENTS =============
+  
+  /**
+   * Get enhanced encaissement statement with detailed encaissement information
+   */
+  getEnhancedEncaissementStatement(companyUuid: string, startDate: string, endDate: string): Observable<EncaissementStatementSummary> {
+    return this.http.get<EncaissementStatementSummary>(`${this.baseUrl}/encaissements`, {
+      params: { companyUuid, startDate, endDate }
+    });
+  }
+
+  /**
+   * Get monthly enhanced encaissement statement
+   */
+  getMonthlyEnhancedEncaissementStatement(companyUuid: string, month: number, year: number): Observable<EncaissementStatementSummary> {
+    return this.http.get<EncaissementStatementSummary>(`${this.baseUrl}/encaissements/monthly`, {
+      params: { companyUuid, month: month.toString(), year: year.toString() }
+    });
+  }
 }

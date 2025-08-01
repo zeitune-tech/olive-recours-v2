@@ -1,0 +1,116 @@
+.encaissement-dialog {
+  .quittance-info {
+    border-left: 4px solid #3b82f6;
+  }
+
+  .mat-mdc-radio-button {
+    margin-right: 16px;
+  }
+
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  .paiement-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #f9fafb;
+    position: relative;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .summary-section {
+    background-color: #f0f9ff;
+    border: 1px solid #e0f2fe;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0f2fe;
+
+      &:last-child {
+        border-bottom: none;
+        font-weight: 600;
+      }
+
+      .label {
+        color: #374151;
+      }
+
+      .value {
+        font-weight: 500;
+        
+        &.amount {
+          color: #059669;
+        }
+
+        &.error {
+          color: #dc2626;
+        }
+      }
+    }
+  }
+
+  .validation-message {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 8px;
+    color: #991b1b;
+    font-size: 14px;
+
+    mat-icon {
+      vertical-align: middle;
+      margin-right: 8px;
+      font-size: 18px;
+    }
+  }
+}
+
+// Override Material button styles for better spacing
+.mat-mdc-dialog-actions {
+  gap: 12px;
+  
+  .mat-mdc-button, .mat-mdc-raised-button {
+    min-width: 100px;
+  }
+}
+
+// Custom radio button group styling
+.mat-mdc-radio-group {
+  .mat-mdc-radio-button {
+    margin-right: 24px;
+    
+    .mdc-radio {
+      padding: 8px;
+    }
+    
+    .mdc-form-field {
+      font-size: 14px;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .encaissement-dialog {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .mat-mdc-dialog-content {
+      max-height: 70vh;
+    }
+  }
+}
