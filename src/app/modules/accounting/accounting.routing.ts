@@ -3,7 +3,6 @@ import { EncashmentComponent } from "./encashment/encashment.component";
 import { SettlementComponent } from "./settlement/settlement.component";
 import { FeesComponent } from "./fees/fees.component";
 import { QuittanceListComponent } from './quittance-list/quittance-list.component';
-import { EncaissementsStatementsComponent } from './encaissements-statements/encaissements-statements.component';
 import { inject } from "@angular/core";
 import { UserService } from "@core/services/user/user.service";
 import { ManagementEntity } from "@core/services/management-entity/management-entity.interface";
@@ -39,11 +38,4 @@ export const routes: Routes = [
             managementEntity: managementEntityResolver
         }
     },
-    {
-        path: 'encaissements-statements',
-        component: EncaissementsStatementsComponent,
-        resolve: {
-            managementEntity: managementEntityResolver
-        }
-    }
 ];

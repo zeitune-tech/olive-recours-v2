@@ -27,12 +27,9 @@ import { EncashmentComponent } from './encashment/encashment.component';
 import { SettlementComponent } from "./settlement/settlement.component";
 import { QuittanceListComponent } from './quittance-list/quittance-list.component';
 import { EncaissementDialogComponent } from './encaissement-dialog/encaissement-dialog.component';
-import { EncaissementsStatementsComponent } from './encaissements-statements/encaissements-statements.component';
 import { TranslocoDirective } from "@jsverse/transloco";
 import { HttpClientModule } from "@angular/common/http";
 import { MatTabsModule } from "@angular/material/tabs";
-import { QuittanceStatementService } from "./quittance-statement.service";
-import { EncaissementQuittanceService } from './encaissement-quittance.service';
 
 @NgModule({
     declarations: [
@@ -41,7 +38,6 @@ import { EncaissementQuittanceService } from './encaissement-quittance.service';
         SettlementComponent,
         QuittanceListComponent,
         EncaissementDialogComponent,
-        EncaissementsStatementsComponent
     ],
     imports: [
     RouterModule.forChild(routes),

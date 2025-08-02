@@ -102,14 +102,6 @@ export const defaultNavigation: NavigationItem[] = [
                 permission: [PERMISSIONS.READ_ENCASHMENT_STATEMENTS, PERMISSIONS.ALL]
             },
             {
-                id: 'accounting-encaissements-statements',
-                title: 'sidebar.encaissements-statements',
-                type: 'basic',
-                icon: 'mat_outline:bar_chart',
-                link: '/accounting/encaissements-statements',
-                permission: [PERMISSIONS.READ_ENCASHMENT_STATEMENTS, PERMISSIONS.ALL]
-            },
-            {
                 id: 'accounting-fees',
                 title: 'sidebar.fees',
                 type: 'basic',
