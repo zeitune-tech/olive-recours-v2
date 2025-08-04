@@ -100,6 +100,10 @@ export class AccountingService {
     return this.http.get<QuittanceResponse[]>(this.quittanceUrl+`/company/${uuid}`);
   }
 
+  getEncaissementQuittancesByCompany(uuid: string): Observable<QuittanceResponse[]> {
+    return this.http.get<QuittanceResponse[]>(this.quittanceUrl+`/company/encashment/${uuid}`);
+  }
+
   updateQuittance(uuid: string, request: QuittanceRequest): Observable<QuittanceResponse> {
     return this.http.put<QuittanceResponse>(`${this.quittanceUrl}/${uuid}`, request);
   }

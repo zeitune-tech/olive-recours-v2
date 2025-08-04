@@ -115,7 +115,7 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
 
     // Get all quittances from the accounting service
     const id = this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION ? this.selectedCompany?.id : this.entity.id;
-    this._accountingService.getAllQuittancesByCompany(id ?? "")
+    this._accountingService.getEncaissementQuittancesByCompany(id ?? "")
       .pipe(
         takeUntil(this.destroy$),
         switchMap(quittances => {
