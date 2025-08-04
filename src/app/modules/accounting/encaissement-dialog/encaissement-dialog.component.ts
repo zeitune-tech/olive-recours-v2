@@ -6,12 +6,12 @@ import { takeUntil } from 'rxjs/operators';
 import { ToastService } from '../../../components/toast/toast.service';
 import {
   EncaissementQuittanceService,
-  QuittanceResponse,
   ModeEncaissementResponse,
   EncaissementQuittanceGlobalRequest,
   EncaissementQuittanceDetailRequest,
   EncaissementQuittanceResponse
 } from '../encaissement-quittance.service';
+import {QuittanceResponse} from "../accounting.service";
 
 export interface EncaissementDialogData {
   quittance: QuittanceResponse;
@@ -27,11 +27,15 @@ export interface EncaissementDialogData {
 })
 export class EncaissementDialogComponent implements OnInit, OnDestroy {
 
-  encaissementType: 'global' | 'detail' = 'global';
-  globalForm!: FormGroup;
+  encaissementForm!: FormGroup;
   detailForm!: FormGroup;
   modesEncaissement: ModeEncaissementResponse[] = [];
   isLoading = false;
+  hasExistingEncaissements = false;
+  
+  // Détermine le mode d'affichage selon le contexte
+  displayMode: 'simple' | 'detail' = 'simple';
+  existingEncaissementType: 'global' | 'detail' | null = null;
 
   private destroy$ = new Subject<void>();
 
@@ -47,6 +51,7 @@ export class EncaissementDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadModesEncaissement();
+    this.checkExistingEncaissements();
 
     if (this.data.isEdit && this.data.encaissement) {
       this.populateFormForEdit();
@@ -59,35 +64,48 @@ export class EncaissementDialogComponent implements OnInit, OnDestroy {
   }
 
   private initializeForms(): void {
-    // Global encaissement form
-    this.globalForm = this.fb.group({
+    // Formulaire simple pour création ou modification d'encaissement global
+    this.encaissementForm = this.fb.group({
       numero: ['', [Validators.required, Validators.pattern(/^[A-Z0-9-]+$/)]],
-      montant: [0, [Validators.required, Validators.min(0.01), this.montantValidator.bind(this)]],
-      dateEncaissement: [new Date(), [Validators.required, this.dateValidator]],
-      modeEncaissementUuid: ['', Validators.required]
-    });
-
-    // Detail encaissement form
-    this.detailForm = this.fb.group({
-      numero: ['', [Validators.required, Validators.pattern(/^[A-Z0-9-]+$/)]],
-      paiements: this.fb.array([this.createPaiementFormGroup()], Validators.minLength(1))
-    });
-  }
-
-  private createPaiementFormGroup(): FormGroup {
-    return this.fb.group({
       montant: [0, [Validators.required, Validators.min(0.01)]],
       dateEncaissement: [new Date(), [Validators.required, this.dateValidator]],
       modeEncaissementUuid: ['', Validators.required]
     });
+    
+    // Formulaire détaillé pour modification d'encaissement détail
+    this.detailForm = this.fb.group({
+      numero: ['', [Validators.required, Validators.pattern(/^[A-Z0-9-]+$/)]],
+      paiements: this.fb.array([], Validators.minLength(1))
+    });
   }
-
-  private montantValidator(control: AbstractControl): { [key: string]: any } | null {
-    const montant = control.value;
-    if (montant > this.data.soldeQuittance) {
-      return { depassementSolde: true };
+  
+  private createPaiementFormGroup(paiement?: any): FormGroup {
+    return this.fb.group({
+      uuid: [paiement?.uuid || null],
+      montant: [paiement?.montant || 0, [Validators.required, Validators.min(0.01)]],
+      dateEncaissement: [paiement?.dateEncaissement ? new Date(paiement.dateEncaissement) : new Date(), [Validators.required, this.dateValidator]],
+      modeEncaissementUuid: [paiement?.modeEncaissement?.uuid || '', Validators.required]
+    });
+  }
+  
+  get paiementsFormArray(): FormArray {
+    return this.detailForm.get('paiements') as FormArray;
+  }
+  
+  addPaiement(): void {
+    this.paiementsFormArray.push(this.createPaiementFormGroup());
+  }
+  
+  removePaiement(index: number): void {
+    if (this.paiementsFormArray.length > 1) {
+      this.paiementsFormArray.removeAt(index);
     }
-    return null;
+  }
+  
+  getTotalPaiements(): number {
+    return this.paiementsFormArray.controls.reduce((total, control) => {
+      return total + (control.get('montant')?.value || 0);
+    }, 0);
   }
 
   private dateValidator(control: AbstractControl): { [key: string]: any } | null {
@@ -98,59 +116,118 @@ export class EncaissementDialogComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  get paiementsFormArray(): FormArray {
-    return this.detailForm.get('paiements') as FormArray;
+  getMontantSaisi(): number {
+    return this.encaissementForm.get('montant')?.value || 0;
   }
 
-  addPaiement(): void {
-    this.paiementsFormArray.push(this.createPaiementFormGroup());
-  }
-
-  removePaiement(index: number): void {
-    if (this.paiementsFormArray.length > 1) {
-      this.paiementsFormArray.removeAt(index);
+  getEncaissementType(): 'global' | 'detail' {
+    // En mode édition, retourner le type de l'encaissement existant
+    if (this.data.isEdit && this.existingEncaissementType) {
+      return this.existingEncaissementType;
+    }
+    
+    const montant = this.getMontantSaisi();
+    
+    // Si la quittance a déjà un encaissement, on ne peut pas en créer un nouveau
+    if (this.hasExistingEncaissements) {
+      return 'detail'; // Cela ne devrait pas arriver en création
+    }
+    
+    // Si montant exact = global, si inférieur = détail (acompte)
+    // Si supérieur = global (le backend gère le surplus)
+    if (montant === this.data.soldeQuittance || montant > this.data.soldeQuittance) {
+      return 'global';
+    } else {
+      return 'detail';
     }
   }
 
-  getTotalPaiements(): number {
-    return this.paiementsFormArray.controls.reduce((total, control) => {
-      return total + (control.get('montant')?.value || 0);
-    }, 0);
-  }
-
   isFormValid(): boolean {
-    if (this.encaissementType === 'global') {
-      return this.globalForm.valid;
+    if (this.displayMode === 'simple') {
+      return this.encaissementForm.valid && this.getMontantSaisi() > 0;
     } else {
-      const totalPaiements = this.getTotalPaiements();
-      return this.detailForm.valid &&
-        totalPaiements > 0 &&
-        totalPaiements <= this.data.soldeQuittance;
+      return this.detailForm.valid && this.getTotalPaiements() > 0;
     }
   }
 
   onSave(): void {
     if (!this.isFormValid()) {
-      this.toastService.show('error', 'Veuillez corriger les erreurs dans le formulaire');
+      this.showValidationErrors();
       return;
     }
 
     this.isLoading = true;
 
-    if (this.encaissementType === 'global') {
-      this.saveGlobalEncaissement();
+    if (this.displayMode === 'simple') {
+      // Mode simple : création ou modification d'encaissement global
+      if (this.getEncaissementType() === 'global') {
+        this.saveGlobalEncaissement();
+      } else {
+        this.saveDetailEncaissement();
+      }
     } else {
+      // Mode détaillé : modification d'encaissement détail
       this.saveDetailEncaissement();
     }
   }
 
+  private showValidationErrors(): void {
+    let errorMessages: string[] = [];
+
+    if (this.displayMode === 'simple') {
+      const form = this.encaissementForm;
+      
+      if (form.get('numero')?.invalid) {
+        errorMessages.push('Le numéro d\'encaissement est requis');
+      }
+      if (form.get('montant')?.invalid) {
+        const montant = form.get('montant')?.value;
+        if (!montant || montant <= 0) {
+          errorMessages.push('Le montant doit être supérieur à 0');
+        }
+      }
+      if (form.get('dateEncaissement')?.invalid) {
+        errorMessages.push('La date d\'encaissement est requise');
+      }
+      if (form.get('modeEncaissementUuid')?.invalid) {
+        errorMessages.push('Le mode d\'encaissement est requis');
+      }
+    } else {
+      const form = this.detailForm;
+      
+      if (form.get('numero')?.invalid) {
+        errorMessages.push('Le numéro d\'encaissement est requis');
+      }
+      
+      const totalPaiements = this.getTotalPaiements();
+      if (totalPaiements === 0) {
+        errorMessages.push('Au moins un paiement est requis');
+      }
+      
+      // Vérifier chaque paiement
+      this.paiementsFormArray.controls.forEach((paiement, index) => {
+        if (paiement.get('montant')?.invalid) {
+          errorMessages.push(`Paiement ${index + 1}: montant invalide`);
+        }
+        if (paiement.get('dateEncaissement')?.invalid) {
+          errorMessages.push(`Paiement ${index + 1}: date invalide`);
+        }
+        if (paiement.get('modeEncaissementUuid')?.invalid) {
+          errorMessages.push(`Paiement ${index + 1}: mode d'encaissement requis`);
+        }
+      });
+    }
+
+    if (errorMessages.length > 0) {
+      this.toastService.show('error', errorMessages.join(' • '));
+    }
+  }
+
   private saveGlobalEncaissement(): void {
-    const formValue = this.globalForm.value;
+    const formValue = this.encaissementForm.value;
     const request: EncaissementQuittanceGlobalRequest = {
       numero: formValue.numero,
       quittanceUuid: this.data.quittance.uuid,
-      montant: formValue.montant,
-      date: formValue.dateEncaissement.toISOString(),
       paiement: {
         montant: formValue.montant,
         dateEncaissement: formValue.dateEncaissement.toISOString(),
@@ -180,20 +257,36 @@ export class EncaissementDialogComponent implements OnInit, OnDestroy {
   }
 
   private saveDetailEncaissement(): void {
-    const formValue = this.detailForm.value;
-    const totalMontant = this.getTotalPaiements();
-
-    const request: EncaissementQuittanceDetailRequest = {
-      numero: formValue.numero,
-      quittanceUuid: this.data.quittance.uuid,
-      montant: totalMontant,
-      date: new Date().toISOString(),
-      paiements: formValue.paiements.map((p: any) => ({
-        montant: p.montant,
-        dateEncaissement: p.dateEncaissement.toISOString(),
-        modeEncaissementUuid: p.modeEncaissementUuid
-      }))
-    };
+    let request: EncaissementQuittanceDetailRequest;
+    
+    if (this.displayMode === 'simple') {
+      // Création d'un encaissement détail avec un seul paiement
+      const formValue = this.encaissementForm.value;
+      const montantSaisi = this.getMontantSaisi();
+      
+      request = {
+        numero: formValue.numero,
+        quittanceUuid: this.data.quittance.uuid,
+        paiements: [{
+          montant: montantSaisi,
+          dateEncaissement: formValue.dateEncaissement.toISOString(),
+          modeEncaissementUuid: formValue.modeEncaissementUuid
+        }]
+      };
+    } else {
+      // Modification d'un encaissement détail avec plusieurs paiements
+      const formValue = this.detailForm.value;
+      
+      request = {
+        numero: formValue.numero,
+        quittanceUuid: this.data.quittance.uuid,
+        paiements: formValue.paiements.map((p: any) => ({
+          montant: p.montant,
+          dateEncaissement: p.dateEncaissement.toISOString(),
+          modeEncaissementUuid: p.modeEncaissementUuid
+        }))
+      };
+    }
 
     const operation$ = this.data.isEdit
       ? this.encaissementService.updateDetail(this.data.encaissement!.uuid, request)
@@ -233,59 +326,63 @@ export class EncaissementDialogComponent implements OnInit, OnDestroy {
   private populateFormForEdit(): void {
     if (!this.data.encaissement) return;
 
-    // Determine if it's global or detail based on the structure
-    // This would need to be enhanced based on actual API response structure
-    const isGlobal = 'paiement' in this.data.encaissement;
-    this.encaissementType = isGlobal ? 'global' : 'detail';
-
+    const encaissement = this.data.encaissement as any;
+    
+    // Détermine si c'est global ou détail
+    // Global = propriété "paiement" (singulier)
+    // Détail = propriété "paiements" (pluriel)
+    const isGlobal = 'paiement' in encaissement && !('paiements' in encaissement);
+    const isDetail = 'paiements' in encaissement && Array.isArray(encaissement.paiements);
+    
     if (isGlobal) {
-      // Populate global form
-      const globalEnc = this.data.encaissement as any; // Cast for now
-      this.globalForm.patchValue({
-        numero: globalEnc.numero,
-        montant: globalEnc.montant,
-        dateEncaissement: new Date(globalEnc.paiement.dateEncaissement),
-        modeEncaissementUuid: globalEnc.paiement.modeEncaissement.uuid
+      // Encaissement global : mode simple
+      this.displayMode = 'simple';
+      this.existingEncaissementType = 'global';
+      this.encaissementForm.patchValue({
+        numero: encaissement.numero,
+        montant: encaissement.paiement.montant,
+        dateEncaissement: new Date(encaissement.paiement.dateEncaissement),
+        modeEncaissementUuid: encaissement.paiement.modeEncaissement.uuid
       });
-    } else {
-      // Populate detail form
-      const detailEnc = this.data.encaissement as any; // Cast for now
+    } else if (isDetail) {
+      // Encaissement détail : mode détaillé avec tous les paiements
+      this.displayMode = 'detail';
+      this.existingEncaissementType = 'detail';
       this.detailForm.patchValue({
-        numero: detailEnc.numero
+        numero: encaissement.numero
       });
-
-      // Clear existing paiements and add from data
+      
+      // Vider le FormArray et ajouter tous les paiements
       while (this.paiementsFormArray.length > 0) {
         this.paiementsFormArray.removeAt(0);
       }
-
-      detailEnc.paiements.forEach((paiement: any) => {
-        const paiementForm = this.fb.group({
-          montant: [paiement.montant, [Validators.required, Validators.min(0.01)]],
-          dateEncaissement: [new Date(paiement.dateEncaissement), [Validators.required, this.dateValidator]],
-          modeEncaissementUuid: [paiement.modeEncaissement.uuid, Validators.required]
-        });
-        this.paiementsFormArray.push(paiementForm);
+      
+      encaissement.paiements.forEach((paiement: any) => {
+        this.paiementsFormArray.push(this.createPaiementFormGroup(paiement));
       });
+    } else {
+      console.error('Structure d\'encaissement non reconnue:', encaissement);
+      this.toastService.show('error', 'Structure d\'encaissement non reconnue');
     }
+  }
+
+  private checkExistingEncaissements(): void {
+    // Vérifie si la quittance a déjà des encaissements
+    // Si le solde est inférieur au montant total de la quittance, c'est qu'il y a déjà des encaissements
+    this.hasExistingEncaissements = this.data.soldeQuittance < this.data.quittance.montant;
   }
 
   onCancel(): void {
     this.dialogRef.close();
   }
 
-  getErrorMessage(controlName: string, formGroup?: any): string {
-    const form = formGroup || (this.encaissementType === 'global' ? this.globalForm : this.detailForm);
-    const control = form.get(controlName);
 
-    if (!control || !control.errors) return '';
-
-    if (control.errors['required']) return `${controlName} est obligatoire`;
-    if (control.errors['min']) return `${controlName} doit être supérieur à 0`;
-    if (control.errors['pattern']) return 'Format invalide';
-    if (control.errors['depassementSolde']) return 'Le montant ne peut pas dépasser le solde disponible';
-    if (control.errors['dateFuture']) return 'La date ne peut pas être dans le futur';
-
-    return 'Erreur de validation';
+  getEncaissementTypeLabel(): string {
+    const type = this.getEncaissementType();
+    if (type === 'global') {
+      return this.hasExistingEncaissements ? 'Encaissement global (avec surplus)' : 'Encaissement global';
+    } else {
+      return this.hasExistingEncaissements ? 'Acompte (encaissement partiel)' : 'Acompte (encaissement partiel)';
+    }
   }
 }

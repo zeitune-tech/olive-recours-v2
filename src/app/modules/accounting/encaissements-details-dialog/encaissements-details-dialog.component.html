@@ -1,0 +1,223 @@
+<div class="encaissements-details-dialog">
+  <!-- Dialog Header -->
+  <div class="flex items-center justify-between p-6 border-b">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-900">
+        Détails des Encaissements
+      </h2>
+      <p class="text-sm text-gray-600 mt-1">
+        Quittance N° {{ data.quittance.numero }}
+      </p>
+    </div>
+    <button
+      mat-icon-button
+      (click)="onClose()"
+      class="text-gray-400 hover:text-gray-600">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Quittance Summary -->
+  <div class="p-6 bg-gray-50 border-b">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="text-center">
+        <div class="text-sm text-gray-600">Montant Total</div>
+        <div class="text-lg font-semibold text-gray-900">
+          {{ formatCurrency(data.quittance.montant) }}
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="text-sm text-gray-600">Montant Encaissé</div>
+        <div class="text-lg font-semibold text-green-600">
+          {{ formatCurrency(data.quittance.montantEncaisse) }}
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="text-sm text-gray-600">Solde Restant</div>
+        <div class="text-lg font-semibold text-orange-600">
+          {{ formatCurrency(data.quittance.soldeQuittance) }}
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="text-sm text-gray-600">Statut</div>
+        <span
+          class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+          [ngClass]="getStatusBadgeClass(data.quittance.statutEncaissement)">
+          {{ getStatusLabel(data.quittance.statutEncaissement) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="p-6">
+    <div class="mb-4">
+      <h3 class="text-lg font-medium text-gray-900">
+        Liste des Encaissements ({{ data.quittance.nombreEncaissements }})
+      </h3>
+    </div>
+
+    <div *ngIf="data.quittance.encaissements.length === 0" class="text-center py-8">
+      <mat-icon class="text-gray-400 text-4xl mb-2">receipt</mat-icon>
+      <p class="text-gray-600">Aucun encaissement trouvé pour cette quittance</p>
+    </div>
+
+    <!-- Section Encaissements Globaux -->
+    <div *ngIf="getEncaissementsGlobaux().length > 0" class="mb-8">
+      <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center">
+        <mat-icon class="mr-2 text-blue-600">account_balance</mat-icon>
+        Encaissements Globaux ({{ getEncaissementsGlobaux().length }})
+      </h4>
+      
+      <div class="overflow-x-auto border rounded-lg">
+        <table mat-table [dataSource]="getEncaissementsGlobaux()" class="w-full">
+
+          <!-- Numero Column -->
+          <ng-container matColumnDef="numero">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">N° Encaissement</th>
+            <td mat-cell *matCellDef="let encaissement">
+              <span class="font-medium">{{ encaissement.numero }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Montant Column -->
+          <ng-container matColumnDef="montant">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Montant</th>
+            <td mat-cell *matCellDef="let encaissement">
+              <span class="font-medium text-green-600">
+                {{ formatCurrency(encaissement.montant) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Date Encaissement Column -->
+          <ng-container matColumnDef="dateEncaissement">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Date</th>
+            <td mat-cell *matCellDef="let encaissement">
+              {{ formatDate(encaissement.paiement.dateEncaissement) }}
+            </td>
+          </ng-container>
+
+          <!-- Mode Encaissement Column -->
+          <ng-container matColumnDef="modeEncaissement">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Mode</th>
+            <td mat-cell *matCellDef="let encaissement">
+              <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                {{ encaissement.paiement?.modeEncaissement?.libelle || 'N/A' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Statut Column -->
+          <ng-container matColumnDef="statutEncaissement">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Statut</th>
+            <td mat-cell *matCellDef="let encaissement">
+              <span
+                class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                [ngClass]="getStatusBadgeClass(encaissement.statut || 'VALIDE')">
+                {{ getStatusLabel(encaissement.statut || 'VALIDE') }}
+              </span>
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="globalDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: globalDisplayedColumns;" class="hover:bg-gray-50"></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section Paiements des Encaissements Détails -->
+    <div *ngIf="getAllPaiements().length > 0" class="mb-8">
+      <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center">
+        <mat-icon class="mr-2 text-orange-600">payment</mat-icon>
+        Paiements par Acomptes ({{ getAllPaiements().length }})
+      </h4>
+      
+      <div class="overflow-x-auto border rounded-lg">
+        <table mat-table [dataSource]="getAllPaiements()" class="w-full">
+
+          <!-- Encaissement Numero Column -->
+          <ng-container matColumnDef="encaissementNumero">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">N° Encaissement</th>
+            <td mat-cell *matCellDef="let paiement">
+              <span class="font-medium text-gray-700">{{ paiement.encaissementNumero }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Paiement Montant Column -->
+          <ng-container matColumnDef="paiementMontant">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Montant du Paiement</th>
+            <td mat-cell *matCellDef="let paiement">
+              <span class="font-medium text-green-600">
+                {{ formatCurrency(paiement.montant) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Paiement Date Column -->
+          <ng-container matColumnDef="paiementDate">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Date du Paiement</th>
+            <td mat-cell *matCellDef="let paiement">
+              {{ formatDate(paiement.dateEncaissement) }}
+            </td>
+          </ng-container>
+
+          <!-- Paiement Mode Column -->
+          <ng-container matColumnDef="paiementMode">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Mode de Paiement</th>
+            <td mat-cell *matCellDef="let paiement">
+              <span class="px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full">
+                {{ paiement.modeEncaissement?.libelle || 'N/A' }}
+              </span>
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="paiementDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: paiementDisplayedColumns;" class="hover:bg-gray-50"></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Résumé des Encaissements Détails -->
+    <div *ngIf="getEncaissementsDetails().length > 0" class="bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-3">
+      <div class="flex items-center justify-between mb-3">
+        <h5 class="text-sm font-semibold text-orange-800 flex items-center">
+          <mat-icon class="mr-1 text-orange-600" style="font-size: 16px;">summarize</mat-icon>
+          Résumé des Encaissements Détails
+        </h5>
+        <span class="text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded-full font-medium">
+          {{ getEncaissementsDetails().length }} encaissement(s)
+        </span>
+      </div>
+      
+      <div class="flex flex-wrap gap-2">
+        <div *ngFor="let encaissement of getEncaissementsDetails()" 
+             class="bg-white border border-orange-200 rounded-lg px-3 py-2 text-xs flex items-center space-x-2 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center space-x-1">
+            <mat-icon class="text-orange-600" style="font-size: 14px;">receipt</mat-icon>
+            <span class="font-medium text-orange-800">{{ encaissement.numero }}</span>
+          </div>
+          <div class="text-gray-400">•</div>
+          <div class="flex items-center space-x-1">
+            <mat-icon class="text-blue-600" style="font-size: 14px;">payments</mat-icon>
+            <span class="text-blue-800">{{ encaissement.paiements.length }}</span>
+          </div>
+          <div class="text-gray-400">•</div>
+          <div class="font-semibold text-green-700">{{ formatCurrency(encaissement.montant) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog Footer -->
+  <div class="flex justify-end p-6 border-t bg-gray-50">
+    <button
+      mat-button
+      (click)="onClose()"
+      class="px-4 py-2">
+      Fermer
+    </button>
+  </div>
+</div>

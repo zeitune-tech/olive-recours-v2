@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
-import { takeUntil, switchMap } from 'rxjs/operators';
+import { Subject, forkJoin, of } from 'rxjs';
+import { takeUntil, switchMap, catchError, map } from 'rxjs/operators';
 import { PERMISSIONS } from '@core/permissions/permissions.data';
 import { ManagementEntity } from '@core/services/management-entity/management-entity.interface';
 import { TranslocoService } from '@jsverse/transloco';
@@ -11,12 +11,13 @@ import { UserService } from '@core/services/user/user.service';
 import { ToastService } from '../../../components/toast/toast.service';
 import { CompanyService } from '@core/services/company/company.service';
 import { Company } from '@core/services/company/company.interface';
-import { 
-  EncaissementQuittanceService, 
-  QuittanceResponse, 
-  EncaissementQuittanceResponse 
+import {
+  EncaissementQuittanceService,
+  EncaissementQuittanceResponse
 } from '../encaissement-quittance.service';
+import {AccountingService, QuittanceResponse} from '../accounting.service';
 import { EncaissementDialogComponent, EncaissementDialogData } from '../encaissement-dialog/encaissement-dialog.component';
+import { EncaissementsDetailsDialogComponent, EncaissementsDetailsDialogData } from '../encaissements-details-dialog/encaissements-details-dialog.component';
 import { ConfirmationService } from '@lhacksrt/services/confirmation/confirmation.service';
 
 export interface QuittanceWithEncaissements extends QuittanceResponse {
@@ -41,19 +42,19 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
   filteredQuittances: QuittanceWithEncaissements[] = [];
   isLoading = false;
   hasError = false;
-  
+
   entity?: ManagementEntity;
   companies: Company[] = [];
   selectedCompany: Company | null = null;
-  
+
   // Filter options
   searchTerm = '';
   statusFilter: 'ALL' | 'NON_ENCAISSE' | 'PARTIEL' | 'ENCAISSE' = 'ALL';
-  
+
   // Table columns
   displayedColumns = [
-    'quittanceNumero', 
-    'montantQuittance', 
+    'quittanceNumero',
+    'montantQuittance',
     'dateSortQuittance',
     'nombreEncaissements',
     'montantEncaisse',
@@ -71,6 +72,7 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
     private _toastService: ToastService,
     private _companyService: CompanyService,
     private _encaissementService: EncaissementQuittanceService,
+    private _accountingService: AccountingService,
     private _dialog: MatDialog,
     private _confirmationService: ConfirmationService
   ) {}
@@ -111,86 +113,56 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.hasError = false;
 
-    // Mock data for now - in real implementation, you'd get quittances from an API
-    // and then load encaissements for each quittance
-    this.loadMockQuittancesWithEncaissements();
-  }
-
-  private loadMockQuittancesWithEncaissements(): void {
-    // This is mock data - replace with actual API calls
-    const mockQuittances: QuittanceResponse[] = [
-      {
-        uuid: 'q1',
-        numero: 'Q001/2024',
-        montant: 500000,
-        nature: 'ENCAISSEMENT',
-        dateSortQuittance: '2024-01-15T10:00:00Z'
-      },
-      {
-        uuid: 'q2',
-        numero: 'Q002/2024',
-        montant: 750000,
-        nature: 'ENCAISSEMENT',
-        dateSortQuittance: '2024-01-20T14:30:00Z'
-      },
-      {
-        uuid: 'q3',
-        numero: 'Q003/2024',
-        montant: 300000,
-        nature: 'REGLEMENT',
-        dateSortQuittance: '2024-01-25T09:15:00Z'
-      }
-    ];
-
-    // For each quittance, load its encaissements
-    const quittancesWithEncaissements: QuittanceWithEncaissements[] = mockQuittances.map(quittance => {
-      // Mock encaissements data
-      const mockEncaissements: EncaissementQuittanceResponse[] = [];
-      
-      // Add some mock encaissements for demonstration
-      if (quittance.uuid === 'q1') {
-        mockEncaissements.push({
-          uuid: 'e1',
-          numero: 'ENC001',
-          quittance,
-          montant: 200000,
-          date: '2024-01-16T10:00:00Z'
-        });
-      } else if (quittance.uuid === 'q2') {
-        mockEncaissements.push(
-          {
-            uuid: 'e2',
-            numero: 'ENC002',
-            quittance,
-            montant: 300000,
-            date: '2024-01-21T10:00:00Z'
-          },
-          {
-            uuid: 'e3',
-            numero: 'ENC003',
-            quittance,
-            montant: 450000,
-            date: '2024-01-22T15:00:00Z'
+    // Get all quittances from the accounting service
+    const id = this.entity.type === ManagementEntityType.MARKET_LEVEL_ORGANIZATION ? this.selectedCompany?.id : this.entity.id;
+    this._accountingService.getAllQuittancesByCompany(id ?? "")
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(quittances => {
+          if (quittances.length === 0) {
+            return of([]);
           }
-        );
-      }
 
-      const montantEncaisse = mockEncaissements.reduce((sum, enc) => sum + enc.montant, 0);
-      const soldeQuittance = quittance.montant - montantEncaisse;
-      
-      return {
-        ...quittance,
-        encaissements: mockEncaissements,
-        nombreEncaissements: mockEncaissements.length,
-        montantEncaisse,
-        soldeQuittance,
-        statutEncaissement: this._encaissementService.getEncaissementStatus(quittance, mockEncaissements)
-      };
-    });
+          // For each quittance, get its encaissements
+          const quittanceWithEncaissementsObservables = quittances.map(quittance =>
+            this._encaissementService.getByQuittance(quittance.uuid)
+              .pipe(
+                catchError(() => of([])),
+                map(encaissements => {
+                  const montantEncaisse = encaissements.reduce((sum, enc) => sum + enc.montant, 0);
+                  const soldeQuittance = quittance.montant - montantEncaisse;
 
-    this.quittances = quittancesWithEncaissements;
-    this.applyFilters();
-    this.isLoading = false;
+                  return {
+                    ...quittance,
+                    encaissements,
+                    nombreEncaissements: encaissements.length,
+                    montantEncaisse,
+                    soldeQuittance,
+                    statutEncaissement: this._encaissementService.getEncaissementStatus(quittance, encaissements)
+                  } as QuittanceWithEncaissements;
+                })
+              )
+          );
+
+          return forkJoin(quittanceWithEncaissementsObservables);
+        }),
+        catchError(error => {
+          console.error('Error loading quittances:', error);
+          this.hasError = true;
+          this._toastService.show('error', 'Erreur lors du chargement des quittances');
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (quittancesWithEncaissements) => {
+          this.quittances = quittancesWithEncaissements;
+          this.applyFilters();
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+        }
+      });
   }
 
   applyFilters(): void {
@@ -199,7 +171,7 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
     // Apply search filter
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(q => 
+      filtered = filtered.filter(q =>
         q.numero.toLowerCase().includes(term)
       );
     }
@@ -246,8 +218,27 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
   }
 
   viewEncaissements(quittance: QuittanceWithEncaissements): void {
-    // Open a dialog or navigate to detailed view of encaissements
-    this._toastService.show('info', `Affichage des ${quittance.nombreEncaissements} encaissements pour la quittance ${quittance.numero}`);
+    const data: EncaissementsDetailsDialogData = {
+      quittance
+    };
+
+    const dialogRef = this._dialog.open(EncaissementsDetailsDialogComponent, {
+      width: '1000px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data,
+      disableClose: false
+    });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result?.action === 'edit') {
+          this.openEncaissementDialog(quittance, result.encaissement);
+        } else if (result?.action === 'delete') {
+          this.deleteEncaissement(quittance, result.encaissement);
+        }
+      });
   }
 
   addEncaissement(quittance: QuittanceWithEncaissements): void {

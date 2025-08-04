@@ -2,15 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
+import {QuittanceResponse} from "./accounting.service";
 
-// ============= Base Interfaces =============
-export interface QuittanceResponse {
-  uuid: string;
-  numero: string;
-  montant: number;
-  nature: 'ENCAISSEMENT' | 'REGLEMENT';
-  dateSortQuittance: string;
-}
 
 export interface ModeEncaissementResponse {
   uuid: string;
@@ -52,16 +45,12 @@ export interface PaiementRequest {
 export interface EncaissementQuittanceGlobalRequest {
   numero: string;
   quittanceUuid: string;
-  montant: number;
-  date: string;
   paiement: PaiementRequest;
 }
 
 export interface EncaissementQuittanceDetailRequest {
   numero: string;
   quittanceUuid: string;
-  montant: number;
-  date: string;
   paiements: PaiementRequest[];
 }
 
@@ -69,13 +58,13 @@ export interface EncaissementQuittanceDetailRequest {
   providedIn: 'root'
 })
 export class EncaissementQuittanceService {
-  
+
   private readonly baseUrl = environment.base_url + '/app';
 
   constructor(private http: HttpClient) {}
 
   // ============= Generic Encaissements =============
-  
+
   /**
    * Get all encaissements
    */
@@ -139,7 +128,7 @@ export class EncaissementQuittanceService {
   }
 
   // ============= Global Encaissements (Single Payment) =============
-  
+
   /**
    * Get all global encaissements
    */
@@ -184,7 +173,7 @@ export class EncaissementQuittanceService {
   }
 
   // ============= Detail Encaissements (Multiple Payments) =============
-  
+
   /**
    * Get all detail encaissements
    */
@@ -236,12 +225,12 @@ export class EncaissementQuittanceService {
   }
 
   // ============= Helper Methods =============
-  
+
   /**
    * Get modes encaissement (for dropdown)
    */
   getModesEncaissement(): Observable<ModeEncaissementResponse[]> {
-    return this.http.get<ModeEncaissementResponse[]>(`${this.baseUrl}/modes-encaissement`);
+    return this.http.get<ModeEncaissementResponse[]>(`${this.baseUrl}/mode-encaissement`);
   }
 
   /**
@@ -257,7 +246,7 @@ export class EncaissementQuittanceService {
    */
   getEncaissementStatus(quittance: QuittanceResponse, encaissements: EncaissementQuittanceResponse[]): 'NON_ENCAISSE' | 'PARTIEL' | 'ENCAISSE' {
     const totalEncaisse = encaissements.reduce((sum, enc) => sum + enc.montant, 0);
-    
+
     if (totalEncaisse === 0) return 'NON_ENCAISSE';
     if (totalEncaisse < quittance.montant) return 'PARTIEL';
     return 'ENCAISSE';

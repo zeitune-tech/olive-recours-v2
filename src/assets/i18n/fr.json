@@ -106,6 +106,7 @@
     "save": "Enregistrer",
     "cancel": "Annuler",
     "edit": "Modifier",
+    "load": "Charger",
     "delete": "Supprimer",
     "validate": "Valider",
     "reject": "Rejeter",
@@ -637,7 +638,13 @@
         "payment": "Paiement",
         "totalPayments": "Total des Paiements",
         "addPayment": "Ajouter un Paiement",
-        "totalExceedsBalance": "Le total des paiements dépasse le solde disponible"
+        "totalExceedsBalance": "Le total des paiements dépasse le solde disponible",
+        "globalAmountDescription": "Montant global",
+        "detectedType": "Type d'encaissement détecté",
+        "encaissementDetails": "Détails de l'encaissement",
+        "amountHint": "Saisissez le montant exact pour un encaissement global, ou un montant inférieur pour un acompte",
+        "amountHintWithExisting": "Cette quittance a déjà des encaissements. Tout nouvel encaissement sera considéré comme un acompte",
+        "existingEncaissementsNote": "Des encaissements existent déjà pour cette quittance"
       },
       "encaissementsStatements": {
         "title": "États et Rapports des Encaissements",

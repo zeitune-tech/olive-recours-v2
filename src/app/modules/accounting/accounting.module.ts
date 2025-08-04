@@ -27,6 +27,7 @@ import { EncashmentComponent } from './encashment/encashment.component';
 import { SettlementComponent } from "./settlement/settlement.component";
 import { QuittanceListComponent } from './quittance-list/quittance-list.component';
 import { EncaissementDialogComponent } from './encaissement-dialog/encaissement-dialog.component';
+import { EncaissementsDetailsDialogComponent } from './encaissements-details-dialog/encaissements-details-dialog.component';
 import { TranslocoDirective } from "@jsverse/transloco";
 import { HttpClientModule } from "@angular/common/http";
 import { MatTabsModule } from "@angular/material/tabs";
@@ -38,6 +39,7 @@ import { MatTabsModule } from "@angular/material/tabs";
         SettlementComponent,
         QuittanceListComponent,
         EncaissementDialogComponent,
+        EncaissementsDetailsDialogComponent,
     ],
     imports: [
     RouterModule.forChild(routes),

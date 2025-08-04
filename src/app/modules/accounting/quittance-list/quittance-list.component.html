@@ -3,14 +3,14 @@
   <div class="flex flex-col mb-6">
     <h1 class="text-2xl md:text-4xl font-bold py-4">
       {{ t('entities.accounting.quittanceList.title') }}
-    </h1>    
+    </h1>
     <p class="text-sm md:text-base text-gray-600">
       {{ t('entities.accounting.quittanceList.description') }}
     </p>
   </div>
 
   <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-    
+
     <!-- Company Selection for MLA -->
     <div *ngIf="isMLA()" class="mb-6">
       <h3 class="text-lg font-semibold mb-3">{{ t('entities.accounting.selectCompany') }}</h3>
@@ -35,7 +35,7 @@
       <!-- Search -->
       <mat-form-field appearance="outline" class="flex-1">
         <mat-label>{{ t('entities.accounting.quittanceList.searchQuittance') }}</mat-label>
-        <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" 
+        <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
                placeholder="{{ t('entities.accounting.quittanceList.searchPlaceholder') }}">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
@@ -54,7 +54,7 @@
       <!-- Refresh Button -->
       <button mat-raised-button color="primary" (click)="loadQuittances()" [disabled]="isLoading">
         <mat-icon>refresh</mat-icon>
-        {{ t('buttons.refresh') }}
+        {{ t('buttons.load') }}
       </button>
     </div>
 
@@ -128,7 +128,7 @@
             <td class="border px-4 py-3 text-center">
               <div class="flex justify-center gap-2">
                 <!-- View Encaissements -->
-                <button mat-icon-button 
+                <button mat-icon-button
                         *ngIf="quittance.nombreEncaissements > 0"
                         (click)="viewEncaissements(quittance)"
                         matTooltip="{{ t('entities.accounting.quittanceList.viewEncaissements') }}"
@@ -136,9 +136,9 @@
                   <mat-icon>visibility</mat-icon>
                 </button>
 
-                <!-- Add Encaissement -->
+                <!-- Add Encaissement (only if no encaissement exists and not fully paid) -->
                 <button mat-icon-button
-                        *ngIf="quittance.soldeQuittance > 0"
+                        *ngIf="quittance.nombreEncaissements === 0 && quittance.montantEncaisse < quittance.montant"
                         (click)="addEncaissement(quittance)"
                         matTooltip="{{ t('entities.accounting.quittanceList.addEncaissement') }}"
                         color="accent">
@@ -173,13 +173,13 @@
         <div class="flex justify-between items-center text-sm font-semibold">
           <span>{{ t('entities.accounting.total') }}: {{ filteredQuittances.length }} {{ t('entities.accounting.quittanceList.quittances') }}</span>
           <div class="flex gap-6">
-            <span>{{ t('entities.accounting.quittanceList.totalQuittanceAmount') }}: 
+            <span>{{ t('entities.accounting.quittanceList.totalQuittanceAmount') }}:
               <span class="text-blue-600">{{ getTotalQuittanceAmount() | number:'1.0-0' }} FCFA</span>
             </span>
-            <span>{{ t('entities.accounting.quittanceList.totalEncashedAmount') }}: 
+            <span>{{ t('entities.accounting.quittanceList.totalEncashedAmount') }}:
               <span class="text-green-600">{{ getTotalEncashedAmount() | number:'1.0-0' }} FCFA</span>
             </span>
-            <span>{{ t('entities.accounting.quittanceList.totalBalance') }}: 
+            <span>{{ t('entities.accounting.quittanceList.totalBalance') }}:
               <span class="text-orange-600">{{ getTotalBalance() | number:'1.0-0' }} FCFA</span>
             </span>
           </div>

@@ -73,7 +73,7 @@ export interface ModeEncaissementResponse {
   providedIn: 'root'
 })
 export class AccountingService {
-  
+
   private readonly quittanceUrl = environment.request_url + '/quittance';
   private readonly quittanceClaimUrl = environment.request_url + '/quittance-claim';
   private readonly encaissementUrl = environment.request_url + '/encaissement-quittance-claim';
@@ -82,7 +82,7 @@ export class AccountingService {
   constructor(private http: HttpClient) { }
 
   // ============= QUITTANCE METHODS =============
-  
+
   // Quittance CRUD
   createQuittance(request: QuittanceRequest): Observable<QuittanceResponse> {
     return this.http.post<QuittanceResponse>(this.quittanceUrl, request);
@@ -96,6 +96,10 @@ export class AccountingService {
     return this.http.get<QuittanceResponse[]>(this.quittanceUrl);
   }
 
+  getAllQuittancesByCompany(uuid: string): Observable<QuittanceResponse[]> {
+    return this.http.get<QuittanceResponse[]>(this.quittanceUrl+`/company/${uuid}`);
+  }
+
   updateQuittance(uuid: string, request: QuittanceRequest): Observable<QuittanceResponse> {
     return this.http.put<QuittanceResponse>(`${this.quittanceUrl}/${uuid}`, request);
   }
@@ -105,7 +109,7 @@ export class AccountingService {
   }
 
   // ============= QUITTANCE CLAIM METHODS =============
-  
+
   // QuittanceClaim CRUD
   createQuittanceClaim(request: QuittanceClaimRequest): Observable<QuittanceClaimResponse> {
     return this.http.post<QuittanceClaimResponse>(this.quittanceClaimUrl, request);
@@ -132,7 +136,7 @@ export class AccountingService {
   }
 
   // ============= ENCAISSEMENT QUITTANCE CLAIM METHODS =============
-  
+
   // EncaissementQuittanceClaim CRUD
   createEncaissement(request: EncaissementQuittanceClaimRequest): Observable<EncaissementQuittanceClaimResponse> {
     return this.http.post<EncaissementQuittanceClaimResponse>(this.encaissementUrl, request);
@@ -159,7 +163,7 @@ export class AccountingService {
   }
 
   // ============= MODE ENCAISSEMENT METHODS =============
-  
+
   // ModeEncaissement read-only (gestion dans params)
   getAllModesEncaissement(): Observable<ModeEncaissementResponse[]> {
     return this.http.get<ModeEncaissementResponse[]>(this.modeEncaissementUrl);
@@ -170,7 +174,7 @@ export class AccountingService {
   }
 
   // ============= REPORTS & PDF GENERATION =============
-  
+
   // Génération de PDFs d'états
   generateEtatEncaissementPdf(quittanceUuid: string): Observable<Blob> {
     return this.http.get(`${this.quittanceUrl}/${quittanceUuid}/etat-encaissement`, {
@@ -191,7 +195,7 @@ export class AccountingService {
   }
 
   // ============= BUSINESS LOGIC METHODS =============
-  
+
   // Méthodes métier utiles
   getQuittanceWithFullDetails(uuid: string): Observable<QuittanceResponse> {
     // Cette méthode pourrait inclure des paramètres pour charger les relations
@@ -209,7 +213,7 @@ export class AccountingService {
   }
 
   // ============= SEARCH & FILTER METHODS =============
-  
+
   searchQuittances(filters: any): Observable<QuittanceResponse[]> {
     return this.http.post<QuittanceResponse[]>(`${this.quittanceUrl}/search`, filters);
   }
