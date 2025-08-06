@@ -37,13 +37,13 @@
             <mat-form-field appearance="outline">
                 <mat-label>{{ t('entities.claim.table.garantiMiseEnOeuvre') }}</mat-label>
                 <mat-select [(ngModel)]="claim.garantiMiseEnOeuvre" name="garantiMiseEnOeuvre" [disabled]="!editMode">
+                    <mat-option [value]="'rc'">{{ t('entities.claim.garanti.rc') }}</mat-option>
                     <mat-option [value]="'tierce_complete'">{{ t('entities.claim.garanti.tierce_complete') }}</mat-option>
                     <mat-option [value]="'tierce_collision'">{{ t('entities.claim.garanti.tierce_collision') }}</mat-option>
                     <mat-option [value]="'tierce_plafonnee'">{{ t('entities.claim.garanti.tierce_plafonnee') }}</mat-option>
                     <mat-option [value]="'avance_recours'">{{ t('entities.claim.garanti.avance_recours') }}</mat-option>
                     <mat-option [value]="'bris_de_glace'">{{ t('entities.claim.garanti.bris_de_glace') }}</mat-option>
                     <mat-option [value]="'incendie'">{{ t('entities.claim.garanti.incendie') }}</mat-option>
-                    <mat-option [value]="'rc'">{{ t('entities.claim.garanti.rc') }}</mat-option>
                     <mat-option [value]="'autres'">{{ t('entities.claim.garanti.autres') }}</mat-option>
                 </mat-select>
             </mat-form-field>

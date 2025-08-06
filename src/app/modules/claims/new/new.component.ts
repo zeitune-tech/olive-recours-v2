@@ -47,7 +47,7 @@ export class ClaimNewComponent implements OnInit {
 				return 'entities.claim.garanti.bris_de_glace';
 			case GarantiMiseEnOeuvre.Incendie:
 				return 'entities.claim.garanti.incendie';
-			case GarantiMiseEnOeuvre.RcCorporelle:
+			case GarantiMiseEnOeuvre.Rc:
 				return 'entities.claim.garanti.rc';
 			case GarantiMiseEnOeuvre.Autres:
 				return 'entities.claim.garanti.autres';
