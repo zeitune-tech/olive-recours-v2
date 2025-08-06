@@ -41,7 +41,7 @@ export class DetailsInformationsComponent implements OnInit {
         // On prépare la donnée à envoyer
         const toSave = {
             ...this.claim,
-            garantiMiseEnOeuvre: Array.isArray(this.claim.garantiMiseEnOeuvre) ? this.claim.garantiMiseEnOeuvre : this.claim.garantiMiseEnOeuvre ? this.claim.garantiMiseEnOeuvre : []
+            garantiMiseEnOeuvre: Array.isArray(this.claim.garantiMiseEnOeuvre) ? this.claim.garantiMiseEnOeuvre : ( this.claim.garantiMiseEnOeuvre ? [this.claim.garantiMiseEnOeuvre] : [] )
         };
         this._claimService.update(this.claim.id, toSave).subscribe((claim: Claim) => {
             let garanti = '';
