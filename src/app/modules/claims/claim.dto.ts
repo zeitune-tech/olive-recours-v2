@@ -5,7 +5,7 @@ export enum GarantiMiseEnOeuvre {
 	AvanceRecours = 'avance_recours',
 	BrisDeGlace = 'bris_de_glace',
 	Incendie = 'incendie',
-	RcCorporelle = 'rc_corporelle',
+	RcCorporelle = 'rc',
 	Autres = 'autres'
 }
 

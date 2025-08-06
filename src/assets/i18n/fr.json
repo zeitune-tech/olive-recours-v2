@@ -399,7 +399,7 @@
         "avance_recours": "Avance sur recours ou Substitution de débiteur",
         "bris_de_glace": "Bris de glace",
         "incendie": "Incendie",
-        "rc_corporelle": "Rc Corporelle",
+        "rc": "Rc",
         "autres": "Autres"
       },
       "create": {
