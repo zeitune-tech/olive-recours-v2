@@ -1591,6 +1591,7 @@
   },
   "messages": {
     "claim": {
+      "accepted_success": "Le recours a été accepté avec succès",
       "accept-own-claim": "Vous ne pouvez pas accepter votre propre recours",
       "reject-own-claim": "Vous ne pouvez pas rejeter votre propre recours",
       "create-success": "Le recours a été créé soumis succès",
