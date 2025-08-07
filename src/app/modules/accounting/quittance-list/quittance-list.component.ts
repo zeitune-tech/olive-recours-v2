@@ -123,6 +123,8 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
             return of([]);
           }
 
+          console.log(quittances);
+
           // For each quittance, get its encaissements
           const quittanceWithEncaissementsObservables = quittances.map(quittance =>
             this._encaissementService.getByQuittance(quittance.uuid)
@@ -135,7 +137,7 @@ export class QuittanceListComponent implements OnInit, OnDestroy {
                   return {
                     ...quittance,
                     encaissements,
-                    nombreEncaissements: encaissements.length,
+                    nombreEncaissements: quittance.encaissement?.paiement ? 1 : (quittance.encaissement?.paiements?.length ?? 0),
                     montantEncaisse,
                     soldeQuittance,
                     statutEncaissement: this._encaissementService.getEncaissementStatus(quittance, encaissements)

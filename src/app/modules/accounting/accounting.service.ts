@@ -18,6 +18,7 @@ export interface QuittanceResponse {
   numero: string;
   nature: string;
   montant: number;
+  encaissement?:any;
   sortQuittance?: number;
   dateSortQuittance?: string;
   quittanceClaims?: QuittanceClaimResponse[];
